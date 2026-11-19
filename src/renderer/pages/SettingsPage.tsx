@@ -3,6 +3,7 @@ import {
   Database,
   Info,
   LayoutTemplate,
+  Radio,
   RefreshCw,
   RotateCcw,
   ShieldCheck,
@@ -12,6 +13,7 @@ import type {
   AppSettings,
   CardWindowOptions,
   CatalogStatus,
+  LiveLolStatus,
 } from '../../shared/types';
 import { ExpandableSection } from '../components/ExpandableSection';
 
@@ -20,15 +22,18 @@ type SettingsGroup = 'card' | 'data' | 'about';
 export function SettingsPage({
   settings,
   catalogStatus,
+  liveLolStatus,
   shortcutRegistered,
   exclusiveFullscreenNote,
   onUpdateSettings,
   onUpdateCardOptions,
   onRefreshDdragon,
+  onPollLiveLolNow,
   onResetDemos,
 }: {
   settings: AppSettings;
   catalogStatus: CatalogStatus;
+  liveLolStatus?: LiveLolStatus | null;
   shortcutRegistered: boolean;
   exclusiveFullscreenNote: string;
   onUpdateSettings: (partial: Partial<AppSettings>) => Promise<void>;
@@ -36,6 +41,7 @@ export function SettingsPage({
     partial: Partial<CardWindowOptions>,
   ) => Promise<{ warning?: string }>;
   onRefreshDdragon: () => Promise<void>;
+  onPollLiveLolNow?: () => Promise<void>;
   onResetDemos: () => Promise<void>;
 }) {
   const [group, setGroup] = useState<SettingsGroup>('card');
@@ -274,6 +280,32 @@ export function SettingsPage({
                 </span>
               </div>
             )}
+          </section>
+
+          <section className="panel">
+            <div className="panel-header">
+              <h2 className="panel-title">Conexão Automática com o League of Legends</h2>
+              <button
+                type="button"
+                className="btn btn-xs"
+                onClick={() => void onPollLiveLolNow?.()}
+              >
+                <Radio size={12} /> Verificar LoL agora
+              </button>
+            </div>
+            <label className="switch-row">
+              <input
+                type="checkbox"
+                checked={settings.liveLolSyncEnabled !== false}
+                onChange={(e) =>
+                  void onUpdateSettings({ liveLolSyncEnabled: e.target.checked })
+                }
+              />
+              <span>Detectar Seleção de Campeões (LCU local) e Partida ao vivo (Riot Live Client Data)</span>
+            </label>
+            <div className="small-text muted-text">
+              Status atual: <strong>{liveLolStatus?.sourceLabel ?? 'Aguardando League of Legends'}</strong>. Lê apenas IDs de campeões na Seleção (respeitando o anonimato) e dados públicos oficiais da partida (ouro, nível, itens comprados e placar) sem ler memória nem interferir no Vanguard.
+            </div>
           </section>
 
           <section className="panel">

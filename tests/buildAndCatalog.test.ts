@@ -47,6 +47,30 @@ describe('Validação do Catálogo Data Dragon (BR), Ícones e Atualizações', 
     expect(report.invalidSlotRuneIds).toEqual([]);
     expect(report.missingShardIds).toEqual([]);
     expect(report.patchMismatch).toBe(false);
+
+    // Garante separação realista por forma: Kayn Azul nunca recomenda Céu Dividido (6610) nem Hidra Profana (6698)
+    const blueBuild = buildItemRecommendation('blue', [], catalog);
+    const allBlueIds = [
+      ...blueBuild.core.map((i) => i.id),
+      ...blueBuild.situational.flatMap((s) => s.items.map((i) => i.id)),
+    ];
+    expect(allBlueIds).not.toContain('6610');
+    expect(allBlueIds).not.toContain('6698');
+    expect(allBlueIds).toContain('6697'); // Húbris
+    expect(allBlueIds).toContain('3142'); // Youmuu
+    expect(allBlueIds).toContain('6696'); // Arco do Axioma
+    expect(allBlueIds).toContain('6694'); // Rancor de Serylda
+    expect(allBlueIds).toContain('3814'); // Limiar da Noite
+
+    // Rhaast usa núcleo bruiser (Eclipse -> Cutelo Negro -> Dança da Morte) e nunca inclui Cicloespada/Hidra Profana
+    const redBuild = buildItemRecommendation('red', [], catalog);
+    const allRedIds = [
+      ...redBuild.core.map((i) => i.id),
+      ...redBuild.situational.flatMap((s) => s.items.map((i) => i.id)),
+    ];
+    expect(redBuild.core.map((i) => i.id)).toEqual(['6692', '3071', '6333']);
+    expect(allRedIds).not.toContain('6698');
+    expect(allRedIds).not.toContain('6699');
   });
 
   it('quando uma runa é removida em um patch futuro, NÃO substitui silenciosamente nem renderiza imagem velha', () => {

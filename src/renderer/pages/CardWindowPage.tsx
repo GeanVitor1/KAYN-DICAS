@@ -1,36 +1,71 @@
 import {
   AlertTriangle,
   Calendar,
+  Check,
+  Coins,
   Eye,
   EyeOff,
   Lock,
+  Radio,
   SlidersHorizontal,
   Target,
   Unlock,
   X,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import {
+  analyzeDraft,
+  createFrozenCardFromAnalysis,
+} from '../../engine/draftAnalyzer';
+import {
+  computeNextBuildStep,
+  formatGameClock,
+} from '../../engine/liveLolParser';
+import { selectPreGameReminders } from '../../engine/tacticalMemory';
 import type {
   CardWindowOptions,
   CatalogSnapshot,
+  DraftState,
+  FrozenMicroComboCard,
   FrozenPreGameCard,
+  LiveLolStatus,
+  TacticalRule,
 } from '../../shared/types';
 import { ComboSequenceBadge } from '../components/ComboSequenceBadge';
 import { ChampionPortrait, ItemIconTile, RuneIconTile } from '../components/GameIcon';
 import { TacticalMapSvg } from '../components/TacticalMapSvg';
 
+const THREAT_PT: Record<string, string> = {
+  armor: 'Armadura',
+  healing: 'Cura',
+  shields: 'Escudo',
+  defensive: 'Defesa',
+};
+
 /**
- * Janela estreita e estática do Cartão Pré-Jogo.
- * Totalmente desacoplada do simulador de treino e sem qualquer leitura ao vivo da partida.
+ * Janela estreita do Cartão Pré-Jogo / Acompanhamento ao Vivo (via API oficial da Riot).
+ * Sem leitura de memória, sem timers ocultos e sem ordens automáticas de macro.
  */
 export function CardWindowPage({
   frozenCard,
+  liveLolStatus,
+  tacticalRules = [],
+  pinnedReminderIds = [],
+  tacticalRuleNotes = {},
+  pinnedMicroCards = [],
+  preferBlueAsTiebreaker = true,
   catalog,
   options,
   onUpdateOptions,
   onCloseCard,
 }: {
   frozenCard: FrozenPreGameCard | null;
+  liveLolStatus?: LiveLolStatus | null;
+  tacticalRules?: TacticalRule[];
+  pinnedReminderIds?: string[];
+  tacticalRuleNotes?: Record<string, string>;
+  pinnedMicroCards?: FrozenMicroComboCard[];
+  preferBlueAsTiebreaker?: boolean;
   catalog: CatalogSnapshot;
   options: CardWindowOptions;
   onUpdateOptions: (partial: Partial<CardWindowOptions>) => Promise<void>;
@@ -38,38 +73,107 @@ export function CardWindowPage({
 }) {
   const [showOpacityBar, setShowOpacityBar] = useState(false);
 
+  const isLiveMatch =
+    liveLolStatus?.phase === 'in_game' && Boolean(liveLolStatus.liveDraft && liveLolStatus.liveMatch);
+  const isLiveChampSelect =
+    liveLolStatus?.phase === 'champ_select' && Boolean(liveLolStatus.liveDraft);
+  const isLiveMode = isLiveMatch || isLiveChampSelect;
+
+  // Quando o LoL está em Seleção ou Partida, gera automaticamente a visão da partida real!
+  const liveComputed = useMemo(() => {
+    if (!isLiveMode || !liveLolStatus?.liveDraft) return null;
+    const liveDraftState: DraftState = {
+      id: isLiveMatch ? 'live-game-card' : 'live-select-card',
+      name: isLiveMatch ? 'Partida ao vivo' : 'Seleção ao vivo',
+      allies: liveLolStatus.liveDraft.allies,
+      enemies: liveLolStatus.liveDraft.enemies,
+      staticNotes: '',
+      updatedAt: liveLolStatus.lastUpdatedAt ?? new Date().toISOString(),
+    };
+    const analysis = analyzeDraft(liveDraftState, catalog, { preferBlueAsTiebreaker });
+    const reminders = selectPreGameReminders(
+      analysis,
+      tacticalRules,
+      pinnedReminderIds,
+      tacticalRuleNotes,
+    );
+    const card = createFrozenCardFromAnalysis(
+      liveDraftState,
+      analysis,
+      pinnedMicroCards,
+      reminders.slice(0, 2).map((r) => ({
+        ruleId: r.ruleId,
+        text: r.text,
+        watchCondition: r.watchCondition,
+      })),
+    );
+    const nextStep = liveLolStatus.liveMatch
+      ? computeNextBuildStep(
+          analysis.build,
+          liveLolStatus.liveMatch.ownedItemIds,
+          liveLolStatus.liveMatch.currentGold,
+        )
+      : null;
+    return { card, nextStep };
+  }, [
+    isLiveMode,
+    isLiveMatch,
+    liveLolStatus,
+    catalog,
+    preferBlueAsTiebreaker,
+    tacticalRules,
+    pinnedReminderIds,
+    tacticalRuleNotes,
+    pinnedMicroCards,
+  ]);
+
+  const activeCard = liveComputed?.card ?? frozenCard;
+  const liveMatch = isLiveMatch ? liveLolStatus?.liveMatch ?? null : null;
+  const ownedSet = useMemo(
+    () => new Set(liveMatch?.ownedItemIds ?? []),
+    [liveMatch],
+  );
+
   const formTitle =
-    frozenCard?.recommendedForm === 'blue'
+    activeCard?.recommendedForm === 'blue'
       ? 'Kayn Azul'
-      : frozenCard?.recommendedForm === 'red'
+      : activeCard?.recommendedForm === 'red'
         ? 'Rhaast'
         : 'Indefinido';
 
   const heroMiniClass =
-    frozenCard?.recommendedForm === 'blue'
+    activeCard?.recommendedForm === 'blue'
       ? 'card-hero-mini-blue'
-      : frozenCard?.recommendedForm === 'red'
+      : activeCard?.recommendedForm === 'red'
         ? 'card-hero-mini-red'
         : 'card-hero-mini-open';
 
   const kaynChamp = catalog.champions.Kayn;
-  const cardPatch = frozenCard?.patch || catalog.patch;
+  const cardPatch = activeCard?.patch || catalog.patch;
 
-  // Resolve lembretes curtos (1-2 no máximo, sem parágrafos)
   const shortReminders =
-    frozenCard?.selectedTacticalReminders && frozenCard.selectedTacticalReminders.length > 0
-      ? frozenCard.selectedTacticalReminders.slice(0, 2).map((r) => r.text)
-      : (frozenCard?.staticReminders ?? []).slice(0, 2);
+    activeCard?.selectedTacticalReminders && activeCard.selectedTacticalReminders.length > 0
+      ? activeCard.selectedTacticalReminders.slice(0, 2).map((r) => r.text)
+      : (activeCard?.staticReminders ?? []).slice(0, 2);
 
-  // Primeiro combo fixado (verificado ou exercício claramente rotulado)
-  const pinnedCombos = (frozenCard?.pinnedMicroCards ?? []).slice(0, 2);
+  const pinnedCombos = (activeCard?.pinnedMicroCards ?? []).slice(0, 2);
 
   return (
     <div className="card-shell" data-testid="frozen-card-root">
       <div className="card-drag-bar">
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <Calendar size={13} color="var(--blue)" />
-          <strong style={{ fontSize: 12.5, color: '#ffffff' }}>Plano pré-jogo</strong>
+          {isLiveMode ? (
+            <Radio size={13} color={isLiveMatch ? 'var(--green)' : 'var(--blue)'} />
+          ) : (
+            <Calendar size={13} color="var(--blue)" />
+          )}
+          <strong style={{ fontSize: 12.5, color: '#ffffff' }}>
+            {isLiveMatch
+              ? `Ao vivo · ${formatGameClock(liveMatch?.gameTimeSeconds ?? 0)}`
+              : isLiveChampSelect
+                ? 'Seleção ao vivo'
+                : 'Plano pré-jogo'}
+          </strong>
         </div>
 
         <div className="card-no-drag" style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
@@ -150,11 +254,11 @@ export function CardWindowPage({
       ) : null}
 
       <div className="card-body">
-        {!frozenCard ? (
+        {!activeCard ? (
           <div className="panel-subtle small-text" style={{ textAlign: 'center', padding: 14 }}>
-            <strong>Sem plano salvo</strong>
+            <strong>Aguardando LoL ou plano salvo</strong>
             <div className="muted-text" style={{ marginTop: 4 }}>
-              No Draft, clique em <strong>Salvar plano pré-jogo</strong>.
+              Entre na Seleção de Campeões ou clique em <strong>Salvar plano pré-jogo</strong> no Draft.
             </div>
           </div>
         ) : (
@@ -172,43 +276,64 @@ export function CardWindowPage({
                   {formTitle}
                 </div>
                 <div className="small-text" style={{ color: 'rgba(238,243,251,0.82)', marginTop: 2 }}>
-                  {frozenCard.shortFormReason ?? frozenCard.lanesToWatch.firstGankWindow}
+                  {activeCard.shortFormReason ?? activeCard.lanesToWatch.firstGankWindow}
                 </div>
               </div>
               <span className="mono muted-text" style={{ fontSize: 10 }}>
-                {frozenCard.patch}
+                {activeCard.patch}
               </span>
             </div>
+
+            {/* BARRA AO VIVO (OURO / PRÓXIMO ITEM / KDA) QUANDO EM PARTIDA */}
+            {liveMatch ? (
+              <div className="panel-subtle" style={{ padding: '7px 9px', display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 11.5 }}>
+                  <span>
+                    <strong>Nv {liveMatch.level}</strong> · {liveMatch.kills}/{liveMatch.deaths}/{liveMatch.assists} · {liveMatch.totalCreepScore} CS
+                  </span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, color: '#fde68a', fontWeight: 800 }} className="mono">
+                    <Coins size={12} /> {liveMatch.currentGold}g
+                  </span>
+                </div>
+                {liveComputed?.nextStep?.nextItem ? (
+                  <div className="small-text" style={{ fontSize: 11, color: liveComputed.nextStep.canAffordNow ? 'var(--green)' : 'var(--muted)' }}>
+                    {liveComputed.nextStep.canAffordNow
+                      ? `Ouro pronto p/ ${liveComputed.nextStep.nextItem.name}!`
+                      : `Faltam ${liveComputed.nextStep.goldNeeded}g p/ ${liveComputed.nextStep.nextItem.name}`}
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
 
             {/* 2. RUNA VISUAL */}
             <div>
               <div className="card-section-label">Runa</div>
-              {frozenCard.runesVisual ? (
+              {activeCard.runesVisual ? (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
                   <RuneIconTile
                     patch={cardPatch}
-                    iconPath={frozenCard.runesVisual.keystone.icon}
-                    name={frozenCard.runesVisual.keystone.name}
-                    subLabel={frozenCard.runesSummary.primaryTree}
+                    iconPath={activeCard.runesVisual.keystone.icon}
+                    name={activeCard.runesVisual.keystone.name}
+                    subLabel={activeCard.runesSummary.primaryTree}
                     size={44}
                     variant="keystone"
-                    accent={frozenCard.recommendedForm === 'blue' ? 'blue' : 'gold'}
-                    invalid={!frozenCard.runesVisual.keystone.validInCatalog}
+                    accent={activeCard.recommendedForm === 'blue' ? 'blue' : 'gold'}
+                    invalid={!activeCard.runesVisual.keystone.validInCatalog}
                   />
                   <div style={{ minWidth: 0 }}>
                     <div style={{ fontSize: 12.5, fontWeight: 800, color: '#ffffff', lineHeight: 1.15 }}>
-                      {frozenCard.runesVisual.keystone.validInCatalog
-                        ? frozenCard.runesVisual.keystone.name
+                      {activeCard.runesVisual.keystone.validInCatalog
+                        ? activeCard.runesVisual.keystone.name
                         : 'Revisão necessária'}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginTop: 4 }}>
-                      {frozenCard.runesVisual.secondaryRunes.map((r) => (
+                      {activeCard.runesVisual.secondaryRunes.map((r) => (
                         <RuneIconTile
                           key={r.id}
                           patch={cardPatch}
                           iconPath={r.icon}
                           name={r.name}
-                          subLabel={frozenCard.runesSummary.secondaryTree}
+                          subLabel={activeCard.runesSummary.secondaryTree}
                           size={26}
                           variant="secondary"
                           invalid={!r.validInCatalog}
@@ -219,47 +344,56 @@ export function CardWindowPage({
                 </div>
               ) : (
                 <div className="small-text">
-                  <strong>{frozenCard.runesSummary.primaryRunes[0]}</strong> ·{' '}
+                  <strong>{activeCard.runesSummary.primaryRunes[0]}</strong> ·{' '}
                   <span className="muted-text">
-                    {frozenCard.runesSummary.secondaryRunes.join(' + ')}
+                    {activeCard.runesSummary.secondaryRunes.join(' + ')}
                   </span>
                 </div>
               )}
-              {frozenCard.runesVisual?.hasInvalidRunes ? (
+              {activeCard.runesVisual?.hasInvalidRunes ? (
                 <div className="small-text" style={{ color: '#fde68a', marginTop: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
                   <AlertTriangle size={11} /> Revisão necessária nas runas
                 </div>
               ) : null}
             </div>
 
-            {/* 3. BUILD VISUAL EM ORDEM */}
+            {/* 3. BUILD VISUAL EM ORDEM (COM CHECK NOS COMPRADOS AO VIVO) */}
             <div>
               <div className="card-section-label">Build</div>
-              {frozenCard.buildVisual ? (
+              {activeCard.buildVisual ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 7, flexWrap: 'wrap' }}>
-                    {frozenCard.buildVisual.core.map((item, idx) => (
-                      <ItemIconTile
-                        key={`${item.id}-${idx}`}
-                        patch={cardPatch}
-                        iconFile={item.icon}
-                        name={item.name}
-                        gold={item.gold}
-                        size={44}
-                        invalid={!item.availableInCatalog}
-                      />
-                    ))}
+                    {activeCard.buildVisual.core.map((item, idx) => {
+                      const isOwned = ownedSet.has(item.id);
+                      return (
+                        <div key={`${item.id}-${idx}`} className={`item-live-wrap ${isOwned ? 'item-owned' : ''}`}>
+                          <ItemIconTile
+                            patch={cardPatch}
+                            iconFile={item.icon}
+                            name={item.name}
+                            gold={item.gold}
+                            size={44}
+                            invalid={!item.availableInCatalog}
+                          />
+                          {isOwned ? (
+                            <span className="item-owned-check">
+                              <Check size={10} strokeWidth={3} />
+                            </span>
+                          ) : null}
+                        </div>
+                      );
+                    })}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <ItemIconTile
                       patch={cardPatch}
-                      iconFile={frozenCard.buildVisual.junglePet.icon}
-                      name={frozenCard.buildVisual.junglePet.name}
+                      iconFile={activeCard.buildVisual.junglePet.icon}
+                      name={activeCard.buildVisual.junglePet.name}
                       size={26}
-                      invalid={!frozenCard.buildVisual.junglePet.availableInCatalog}
+                      invalid={!activeCard.buildVisual.junglePet.availableInCatalog}
                     />
                     <span className="muted-text" style={{ fontSize: 10 }}>·</span>
-                    {frozenCard.buildVisual.boots.slice(0, 2).map((b) => (
+                    {activeCard.buildVisual.boots.slice(0, 2).map((b) => (
                       <ItemIconTile
                         key={b.id}
                         patch={cardPatch}
@@ -270,16 +404,27 @@ export function CardWindowPage({
                       />
                     ))}
                     <span className="small-text muted-text" style={{ marginLeft: 'auto', fontSize: 11 }}>
-                      1ª: {frozenCard.lanesToWatch.firstGankWindow}
+                      1ª: {activeCard.lanesToWatch.firstGankWindow}
                     </span>
                   </div>
                 </div>
               ) : (
                 <div className="small-text">
-                  {frozenCard.buildSummary.coreItems.join(' → ')}
+                  {activeCard.buildSummary.coreItems.join(' → ')}
                 </div>
               )}
             </div>
+
+            {/* ALERTAS FACTUAIS DE ITENS INIMIGOS AO VIVO */}
+            {liveMatch && liveMatch.enemyItemThreats.length > 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {liveMatch.enemyItemThreats.slice(0, 2).map((th, idx) => (
+                  <div key={idx} className="badge badge-amber" style={{ justifyContent: 'flex-start', borderRadius: 7 }}>
+                    {th.championName}: {th.itemName} ({THREAT_PT[th.threat]})
+                  </div>
+                ))}
+              </div>
+            ) : null}
 
             {/* 4. LEMBRETES CURTOS (1–2) */}
             {shortReminders.length > 0 ? (
@@ -293,7 +438,7 @@ export function CardWindowPage({
               </div>
             ) : null}
 
-            {/* 5. COMBO FIXADO (APENAS VERIFICADOS OU EXERCÍCIO DE TREINO) */}
+            {/* 5. COMBO FIXADO */}
             {pinnedCombos.length > 0 ? (
               <div data-testid="card-pinned-micros" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {pinnedCombos.map((mc) => (
@@ -320,12 +465,11 @@ export function CardWindowPage({
               </div>
             ) : null}
 
-            {/* Mapa estático opcional */}
             {options.showStaticMap ? (
               <TacticalMapSvg
                 compact
-                focusSide={frozenCard.schematicPlan.primaryFocusSide}
-                suggestedStart={frozenCard.schematicPlan.suggestedStart}
+                focusSide={activeCard.schematicPlan.primaryFocusSide}
+                suggestedStart={activeCard.schematicPlan.suggestedStart}
               />
             ) : null}
           </>

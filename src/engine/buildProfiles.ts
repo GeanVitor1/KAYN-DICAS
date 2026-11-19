@@ -12,10 +12,10 @@ import type {
 } from '../shared/types';
 
 export const BUILD_DATA_META = {
-  buildVersion: '2026.11-kayn-16.23.1-v2',
+  buildVersion: '2026.11-kayn-16.23.1-v3',
   validatedPatch: '16.23.1',
   source:
-    "Recomendações curadas para Kayn Jungle (Summoner's Rift, IDs e ícones conferidos no Data Dragon BR 16.23.1 pt_BR)",
+    "Recomendações revisadas para Kayn Jungle (Summoner's Rift, IDs e ícones conferidos no Data Dragon BR 16.23.1 pt_BR)",
   updatedAt: '2026-11-19',
 } as const;
 
@@ -136,14 +136,10 @@ export const BLUE_BUILD_BLUEPRINT = {
     { id: '3009', reason: 'Alternativa de tempo de mapa quando precisa cruzar o mapa muito rápido.' },
   ],
   core: [
-    { id: '6697', reason: 'Húbris: ótimo 1º item quando abre vantagem cedo e acumula estátua em abates.' },
-    { id: '3142', reason: 'Lâmina Fantasma de Youmuu: ativa de velocidade para achar ângulos sem gastar E à toa.' },
-    { id: '6696', reason: 'Arco do Axioma: acelera o R entre picks e garante presença em lutas seguidas.' },
+    { id: '6697', reason: 'Húbris: 1º item forte para snowball e empilhar AD em abates cedo.' },
+    { id: '3142', reason: 'Lâmina Fantasma de Youmuu: velocidade de movimento e letalidade para achar ângulos sem queimar E.' },
+    { id: '6696', reason: 'Arco do Axioma: reduz recarga do R em abates e mantém pressão em lutas seguidas.' },
   ],
-  alternativeCoreHint: {
-    id: '6698', // Hidra Profana
-    reason: 'Hidra Profana: acelera limpeza de selva/waves e soma burst ativo no combo.',
-  },
 };
 
 export const RED_BUILD_BLUEPRINT = {
@@ -159,7 +155,7 @@ export const RED_BUILD_BLUEPRINT = {
   core: [
     { id: '6692', reason: 'Eclipse: pico forte de 1º item para duelo, escudo curto e pressão no mid game.' },
     { id: '3071', reason: 'Cutelo Negro: vida, aceleração e redução de armadura em área no Q para o time todo.' },
-    { id: '3161', reason: 'Lança de Shojin: amplifica dano de habilidades (Q/W/R) e reduz recargas em luta longa.' },
+    { id: '6333', reason: 'Dança da Morte: segura burst físico e transforma teamfights com cura em abates.' },
   ],
 };
 
@@ -181,23 +177,22 @@ export const OPEN_BUILD_BLUEPRINT = {
 export function collectBlueprintItemIds(): string[] {
   const ids = new Set<string>([
     BLUE_BUILD_BLUEPRINT.junglePet.id,
-    BLUE_BUILD_BLUEPRINT.alternativeCoreHint.id,
     RED_BUILD_BLUEPRINT.junglePet.id,
     OPEN_BUILD_BLUEPRINT.junglePet.id,
-    // Situacionais
-    '6699', // Cicloespada Voltaica
-    '6698', // Hidra Profana
-    '6694', // Rancor de Serylda
-    '3814', // Limiar da Noite
-    '6695', // Presa da Serpente
-    '3004', // Manamune
-    '6610', // Céu Dividido
-    '6333', // Dança da Morte
-    '3053', // Sinal de Sterak
-    '3156', // Mandíbula de Malmortius
-    '3065', // Semblante Espiritual
+    // Situacionais (separados por forma)
+    '6699', // Cicloespada Voltaica (Azul)
+    '6694', // Rancor de Serylda (Azul)
+    '3814', // Limiar da Noite (Azul)
+    '6695', // Presa da Serpente (Azul / Rhaast contra escudos)
+    '3004', // Manamune (Azul em jogos de escala)
+    '3161', // Lança de Shojin (Rhaast)
+    '6610', // Céu Dividido (Rhaast)
+    '6333', // Dança da Morte (Rhaast)
+    '3053', // Sinal de Sterak (Rhaast)
+    '3156', // Mandíbula de Malmortius (Rhaast)
+    '3065', // Semblante Espiritual (Rhaast)
     '3026', // Anjo Guardião
-    '3742', // Couraça do Defunto
+    '3075', // Armadura de Espinhos (Rhaast)
     '3123', // Chamado do Carrasco
     '6609', // Serrespada Quimiopunk
   ]);
@@ -480,20 +475,6 @@ export function buildItemRecommendation(
 
   const situational: SituationalBuildCategory[] = [
     {
-      key: 'excesso_cura',
-      label: 'Excesso de cura inimiga',
-      shortCondition: 'Contra muita cura',
-      activeInDraft: heavyHealingCount >= 2 || (heavyHealingCount >= 1 && frontlineCount >= 1),
-      triggerReason:
-        healChampions.length > 0
-          ? `Cura forte em: ${healChampions.join(', ')}.`
-          : 'Contra campeões ou itens com muita cura.',
-      items: [
-        resolveItemRef(catalog, '3123', 'Chamado do Carrasco (800g): segure só o componente cedo e feche depois.'),
-        resolveItemRef(catalog, '6609', 'Serrespada Quimiopunk: fechamento final com vida e aceleração.'),
-      ],
-    },
-    {
       key: 'armadura_adversaria',
       label: 'Armadura adversária',
       shortCondition: 'Contra armadura',
@@ -506,19 +487,6 @@ export function buildItemRecommendation(
         form === 'blue'
           ? [resolveItemRef(catalog, '6694', 'Rancor de Serylda: penetração % de armadura + aceleração + slow em alvos baixos.')]
           : [resolveItemRef(catalog, '3071', 'Cutelo Negro: quebra até 30% da armadura para o seu ADC também bater.')],
-    },
-    {
-      key: 'excesso_escudos',
-      label: 'Excesso de escudos inimigos',
-      shortCondition: 'Contra muitos escudos',
-      activeInDraft: heavyShieldCount >= 2,
-      triggerReason:
-        shieldChampions.length > 0
-          ? `Escudos relevantes em: ${shieldChampions.join(', ')}.`
-          : 'Contra encantadores e carries com muito escudo.',
-      items: [
-        resolveItemRef(catalog, '6695', 'Presa da Serpente: corta escudos pela metade com custo baixo — ótima no Azul e viável no Rhaast.'),
-      ],
     },
     {
       key: 'sobrevivencia',
@@ -536,42 +504,82 @@ export function buildItemRecommendation(
               resolveItemRef(catalog, '3026', 'Anjo Guardião: segunda vida quando você é o único assassino fechando lutas.'),
             ]
           : [
-              resolveItemRef(catalog, '6333', 'Dança da Morte: segura burst físico e limpa sangramento em abates.'),
+              resolveItemRef(catalog, '3065', 'Semblante Espiritual: amplifica cura do Rhaast e MR contra magos.'),
               resolveItemRef(catalog, '3053', 'Sinal de Sterak: escudo anti-burst + tenacidade em lutas 5v5.'),
               resolveItemRef(catalog, '3156', 'Mandíbula de Malmortius: contra duplo dano mágico / burst AP.'),
-              resolveItemRef(catalog, '3065', 'Semblante Espiritual: amplifica cura do Rhaast e MR contra magos.'),
+              resolveItemRef(catalog, '3026', 'Anjo Guardião: seguro extra em lutas decisivas de objetivo.'),
             ],
     },
     {
-      key: 'alvo_fragil',
-      label: 'Alvo frágil / Pickoff rápido',
-      shortCondition: 'Para explodir carries',
-      activeInDraft: form === 'blue' && squishyCount >= 3,
+      key: 'excesso_escudos',
+      label: 'Excesso de escudos inimigos',
+      shortCondition: 'Contra muitos escudos',
+      activeInDraft: heavyShieldCount >= 2,
       triggerReason:
-        squishyCount >= 3
-          ? `${squishyCount} alvos frágeis na composição inimiga.`
-          : 'Use se precisar explodir um carregador específico fora de posição.',
+        shieldChampions.length > 0
+          ? `Escudos relevantes em: ${shieldChampions.join(', ')}.`
+          : 'Contra encantadores e carries com muito escudo.',
       items: [
-        resolveItemRef(catalog, '6698', 'Hidra Profana: acelera clear e adiciona burst ativo no combo.'),
-        resolveItemRef(catalog, '6699', 'Cicloespada Voltaica: slow pesado no primeiro ataque para garantir W.'),
-        resolveItemRef(catalog, '3004', 'Manamune: opção de escala para spam de W/Q em jogos mais lentos.'),
+        resolveItemRef(catalog, '6695', 'Presa da Serpente: corta escudos pela metade com custo baixo — excelente no Azul e viável no Rhaast.'),
       ],
     },
     {
-      key: 'frontline_inimiga',
-      label: 'Frontline inimiga / Luta longa',
-      shortCondition: 'Contra frontline pesada',
-      activeInDraft: form === 'red' && frontlineCount >= 2,
+      key: 'excesso_cura',
+      label: 'Excesso de cura inimiga',
+      shortCondition: 'Contra muita cura',
+      activeInDraft: heavyHealingCount >= 2 || (heavyHealingCount >= 1 && frontlineCount >= 1),
       triggerReason:
-        frontlineCount >= 2
-          ? `${frontlineCount} campeões de linha de frente no time inimigo.`
-          : 'Para estender trocas contra lutadores e tanques.',
-      items: [
-        resolveItemRef(catalog, '6610', 'Céu Dividido: sustentação imediata ao trocar alvo no meio da luta.'),
-        resolveItemRef(catalog, '3071', 'Cutelo Negro: reduz armadura da frontline e entrega vida + aceleração.'),
-        resolveItemRef(catalog, '3161', 'Lança de Shojin: fortalece Q/W em rotações contínuas.'),
-      ],
+        healChampions.length > 0
+          ? `Cura forte em: ${healChampions.join(', ')}.`
+          : 'Contra campeões ou itens com muita cura.',
+      items:
+        form === 'red'
+          ? [
+              resolveItemRef(catalog, '3123', 'Chamado do Carrasco (800g): segure o componente cedo sem atrasar seu núcleo.'),
+              resolveItemRef(catalog, '3075', 'Armadura de Espinhos: corta cura contra times pesados em AD/ataque básico.'),
+              resolveItemRef(catalog, '6609', 'Serrespada Quimiopunk: fechamento com vida e aceleração.'),
+            ]
+          : [
+              resolveItemRef(catalog, '3123', 'Chamado do Carrasco (800g): segure só o componente se ninguém do time fizer corta-cura.'),
+              resolveItemRef(catalog, '6609', 'Serrespada Quimiopunk: fechamento final se precisar manter corta-cura.'),
+            ],
     },
+    ...(form !== 'red'
+      ? [
+          {
+            key: 'alvo_fragil' as const,
+            label: 'Pickoff / Carries com mobilidade',
+            shortCondition: 'Para garantir pickoff',
+            activeInDraft: form === 'blue' && squishyCount >= 3,
+            triggerReason:
+              squishyCount >= 3
+                ? `${squishyCount} alvos frágeis na composição inimiga.`
+                : 'Para prender carries móveis com slow e ampliar dano de combo.',
+            items: [
+              resolveItemRef(catalog, '6699', 'Cicloespada Voltaica: energiza no E/Q e aplica slow pesado para garantir o W.'),
+              resolveItemRef(catalog, '3004', 'Manamune: opção de escala para spam de W/Q em jogos mais longos.'),
+            ],
+          },
+        ]
+      : []),
+    ...(form !== 'blue'
+      ? [
+          {
+            key: 'frontline_inimiga' as const,
+            label: 'Frontline inimiga / Luta longa',
+            shortCondition: 'Contra frontline pesada',
+            activeInDraft: form === 'red' && frontlineCount >= 2,
+            triggerReason:
+              frontlineCount >= 2
+                ? `${frontlineCount} campeões de linha de frente no time inimigo.`
+                : 'Para estender trocas contra lutadores e tanques.',
+            items: [
+              resolveItemRef(catalog, '3161', 'Lança de Shojin: amplifica dano de Q/W/R e acelera rotações em lutas longas.'),
+              resolveItemRef(catalog, '6610', 'Céu Dividido: sustentação imediata ao trocar alvo dentro da frontline.'),
+            ],
+          },
+        ]
+      : []),
   ];
 
   const junglePet = resolveItemRef(catalog, blueprint.junglePet.id, blueprint.junglePet.reason);

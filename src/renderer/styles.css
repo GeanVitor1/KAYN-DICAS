@@ -177,6 +177,86 @@ textarea:focus-visible,
   background: var(--amber);
 }
 
+.live-pill-select {
+  border-color: var(--blue-border);
+  background: var(--blue-bg);
+  color: #bae6fd;
+}
+
+.live-pill-game {
+  border-color: var(--green-border);
+  background: var(--green-bg);
+  color: #a7f3d0;
+}
+
+.live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+}
+
+.live-dot-green {
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+}
+
+.live-dot-blue {
+  background: var(--blue);
+  box-shadow: 0 0 8px var(--blue);
+}
+
+.live-dot-idle {
+  background: #60a5fa;
+}
+
+.live-dot-off {
+  background: #64748b;
+}
+
+.live-telemetry-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 7px 10px;
+  border-radius: 9px;
+  background: rgba(52, 211, 153, 0.08);
+  border: 1px solid var(--green-border);
+}
+
+.item-live-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.item-owned .item-tile {
+  border-color: var(--green-border);
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.25);
+}
+
+.item-next .item-tile {
+  border-color: var(--blue);
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+}
+
+.item-owned-check {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #10b981;
+  color: #041b12;
+  border: 1.5px solid #090e18;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  pointer-events: none;
+}
+
 .icon-nav-btn {
   width: 34px;
   height: 34px;

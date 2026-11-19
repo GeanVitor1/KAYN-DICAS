@@ -25,6 +25,7 @@ import type {
 } from '../shared/types';
 import { AssetCacheService, parseAssetUrl } from './assetCacheService';
 import { DdragonCatalogService } from './ddragonService';
+import { LolLiveMonitorService } from './lolLiveService';
 import {
   fetchAndConvertRiotMatch,
   fetchRecentSoloQueueMatches,
@@ -68,6 +69,7 @@ let cardWindow: BrowserWindow | null = null;
 let appState: PersistedAppState;
 let catalogService: DdragonCatalogService;
 let assetCacheService: AssetCacheService;
+let lolLiveService: LolLiveMonitorService;
 let stateFilePath: string;
 let riotKeyFilePath: string;
 let sessionRiotApiKey = '';
@@ -127,6 +129,16 @@ function broadcastCardOptions(): void {
   for (const win of [mainWindow, cardWindow]) {
     if (win && !win.isDestroyed()) {
       win.webContents.send(IPC_CHANNELS.ON_CARD_OPTIONS_SYNC, appState.settings.cardWindow);
+    }
+  }
+}
+
+function broadcastLiveLolStatus(): void {
+  if (!lolLiveService) return;
+  const status = lolLiveService.getStatus();
+  for (const win of [mainWindow, cardWindow]) {
+    if (win && !win.isDestroyed()) {
+      win.webContents.send(IPC_CHANNELS.ON_LIVE_LOL_SYNC, status);
     }
   }
 }
@@ -334,10 +346,19 @@ function registerIpcHandlers(): void {
     state: appState,
     catalog: catalogService.getCatalog(),
     catalogStatus: catalogService.getStatus(),
+    liveLolStatus: lolLiveService.getStatus(),
     shortcutRegistered,
     cardWindowOpen: Boolean(cardWindow && !cardWindow.isDestroyed() && cardWindow.isVisible()),
     isExclusiveFullscreenCaveat: EXCLUSIVE_FULLSCREEN_NOTE,
   }));
+
+  ipcMain.handle(IPC_CHANNELS.GET_LIVE_LOL_STATUS, () => lolLiveService.getStatus());
+
+  ipcMain.handle(IPC_CHANNELS.POLL_LIVE_LOL_NOW, async () => {
+    const next = await lolLiveService.pollNow();
+    broadcastLiveLolStatus();
+    return next;
+  });
 
   ipcMain.handle(IPC_CHANNELS.UPDATE_CURRENT_DRAFT, (_e, draft: DraftState) => {
     appState = sanitizePersistedState({
@@ -431,6 +452,9 @@ function registerIpcHandlers(): void {
           : appState.settings.cardWindow,
       },
     });
+    if (typeof partial.liveLolSyncEnabled === 'boolean' && lolLiveService) {
+      lolLiveService.setEnabled(partial.liveLolSyncEnabled);
+    }
     persistState();
     return appState;
   });
@@ -1020,11 +1044,17 @@ app.whenReady().then(async () => {
   catalogService = new DdragonCatalogService(cacheFilePath, {
     assetCache: assetCacheService,
   });
+  lolLiveService = new LolLiveMonitorService({
+    getCatalog: () => catalogService.getCatalog(),
+    onChange: () => broadcastLiveLolStatus(),
+    enabled: !IS_SMOKE_TEST && !CAPTURE_SCREENS_DIR && appState.settings.liveLolSyncEnabled !== false,
+  });
 
   registerAssetProtocol();
   registerIpcHandlers();
   registerShortcuts();
   mainWindow = createMainWindow();
+  lolLiveService.start();
 
   if (IS_SMOKE_TEST || CAPTURE_SCREENS_DIR) {
     try {
@@ -1053,6 +1083,7 @@ app.whenReady().then(async () => {
 });
 
 app.on('will-quit', () => {
+  lolLiveService?.stop();
   globalShortcut.unregisterAll();
 });
 

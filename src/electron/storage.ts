@@ -31,6 +31,7 @@ export const DEFAULT_CARD_OPTIONS: CardWindowOptions = {
 
 export const DEFAULT_SETTINGS: AppSettings = {
   preferBlueAsTiebreaker: true,
+  liveLolSyncEnabled: true,
   cardWindow: { ...DEFAULT_CARD_OPTIONS },
   riotApiKeyMode: 'none',
   riotRegionRouting: 'americas',
@@ -163,6 +164,10 @@ export function sanitizePersistedState(raw: unknown): PersistedAppState {
       typeof rawSettings.preferBlueAsTiebreaker === 'boolean'
         ? rawSettings.preferBlueAsTiebreaker
         : defaults.settings.preferBlueAsTiebreaker,
+    liveLolSyncEnabled:
+      typeof rawSettings.liveLolSyncEnabled === 'boolean'
+        ? rawSettings.liveLolSyncEnabled
+        : true,
     cardWindow: sanitizeCardOptions(rawSettings.cardWindow),
     riotApiKeyMode:
       rawSettings.riotApiKeyMode === 'session_only' || rawSettings.riotApiKeyMode === 'saved_encrypted'

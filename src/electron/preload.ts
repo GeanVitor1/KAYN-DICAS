@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import type { KaynDesktopApi } from '../shared/ipc';
-import type { CardWindowOptions, PersistedAppState } from '../shared/types';
+import type { CardWindowOptions, LiveLolStatus, PersistedAppState } from '../shared/types';
 
 // Mantemos literais inline (sem require() relativo em runtime) para compatibilidade estrita com sandbox: true do Electron.
 const CHANNELS = {
@@ -29,8 +29,11 @@ const CHANNELS = {
   IMPORT_REVIEW_JSON: 'kayn:import-review-json',
   FETCH_RIOT_MATCHES: 'kayn:fetch-riot-matches',
   IMPORT_RIOT_MATCH: 'kayn:import-riot-match',
+  GET_LIVE_LOL_STATUS: 'kayn:get-live-lol-status',
+  POLL_LIVE_LOL_NOW: 'kayn:poll-live-lol-now',
   ON_STATE_SYNC: 'kayn:on-state-sync',
   ON_CARD_OPTIONS_SYNC: 'kayn:on-card-options-sync',
+  ON_LIVE_LOL_SYNC: 'kayn:on-live-lol-sync',
 } as const;
 
 const api: KaynDesktopApi = {
@@ -60,6 +63,8 @@ const api: KaynDesktopApi = {
   importReviewJson: () => ipcRenderer.invoke(CHANNELS.IMPORT_REVIEW_JSON),
   fetchRiotMatches: (params) => ipcRenderer.invoke(CHANNELS.FETCH_RIOT_MATCHES, params),
   importRiotMatch: (params) => ipcRenderer.invoke(CHANNELS.IMPORT_RIOT_MATCH, params),
+  getLiveLolStatus: () => ipcRenderer.invoke(CHANNELS.GET_LIVE_LOL_STATUS),
+  pollLiveLolNow: () => ipcRenderer.invoke(CHANNELS.POLL_LIVE_LOL_NOW),
   onStateSync: (cb) => {
     const listener = (_event: Electron.IpcRendererEvent, state: PersistedAppState) => cb(state);
     ipcRenderer.on(CHANNELS.ON_STATE_SYNC, listener);
@@ -69,6 +74,11 @@ const api: KaynDesktopApi = {
     const listener = (_event: Electron.IpcRendererEvent, options: CardWindowOptions) => cb(options);
     ipcRenderer.on(CHANNELS.ON_CARD_OPTIONS_SYNC, listener);
     return () => ipcRenderer.removeListener(CHANNELS.ON_CARD_OPTIONS_SYNC, listener);
+  },
+  onLiveLolSync: (cb) => {
+    const listener = (_event: Electron.IpcRendererEvent, status: LiveLolStatus) => cb(status);
+    ipcRenderer.on(CHANNELS.ON_LIVE_LOL_SYNC, listener);
+    return () => ipcRenderer.removeListener(CHANNELS.ON_LIVE_LOL_SYNC, listener);
   },
 };
 

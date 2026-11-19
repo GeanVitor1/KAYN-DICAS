@@ -5,6 +5,7 @@ import type {
   CatalogSnapshot,
   DraftState,
   FrozenPreGameCard,
+  LiveLolStatus,
   PersistedAppState,
   ReviewMatch,
   StudyLesson,
@@ -38,14 +39,18 @@ export const IPC_CHANNELS = {
   IMPORT_REVIEW_JSON: 'kayn:import-review-json',
   FETCH_RIOT_MATCHES: 'kayn:fetch-riot-matches',
   IMPORT_RIOT_MATCH: 'kayn:import-riot-match',
+  GET_LIVE_LOL_STATUS: 'kayn:get-live-lol-status',
+  POLL_LIVE_LOL_NOW: 'kayn:poll-live-lol-now',
   ON_STATE_SYNC: 'kayn:on-state-sync',
   ON_CARD_OPTIONS_SYNC: 'kayn:on-card-options-sync',
+  ON_LIVE_LOL_SYNC: 'kayn:on-live-lol-sync',
 } as const;
 
 export interface InitialHydrationPayload {
   state: PersistedAppState;
   catalog: CatalogSnapshot;
   catalogStatus: CatalogStatus;
+  liveLolStatus?: LiveLolStatus;
   shortcutRegistered: boolean;
   cardWindowOpen: boolean;
   isExclusiveFullscreenCaveat: string;
@@ -124,6 +129,9 @@ export interface KaynDesktopApi {
     review?: ReviewMatch;
     error?: string;
   }>;
+  getLiveLolStatus: () => Promise<LiveLolStatus>;
+  pollLiveLolNow: () => Promise<LiveLolStatus>;
   onStateSync: (cb: (state: PersistedAppState) => void) => () => void;
   onCardOptionsSync: (cb: (options: CardWindowOptions) => void) => () => void;
+  onLiveLolSync: (cb: (status: LiveLolStatus) => void) => () => void;
 }

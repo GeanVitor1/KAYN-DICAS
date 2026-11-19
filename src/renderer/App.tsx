@@ -7,6 +7,7 @@ import {
   Target,
 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
+import { formatGameClock } from '../engine/liveLolParser';
 import {
   buildFrozenMicroCards,
   getAllStudyLessons,
@@ -18,6 +19,7 @@ import type {
   CardWindowOptions,
   DraftState,
   FrozenPreGameCard,
+  LiveLolStatus,
   PersistedAppState,
   ReviewMatch,
   StudyLesson,
@@ -38,6 +40,7 @@ export function App() {
   const api = getDesktopApi();
 
   const [hydration, setHydration] = useState<InitialHydrationPayload | null>(null);
+  const [liveLolStatus, setLiveLolStatus] = useState<LiveLolStatus | null>(null);
   const [activeTab, setActiveTab] = useState<TabKey>('draft');
   const [selectedTrainingScenarioId, setSelectedTrainingScenarioId] = useState<string | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -47,7 +50,12 @@ export function App() {
     api
       .getInitialState()
       .then((payload) => {
-        if (mounted) setHydration(payload);
+        if (mounted) {
+          setHydration(payload);
+          if (payload.liveLolStatus) {
+            setLiveLolStatus(payload.liveLolStatus);
+          }
+        }
       })
       .catch((err) => {
         if (mounted) {
@@ -73,11 +81,15 @@ export function App() {
           : prev,
       );
     });
+    const unsubLive = api.onLiveLolSync((nextLive: LiveLolStatus) => {
+      setLiveLolStatus(nextLive);
+    });
 
     return () => {
       mounted = false;
       unsubState();
       unsubOpts();
+      unsubLive();
     };
   }, [api]);
 
@@ -124,6 +136,12 @@ export function App() {
     return (
       <CardWindowPage
         frozenCard={state.frozenCard}
+        liveLolStatus={liveLolStatus}
+        tacticalRules={tacticalRules}
+        pinnedReminderIds={state.pinnedReminderIds ?? []}
+        tacticalRuleNotes={state.tacticalRuleNotes ?? {}}
+        pinnedMicroCards={pinnedMicroCards}
+        preferBlueAsTiebreaker={state.settings.preferBlueAsTiebreaker}
         catalog={catalog}
         options={state.settings.cardWindow}
         onUpdateOptions={async (partial) => {
@@ -153,6 +171,16 @@ export function App() {
     !catalogStatus.validation.validRecommendations ||
     Boolean(catalogStatus.lastError);
   const isOfflineSource = catalogStatus.sourceMode === 'bundled_offline';
+
+  const livePhase = liveLolStatus?.phase ?? 'disconnected';
+  const liveLabel =
+    livePhase === 'in_game'
+      ? `Em Partida · ${formatGameClock(liveLolStatus?.liveMatch?.gameTimeSeconds ?? 0)}`
+      : livePhase === 'champ_select'
+        ? 'Seleção ao vivo'
+        : livePhase === 'client_idle'
+          ? 'LoL aberto'
+          : 'Aguardando LoL';
 
   return (
     <div className="app-shell">
@@ -202,6 +230,36 @@ export function App() {
         <div className="topbar-right">
           <button
             type="button"
+            data-testid="live-lol-pill"
+            className={`patch-pill ${
+              livePhase === 'in_game'
+                ? 'live-pill-game'
+                : livePhase === 'champ_select'
+                  ? 'live-pill-select'
+                  : ''
+            }`}
+            title={liveLolStatus?.sourceLabel ?? 'Clique para verificar conexão com o League of Legends'}
+            onClick={() => {
+              void api.pollLiveLolNow().then(setLiveLolStatus);
+              setActiveTab('draft');
+            }}
+          >
+            <span
+              className={`live-dot ${
+                livePhase === 'in_game'
+                  ? 'live-dot-green'
+                  : livePhase === 'champ_select'
+                    ? 'live-dot-blue'
+                    : livePhase === 'client_idle'
+                      ? 'live-dot-idle'
+                      : 'live-dot-off'
+              }`}
+            />
+            <span>{liveLabel}</span>
+          </button>
+
+          <button
+            type="button"
             data-testid="patch-indicator"
             className={`patch-pill ${hasPatchAlert ? 'patch-pill-warn' : ''}`}
             title={
@@ -240,12 +298,17 @@ export function App() {
             draft={state.currentDraft}
             savedDrafts={state.savedDrafts}
             frozenCard={state.frozenCard}
+            liveLolStatus={liveLolStatus}
             pinnedMicroCards={pinnedMicroCards}
             tacticalRules={tacticalRules}
             pinnedReminderIds={state.pinnedReminderIds ?? []}
             tacticalRuleNotes={state.tacticalRuleNotes ?? {}}
             catalog={catalog}
             preferBlueAsTiebreaker={state.settings.preferBlueAsTiebreaker}
+            onRefreshLiveLol={async () => {
+              const next = await api.pollLiveLolNow();
+              setLiveLolStatus(next);
+            }}
             onChangeDraft={(next: DraftState) => {
               updateState({ ...state, currentDraft: next });
               void api.updateCurrentDraft(next);
@@ -382,8 +445,13 @@ export function App() {
           <SettingsPage
             settings={state.settings}
             catalogStatus={catalogStatus}
+            liveLolStatus={liveLolStatus}
             shortcutRegistered={hydration.shortcutRegistered}
             exclusiveFullscreenNote={hydration.isExclusiveFullscreenCaveat}
+            onPollLiveLolNow={async () => {
+              const next = await api.pollLiveLolNow();
+              setLiveLolStatus(next);
+            }}
             onUpdateSettings={async (partial) => {
               const next = await api.updateSettings(partial);
               updateState(next);

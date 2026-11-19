@@ -1,13 +1,16 @@
 import {
   AlertTriangle,
   BookmarkPlus,
+  Check,
   ChevronDown,
   ChevronRight,
   ChevronUp,
+  Coins,
   ExternalLink,
   HelpCircle,
   Layers,
   Pin,
+  Radio,
   RotateCcw,
   Sparkles,
   Swords,
@@ -20,6 +23,10 @@ import {
   createFrozenCardFromAnalysis,
   getShortFormReason,
 } from '../../engine/draftAnalyzer';
+import {
+  computeNextBuildStep,
+  formatGameClock,
+} from '../../engine/liveLolParser';
 import { selectPreGameReminders } from '../../engine/tacticalMemory';
 import type {
   CatalogSnapshot,
@@ -27,6 +34,7 @@ import type {
   FrozenMicroComboCard,
   FrozenPreGameCard,
   LaneRole,
+  LiveLolStatus,
   TacticalRule,
   TargetLane,
 } from '../../shared/types';
@@ -51,10 +59,18 @@ const LANE_SHORT: Record<TargetLane, string> = {
   bot: 'Bot',
 };
 
+const THREAT_LABEL: Record<string, string> = {
+  armor: 'Armadura',
+  healing: 'Cura',
+  shields: 'Escudo',
+  defensive: 'Defesa',
+};
+
 export function DraftPage({
   draft,
   savedDrafts,
   frozenCard,
+  liveLolStatus,
   pinnedMicroCards,
   tacticalRules,
   pinnedReminderIds,
@@ -68,10 +84,12 @@ export function DraftPage({
   onTogglePinnedReminder,
   onFreezeCard,
   onOpenCardWindow,
+  onRefreshLiveLol,
 }: {
   draft: DraftState;
   savedDrafts: DraftState[];
   frozenCard: FrozenPreGameCard | null;
+  liveLolStatus?: LiveLolStatus | null;
   pinnedMicroCards: FrozenMicroComboCard[];
   tacticalRules: TacticalRule[];
   pinnedReminderIds: string[];
@@ -85,15 +103,54 @@ export function DraftPage({
   onTogglePinnedReminder: (ruleId: string) => Promise<void>;
   onFreezeCard: (card: FrozenPreGameCard) => Promise<void>;
   onOpenCardWindow: () => Promise<void>;
+  onRefreshLiveLol?: () => Promise<void>;
 }) {
   const [freezeNotice, setFreezeNotice] = useState<string | null>(null);
   const [showWhy, setShowWhy] = useState(false);
   const [showSituational, setShowSituational] = useState(false);
   const [splashFailed, setSplashFailed] = useState(false);
+  const [manualOverrideDuringLive, setManualOverrideDuringLive] = useState(false);
+
+  const hasLiveDraft = Boolean(
+    liveLolStatus &&
+      (liveLolStatus.phase === 'champ_select' || liveLolStatus.phase === 'in_game') &&
+      liveLolStatus.liveDraft,
+  );
+  const isLiveActive = hasLiveDraft && !manualOverrideDuringLive;
+  const liveMatch = isLiveActive && liveLolStatus?.phase === 'in_game' ? liveLolStatus.liveMatch : null;
+
+  const effectiveDraft: DraftState = useMemo(() => {
+    if (isLiveActive && liveLolStatus?.liveDraft) {
+      return {
+        ...draft,
+        id: liveLolStatus.phase === 'in_game' ? 'live-in-game' : 'live-champ-select',
+        name:
+          liveLolStatus.phase === 'in_game'
+            ? 'Partida ao vivo (LoL)'
+            : 'Seleção de Campeões ao vivo',
+        allies: liveLolStatus.liveDraft.allies,
+        enemies: liveLolStatus.liveDraft.enemies,
+      };
+    }
+    return draft;
+  }, [draft, isLiveActive, liveLolStatus]);
 
   const analysis = useMemo(
-    () => analyzeDraft(draft, catalog, { preferBlueAsTiebreaker }),
-    [draft, catalog, preferBlueAsTiebreaker],
+    () => analyzeDraft(effectiveDraft, catalog, { preferBlueAsTiebreaker }),
+    [effectiveDraft, catalog, preferBlueAsTiebreaker],
+  );
+
+  const nextBuildStep = useMemo(
+    () =>
+      liveMatch
+        ? computeNextBuildStep(analysis.build, liveMatch.ownedItemIds, liveMatch.currentGold)
+        : null,
+    [analysis.build, liveMatch],
+  );
+
+  const ownedItemSet = useMemo(
+    () => new Set(liveMatch?.ownedItemIds ?? []),
+    [liveMatch],
   );
 
   const preGameReminders = useMemo(
@@ -103,18 +160,19 @@ export function DraftPage({
         tacticalRules,
         pinnedReminderIds,
         tacticalRuleNotes,
-        draft.staticNotes,
+        effectiveDraft.staticNotes,
       ),
-    [analysis, tacticalRules, pinnedReminderIds, tacticalRuleNotes, draft.staticNotes],
+    [analysis, tacticalRules, pinnedReminderIds, tacticalRuleNotes, effectiveDraft.staticNotes],
   );
 
   const shortReason = useMemo(() => getShortFormReason(analysis), [analysis]);
 
   const updateSlot = (side: 'allies' | 'enemies', role: LaneRole, champId: string | null) => {
+    if (hasLiveDraft) setManualOverrideDuringLive(true);
     onChangeDraft({
-      ...draft,
+      ...effectiveDraft,
       [side]: {
-        ...draft[side],
+        ...effectiveDraft[side],
         [role]: champId,
       },
       updatedAt: new Date().toISOString(),
@@ -122,13 +180,14 @@ export function DraftPage({
   };
 
   const swapWithNextRole = (side: 'allies' | 'enemies', roleIndex: number) => {
+    if (hasLiveDraft) setManualOverrideDuringLive(true);
     const r1 = ROLES[roleIndex].role;
     const r2 = ROLES[(roleIndex + 1) % ROLES.length].role;
     if (side === 'allies' && (r1 === 'jungle' || r2 === 'jungle')) {
       const target = ROLES[(roleIndex + 2) % ROLES.length].role;
-      const sideObj = draft[side];
+      const sideObj = effectiveDraft[side];
       onChangeDraft({
-        ...draft,
+        ...effectiveDraft,
         [side]: {
           ...sideObj,
           [r1]: sideObj[target],
@@ -138,9 +197,9 @@ export function DraftPage({
       });
       return;
     }
-    const sideObj = draft[side];
+    const sideObj = effectiveDraft[side];
     onChangeDraft({
-      ...draft,
+      ...effectiveDraft,
       [side]: {
         ...sideObj,
         [r1]: sideObj[r2],
@@ -150,9 +209,14 @@ export function DraftPage({
     });
   };
 
+  const loadManualDemo = (next: DraftState) => {
+    if (hasLiveDraft) setManualOverrideDuringLive(true);
+    onChangeDraft(next);
+  };
+
   const handleFreeze = async () => {
     const card = createFrozenCardFromAnalysis(
-      draft,
+      effectiveDraft,
       analysis,
       pinnedMicroCards,
       preGameReminders.slice(0, 2).map((r) => ({
@@ -163,7 +227,7 @@ export function DraftPage({
     );
     await onFreezeCard(card);
     setFreezeNotice(
-      `Plano salvo às ${new Date(card.frozenAt).toLocaleTimeString('pt-BR')} (estático na partida).`,
+      `Plano salvo às ${new Date(card.frozenAt).toLocaleTimeString('pt-BR')}.`,
     );
   };
 
@@ -182,11 +246,7 @@ export function DraftPage({
         : 'form-hero-open';
 
   const keystoneAccent: 'gold' | 'blue' | 'red' =
-    analysis.recommendedForm === 'blue'
-      ? 'blue'
-      : analysis.recommendedForm === 'red'
-        ? 'gold'
-        : 'gold';
+    analysis.recommendedForm === 'blue' ? 'blue' : 'gold';
 
   const keystone = analysis.runes.primaryRunes[0];
   const primaryMinors = analysis.runes.primaryRunes.slice(1);
@@ -212,43 +272,79 @@ export function DraftPage({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
-      {/* Barra compacta superior */}
+      {/* Barra compacta superior: Status ao vivo do LoL + Simular offline + Ações */}
       <div className="toolbar">
         <div className="toolbar-group">
+          {isLiveActive ? (
+            <span
+              data-testid="draft-live-badge"
+              className={`badge ${liveLolStatus?.phase === 'in_game' ? 'badge-green' : 'badge-blue'}`}
+            >
+              <Radio size={11} />
+              {liveLolStatus?.phase === 'in_game'
+                ? `LoL em partida · ${formatGameClock(liveMatch?.gameTimeSeconds ?? 0)}`
+                : 'Seleção de Campeões ao vivo (LCU)'}
+            </span>
+          ) : hasLiveDraft ? (
+            <button
+              type="button"
+              className="btn btn-xs btn-blue"
+              onClick={() => setManualOverrideDuringLive(false)}
+            >
+              <Radio size={12} /> Voltar ao LoL ao vivo
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="btn btn-xs"
+              title="Procurar Seleção de Campeões ou Partida ativa no League of Legends"
+              onClick={() => void onRefreshLiveLol?.()}
+            >
+              <Radio size={12} color="var(--muted)" />
+              {liveLolStatus?.phase === 'client_idle'
+                ? 'LoL aberto (entre na Seleção)'
+                : 'Detectar LoL'}
+            </button>
+          )}
+
+          <span className="small-text muted-text" style={{ marginLeft: 4 }}>
+            Simular:
+          </span>
           <button
             type="button"
             data-testid="demo-blue"
             className="btn btn-blue btn-xs"
-            onClick={() => onChangeDraft({ ...DEMO_DRAFTS.blue })}
+            onClick={() => loadManualDemo({ ...DEMO_DRAFTS.blue })}
           >
-            Demo Azul
+            Azul
           </button>
           <button
             type="button"
             data-testid="demo-red"
             className="btn btn-red btn-xs"
-            onClick={() => onChangeDraft({ ...DEMO_DRAFTS.red })}
+            onClick={() => loadManualDemo({ ...DEMO_DRAFTS.red })}
           >
-            Demo Rhaast
+            Rhaast
           </button>
           <button
             type="button"
             data-testid="demo-balanced"
             className="btn btn-amber btn-xs"
-            onClick={() => onChangeDraft({ ...DEMO_DRAFTS.balanced })}
+            onClick={() => loadManualDemo({ ...DEMO_DRAFTS.balanced })}
           >
             Equilibrado
           </button>
           <button
             type="button"
             className="btn btn-xs btn-ghost"
-            onClick={() => onChangeDraft(createEmptyDraft())}
+            title="Limpar draft manual"
+            onClick={() => loadManualDemo(createEmptyDraft())}
           >
-            <RotateCcw size={12} /> Limpar
+            <RotateCcw size={12} />
           </button>
           <label
             className="switch-row"
-            style={{ marginLeft: 4, fontSize: 12 }}
+            style={{ marginLeft: 2, fontSize: 12 }}
             title="Usado apenas como desempate em drafts equilibrados — nunca mascara um Rhaast claro"
           >
             <input
@@ -263,7 +359,7 @@ export function DraftPage({
         <div className="toolbar-group">
           {freezeNotice ? (
             <span className="badge badge-green">{freezeNotice}</span>
-          ) : frozenCard ? (
+          ) : frozenCard && !isLiveActive ? (
             <span className="badge badge-muted">
               Plano salvo · {new Date(frozenCard.frozenAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
             </span>
@@ -301,15 +397,17 @@ export function DraftPage({
               {ROLES.map((item, idx) => (
                 <ChampionPortraitSlot
                   key={`ally-${item.role}`}
-                  value={draft.allies[item.role]}
+                  value={effectiveDraft.allies[item.role]}
                   roleLabel={item.short}
                   side="ally"
                   catalog={catalog}
-                  disabled={item.role === 'jungle'}
+                  disabled={!isLiveActive && item.role === 'jungle'}
                   ariaLabel={`Aliado ${item.label}`}
                   onChange={(id) => updateSlot('allies', item.role, id)}
                   onSwapNext={
-                    item.role === 'jungle' ? undefined : () => swapWithNextRole('allies', idx)
+                    !isLiveActive && item.role === 'jungle'
+                      ? undefined
+                      : () => swapWithNextRole('allies', idx)
                   }
                 />
               ))}
@@ -323,7 +421,7 @@ export function DraftPage({
               {ROLES.map((item, idx) => (
                 <ChampionPortraitSlot
                   key={`enemy-${item.role}`}
-                  value={draft.enemies[item.role]}
+                  value={effectiveDraft.enemies[item.role]}
                   roleLabel={item.short}
                   side="enemy"
                   catalog={catalog}
@@ -356,7 +454,13 @@ export function DraftPage({
 
             <div className="form-hero-body">
               <div className="form-hero-kicker">
-                <span>Recomendação</span>
+                <span>
+                  {isLiveActive
+                    ? liveLolStatus?.phase === 'in_game'
+                      ? 'Partida ao vivo'
+                      : 'Seleção ao vivo'
+                    : 'Recomendação'}
+                </span>
                 <ConfidenceBadge level={analysis.confidence.level} />
               </div>
 
@@ -387,8 +491,33 @@ export function DraftPage({
           </div>
         </section>
 
-        {/* COLUNA DIREITA: RUNAS VISUAIS + BUILD VISUAL */}
+        {/* COLUNA DIREITA: RUNAS VISUAIS + TELEMETRIA AO VIVO (SE EM PARTIDA) + BUILD VISUAL */}
         <section className="draft-right-col" aria-label="Runas e build recomendadas">
+          {/* TELEMETRIA REAL EM PARTIDA (SÓ QUANDO EM JOGO) */}
+          {liveMatch ? (
+            <div className="live-telemetry-bar" data-testid="live-match-bar">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                <span className="badge badge-green mono">{formatGameClock(liveMatch.gameTimeSeconds)}</span>
+                <span className="small-text">
+                  <strong>Nv {liveMatch.level}</strong> · {liveMatch.kills}/{liveMatch.deaths}/{liveMatch.assists} · {liveMatch.totalCreepScore} CS (HUD)
+                </span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Coins size={13} color="var(--amber)" />
+                <strong className="small-text mono" style={{ color: '#fde68a' }}>
+                  {liveMatch.currentGold}g
+                </strong>
+                {nextBuildStep?.nextItem ? (
+                  <span className="small-text muted-text">
+                    {nextBuildStep.canAffordNow
+                      ? `· fecha ${nextBuildStep.nextItem.name}!`
+                      : `· faltam ${nextBuildStep.goldNeeded}g p/ ${nextBuildStep.nextItem.name}`}
+                  </span>
+                ) : null}
+              </div>
+            </div>
+          ) : null}
+
           {/* RUNAS */}
           <div className="rune-section-block" data-testid="draft-runes-section">
             <div className="panel-header">
@@ -405,7 +534,6 @@ export function DraftPage({
             </div>
 
             <div className="rune-visual-board">
-              {/* Runa principal grande + nome sempre visível */}
               <div className="rune-keystone-col">
                 <RuneIconTile
                   patch={catalog.patch}
@@ -427,7 +555,6 @@ export function DraftPage({
 
               <div className="rune-divider" aria-hidden="true" />
 
-              {/* Árvore principal (menores), secundária e fragmentos na ordem do cliente */}
               <div className="rune-rows-col">
                 <div className="rune-row-line" aria-label="Runas da árvore principal">
                   <span className="rune-row-tag">Principal</span>
@@ -512,27 +639,49 @@ export function DraftPage({
               </div>
             </div>
 
-            {/* Núcleo em ordem visual */}
+            {/* Núcleo em ordem visual (com check nos itens já comprados em partida!) */}
             <div className="build-core-row" aria-label="Núcleo da build em ordem">
-              {analysis.build.core.map((item, idx) => (
-                <div key={`${item.id}-${idx}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                  <ItemIconTile
-                    patch={catalog.patch}
-                    iconFile={item.icon}
-                    name={item.name}
-                    gold={item.gold}
-                    reason={item.reason}
-                    size={54}
-                    invalid={!item.availableInCatalog}
-                  />
-                  {idx < analysis.build.core.length - 1 ? (
-                    <span className="build-arrow" aria-hidden="true">
-                      <ChevronRight size={16} />
-                    </span>
-                  ) : null}
-                </div>
-              ))}
+              {analysis.build.core.map((item, idx) => {
+                const isOwned = ownedItemSet.has(item.id);
+                const isNext = nextBuildStep?.nextItem?.id === item.id;
+                return (
+                  <div key={`${item.id}-${idx}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                    <div className={`item-live-wrap ${isOwned ? 'item-owned' : ''} ${isNext ? 'item-next' : ''}`}>
+                      <ItemIconTile
+                        patch={catalog.patch}
+                        iconFile={item.icon}
+                        name={item.name}
+                        gold={item.gold}
+                        reason={isOwned ? 'Já comprado nesta partida.' : item.reason}
+                        size={54}
+                        invalid={!item.availableInCatalog}
+                      />
+                      {isOwned ? (
+                        <span className="item-owned-check" title="Comprado">
+                          <Check size={11} strokeWidth={3} />
+                        </span>
+                      ) : null}
+                    </div>
+                    {idx < analysis.build.core.length - 1 ? (
+                      <span className="build-arrow" aria-hidden="true">
+                        <ChevronRight size={16} />
+                      </span>
+                    ) : null}
+                  </div>
+                );
+              })}
             </div>
+
+            {/* Alertas factuais de itens comprados pelos inimigos ao vivo */}
+            {liveMatch && liveMatch.enemyItemThreats.length > 0 ? (
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                {liveMatch.enemyItemThreats.slice(0, 3).map((th, idx) => (
+                  <span key={`${th.championId}-${th.itemId}-${idx}`} className="badge badge-amber">
+                    {th.championName}: {th.itemName} ({THREAT_LABEL[th.threat]})
+                  </span>
+                ))}
+              </div>
+            ) : null}
 
             {/* Linha compacta: Pet + Botas */}
             <div className="build-support-strip">
@@ -571,7 +720,7 @@ export function DraftPage({
               </div>
             </div>
 
-            {/* Situacionais compactos sob demanda */}
+            {/* Situacionais estritamente filtrados pela forma */}
             {showSituational ? (
               <div className="situational-pills-row" data-testid="situational-panel">
                 {analysis.build.situational.map((cat) => {
@@ -695,12 +844,12 @@ export function DraftPage({
             {preGameReminders[0]?.text ?? 'Sem janela na Bot? Volte pros campos.'}
           </div>
           <div className="strip-sub">
-            {preGameReminders[1]?.text ?? 'O app não vê a wave — confirme espaço e visão antes de entrar.'}
+            {preGameReminders[1]?.text ?? 'A API oficial não informa posição de waves — confirme visão antes de entrar.'}
           </div>
         </div>
       </section>
 
-      {/* DETALHES EXPANSÍVEIS (ABAIXO DA DOBRA — PRESERVA TODAS AS FUNCIONALIDADES) */}
+      {/* DETALHES EXPANSÍVEIS */}
       <ExpandableSection title="Detalhes das 3 lanes (Top / Mid / Bot) e mapa pré-jogo">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           <div className="grid-3">
@@ -747,9 +896,9 @@ export function DraftPage({
               <input
                 type="text"
                 className="input"
-                value={draft.name}
+                value={effectiveDraft.name}
                 onChange={(e) =>
-                  onChangeDraft({ ...draft, name: e.target.value, updatedAt: new Date().toISOString() })
+                  onChangeDraft({ ...effectiveDraft, name: e.target.value, updatedAt: new Date().toISOString() })
                 }
               />
             </label>
@@ -758,10 +907,10 @@ export function DraftPage({
               <textarea
                 className="textarea"
                 placeholder="Ex.: Não forçar Bot contra Ezreal + Lulu sem Flash do suporte."
-                value={draft.staticNotes}
+                value={effectiveDraft.staticNotes}
                 onChange={(e) =>
                   onChangeDraft({
-                    ...draft,
+                    ...effectiveDraft,
                     staticNotes: e.target.value,
                     updatedAt: new Date().toISOString(),
                   })
@@ -769,7 +918,7 @@ export function DraftPage({
               />
             </label>
             <div>
-              <button type="button" className="btn btn-xs" onClick={() => onSaveDraft(draft)}>
+              <button type="button" className="btn btn-xs" onClick={() => onSaveDraft(effectiveDraft)}>
                 <BookmarkPlus size={12} /> Salvar draft na lista
               </button>
             </div>
@@ -785,7 +934,7 @@ export function DraftPage({
                   <button
                     type="button"
                     className="btn btn-xs"
-                    onClick={() => onChangeDraft({ ...sd })}
+                    onClick={() => loadManualDemo({ ...sd })}
                   >
                     <Layers size={11} /> {sd.name}
                   </button>

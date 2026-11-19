@@ -672,9 +672,79 @@ export interface ReviewAnalysis {
 
 export interface AppSettings {
   preferBlueAsTiebreaker: boolean;
+  liveLolSyncEnabled?: boolean;
   cardWindow: CardWindowOptions;
   riotApiKeyMode: 'none' | 'session_only' | 'saved_encrypted';
   riotRegionRouting: 'americas';
+}
+
+export type LiveLolPhase =
+  | 'disconnected'
+  | 'client_idle'
+  | 'champ_select'
+  | 'in_game';
+
+export interface LiveItemSummary {
+  itemId: string;
+  name: string;
+  count: number;
+  slot: number;
+}
+
+export interface LiveEnemyThreatItem {
+  championId: string;
+  championName: string;
+  itemId: string;
+  itemName: string;
+  threat: 'armor' | 'healing' | 'shields' | 'defensive';
+}
+
+export interface LiveMatchTelemetry {
+  gameTimeSeconds: number;
+  gameMode: string;
+  mapNumber: number;
+  playerChampionId: string | null;
+  playerChampionName: string;
+  playerTeam: 'ORDER' | 'CHAOS';
+  level: number;
+  currentGold: number;
+  currentHealth: number;
+  maxHealth: number;
+  kills: number;
+  deaths: number;
+  assists: number;
+  /** CS total oficial do HUD da Live Client Data API (a API não separa minions de lane vs campos da selva). */
+  totalCreepScore: number;
+  ownedItemIds: string[];
+  ownedItems: LiveItemSummary[];
+  enemyItemThreats: LiveEnemyThreatItem[];
+  objectivesTaken: {
+    allyDragons: number;
+    enemyDragons: number;
+    allyBarons: number;
+    enemyBarons: number;
+    allyHeralds: number;
+    enemyHeralds: number;
+    allyGrubs: number;
+    enemyGrubs: number;
+  };
+}
+
+export interface LiveLolStatus {
+  phase: LiveLolPhase;
+  enabled: boolean;
+  lastUpdatedAt: string | null;
+  sourceLabel: string;
+  liveDraft: {
+    allies: DraftSide;
+    enemies: DraftSide;
+    isMyTeamComplete: boolean;
+    revealedEnemiesCount: number;
+    localPlayerPosition: LaneRole | null;
+    localPlayerChampionId: string | null;
+  } | null;
+  liveMatch: LiveMatchTelemetry | null;
+  error?: string;
 }
 
 export interface PersistedAppState {
