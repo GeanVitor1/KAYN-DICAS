@@ -1,0 +1,5190 @@
+{
+  "patch": "16.23.1",
+  "locale": "pt_BR",
+  "mapId": 11,
+  "fetchedAt": "2026-11-19T02:02:45.964Z",
+  "source": "Riot Data Dragon",
+  "championCount": 173,
+  "itemCount": 215,
+  "runeTreeCount": 5,
+  "champions": {
+    "Aatrox": {
+      "id": "Aatrox",
+      "key": "266",
+      "name": "Aatrox",
+      "title": "a Espada Darkin",
+      "tags": [
+        "Fighter"
+      ],
+      "attackrange": 175
+    },
+    "Ahri": {
+      "id": "Ahri",
+      "key": "103",
+      "name": "Ahri",
+      "title": "a Raposa de Nove Caudas",
+      "tags": [
+        "Mage",
+        "Assassin"
+      ],
+      "attackrange": 550
+    },
+    "Akali": {
+      "id": "Akali",
+      "key": "84",
+      "name": "Akali",
+      "title": "a Assassina Renegada",
+      "tags": [
+        "Assassin"
+      ],
+      "attackrange": 125
+    },
+    "Akshan": {
+      "id": "Akshan",
+      "key": "166",
+      "name": "Akshan",
+      "title": "o Sentinela Rebelde",
+      "tags": [
+        "Marksman",
+        "Assassin"
+      ],
+      "attackrange": 500
+    },
+    "Alistar": {
+      "id": "Alistar",
+      "key": "12",
+      "name": "Alistar",
+      "title": "o Minotauro",
+      "tags": [
+        "Tank",
+        "Support"
+      ],
+      "attackrange": 125
+    },
+    "Ambessa": {
+      "id": "Ambessa",
+      "key": "799",
+      "name": "Ambessa",
+      "title": "Matriarca da Guerra",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "attackrange": 125
+    },
+    "Amumu": {
+      "id": "Amumu",
+      "key": "32",
+      "name": "Amumu",
+      "title": "a Múmia Triste",
+      "tags": [
+        "Tank",
+        "Support"
+      ],
+      "attackrange": 125
+    },
+    "Anivia": {
+      "id": "Anivia",
+      "key": "34",
+      "name": "Anivia",
+      "title": "a Criofênix",
+      "tags": [
+        "Mage"
+      ],
+      "attackrange": 600
+    },
+    "Annie": {
+      "id": "Annie",
+      "key": "1",
+      "name": "Annie",
+      "title": "a Criança Sombria",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "attackrange": 625
+    },
+    "Aphelios": {
+      "id": "Aphelios",
+      "key": "523",
+      "name": "Aphelios",
+      "title": "a Arma dos Devotos",
+      "tags": [
+        "Marksman"
+      ],
+      "attackrange": 550
+    },
+    "Ashe": {
+      "id": "Ashe",
+      "key": "22",
+      "name": "Ashe",
+      "title": "a Arqueira do Gelo",
+      "tags": [
+        "Marksman",
+        "Support"
+      ],
+      "attackrange": 600
+    },
+    "AurelionSol": {
+      "id": "AurelionSol",
+      "key": "136",
+      "name": "Aurelion Sol",
+      "title": "o Forjador de Estrelas",
+      "tags": [
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "Aurora": {
+      "id": "Aurora",
+      "key": "893",
+      "name": "Aurora",
+      "title": "a Bruxa Entre Mundos",
+      "tags": [
+        "Mage",
+        "Assassin"
+      ],
+      "attackrange": 550
+    },
+    "Azir": {
+      "id": "Azir",
+      "key": "268",
+      "name": "Azir",
+      "title": "o Imperador das Areias",
+      "tags": [
+        "Mage",
+        "Marksman"
+      ],
+      "attackrange": 550
+    },
+    "Bard": {
+      "id": "Bard",
+      "key": "432",
+      "name": "Bardo",
+      "title": "o Protetor Andarilho",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "attackrange": 500
+    },
+    "Belveth": {
+      "id": "Belveth",
+      "key": "200",
+      "name": "Bel'Veth",
+      "title": "a Imperatriz do Vazio",
+      "tags": [
+        "Fighter"
+      ],
+      "attackrange": 150
+    },
+    "Blitzcrank": {
+      "id": "Blitzcrank",
+      "key": "53",
+      "name": "Blitzcrank",
+      "title": "o Grande Golem a Vapor",
+      "tags": [
+        "Tank",
+        "Support"
+      ],
+      "attackrange": 125
+    },
+    "Brand": {
+      "id": "Brand",
+      "key": "63",
+      "name": "Brand",
+      "title": "a Vingança Flamejante",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "attackrange": 550
+    },
+    "Braum": {
+      "id": "Braum",
+      "key": "201",
+      "name": "Braum",
+      "title": "o Coração de Freljord",
+      "tags": [
+        "Tank",
+        "Support"
+      ],
+      "attackrange": 125
+    },
+    "Briar": {
+      "id": "Briar",
+      "key": "233",
+      "name": "Briar",
+      "title": "a Fome Contida",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "attackrange": 125
+    },
+    "Caitlyn": {
+      "id": "Caitlyn",
+      "key": "51",
+      "name": "Caitlyn",
+      "title": "a Xerife de Piltover",
+      "tags": [
+        "Marksman"
+      ],
+      "attackrange": 650
+    },
+    "Camille": {
+      "id": "Camille",
+      "key": "164",
+      "name": "Camille",
+      "title": "a Sombra de Aço",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "attackrange": 125
+    },
+    "Cassiopeia": {
+      "id": "Cassiopeia",
+      "key": "69",
+      "name": "Cassiopeia",
+      "title": "o Abraço da Serpente",
+      "tags": [
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "Chogath": {
+      "id": "Chogath",
+      "key": "31",
+      "name": "Cho'Gath",
+      "title": "o Terror do Vazio",
+      "tags": [
+        "Tank",
+        "Mage"
+      ],
+      "attackrange": 125
+    },
+    "Corki": {
+      "id": "Corki",
+      "key": "42",
+      "name": "Corki",
+      "title": "o Bombardeiro Ousado",
+      "tags": [
+        "Marksman",
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "Darius": {
+      "id": "Darius",
+      "key": "122",
+      "name": "Darius",
+      "title": "a Mão de Noxus",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "attackrange": 175
+    },
+    "Diana": {
+      "id": "Diana",
+      "key": "131",
+      "name": "Diana",
+      "title": "o Escárnio da Lua",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "attackrange": 150
+    },
+    "Draven": {
+      "id": "Draven",
+      "key": "119",
+      "name": "Draven",
+      "title": "o Carrasco de Noxus",
+      "tags": [
+        "Marksman"
+      ],
+      "attackrange": 550
+    },
+    "DrMundo": {
+      "id": "DrMundo",
+      "key": "36",
+      "name": "Dr. Mundo",
+      "title": "o Louco de Zaun",
+      "tags": [
+        "Tank",
+        "Fighter"
+      ],
+      "attackrange": 125
+    },
+    "Ekko": {
+      "id": "Ekko",
+      "key": "245",
+      "name": "Ekko",
+      "title": "o Rapaz que Estilhaçou o Tempo",
+      "tags": [
+        "Assassin",
+        "Mage"
+      ],
+      "attackrange": 125
+    },
+    "Elise": {
+      "id": "Elise",
+      "key": "60",
+      "name": "Elise",
+      "title": "a Aranha Rainha",
+      "tags": [
+        "Assassin",
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "Evelynn": {
+      "id": "Evelynn",
+      "key": "28",
+      "name": "Evelynn",
+      "title": "o Abraço da Agonia",
+      "tags": [
+        "Assassin",
+        "Mage"
+      ],
+      "attackrange": 125
+    },
+    "Ezreal": {
+      "id": "Ezreal",
+      "key": "81",
+      "name": "Ezreal",
+      "title": "o Explorador Pródigo",
+      "tags": [
+        "Marksman",
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "Fiddlesticks": {
+      "id": "Fiddlesticks",
+      "key": "9",
+      "name": "Fiddlesticks",
+      "title": "o Terror Ancestral",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "attackrange": 480
+    },
+    "Fiora": {
+      "id": "Fiora",
+      "key": "114",
+      "name": "Fiora",
+      "title": "a Grande Duelista",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "attackrange": 150
+    },
+    "Fizz": {
+      "id": "Fizz",
+      "key": "105",
+      "name": "Fizz",
+      "title": "o Trapaceiro das Marés",
+      "tags": [
+        "Assassin",
+        "Fighter"
+      ],
+      "attackrange": 175
+    },
+    "Galio": {
+      "id": "Galio",
+      "key": "3",
+      "name": "Galio",
+      "title": "o Colosso",
+      "tags": [
+        "Tank",
+        "Mage"
+      ],
+      "attackrange": 150
+    },
+    "Gangplank": {
+      "id": "Gangplank",
+      "key": "41",
+      "name": "Gangplank",
+      "title": "o Terror dos Doze Mares",
+      "tags": [
+        "Fighter"
+      ],
+      "attackrange": 125
+    },
+    "Garen": {
+      "id": "Garen",
+      "key": "86",
+      "name": "Garen",
+      "title": "o Poder de Demacia",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "attackrange": 175
+    },
+    "Gnar": {
+      "id": "Gnar",
+      "key": "150",
+      "name": "Gnar",
+      "title": "o Yordle Pré-Histórico",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "attackrange": 175
+    },
+    "Gragas": {
+      "id": "Gragas",
+      "key": "79",
+      "name": "Gragas",
+      "title": "o Badernista",
+      "tags": [
+        "Fighter",
+        "Mage"
+      ],
+      "attackrange": 125
+    },
+    "Graves": {
+      "id": "Graves",
+      "key": "104",
+      "name": "Graves",
+      "title": "o Foragido",
+      "tags": [
+        "Marksman"
+      ],
+      "attackrange": 425
+    },
+    "Gwen": {
+      "id": "Gwen",
+      "key": "887",
+      "name": "Gwen",
+      "title": "A Costureira Encantada",
+      "tags": [
+        "Fighter"
+      ],
+      "attackrange": 150
+    },
+    "Hecarim": {
+      "id": "Hecarim",
+      "key": "120",
+      "name": "Hecarim",
+      "title": "a Sombra da Guerra",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "attackrange": 175
+    },
+    "Heimerdinger": {
+      "id": "Heimerdinger",
+      "key": "74",
+      "name": "Heimerdinger",
+      "title": "o Inventor Idolatrado",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "attackrange": 550
+    },
+    "Hwei": {
+      "id": "Hwei",
+      "key": "910",
+      "name": "Hwei",
+      "title": "o Visionário",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "attackrange": 550
+    },
+    "Illaoi": {
+      "id": "Illaoi",
+      "key": "420",
+      "name": "Illaoi",
+      "title": "a Sacerdotisa Cráquem",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "attackrange": 125
+    },
+    "Irelia": {
+      "id": "Irelia",
+      "key": "39",
+      "name": "Irelia",
+      "title": "a Dançarina das Lâminas",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "attackrange": 200
+    },
+    "Ivern": {
+      "id": "Ivern",
+      "key": "427",
+      "name": "Ivern",
+      "title": "o Pai do Verde",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "attackrange": 475
+    },
+    "Janna": {
+      "id": "Janna",
+      "key": "40",
+      "name": "Janna",
+      "title": "a Fúria da Tormenta",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "JarvanIV": {
+      "id": "JarvanIV",
+      "key": "59",
+      "name": "Jarvan IV",
+      "title": "o Exemplo de Demacia",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "attackrange": 175
+    },
+    "Jax": {
+      "id": "Jax",
+      "key": "24",
+      "name": "Jax",
+      "title": "o Grão-Mestre das Armas",
+      "tags": [
+        "Fighter"
+      ],
+      "attackrange": 125
+    },
+    "Jayce": {
+      "id": "Jayce",
+      "key": "126",
+      "name": "Jayce",
+      "title": "o Defensor do Amanhã",
+      "tags": [
+        "Fighter",
+        "Marksman"
+      ],
+      "attackrange": 125
+    },
+    "Jhin": {
+      "id": "Jhin",
+      "key": "202",
+      "name": "Jhin",
+      "title": "o Virtuoso",
+      "tags": [
+        "Marksman",
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "Jinx": {
+      "id": "Jinx",
+      "key": "222",
+      "name": "Jinx",
+      "title": "o Gatilho Desenfreado",
+      "tags": [
+        "Marksman"
+      ],
+      "attackrange": 525
+    },
+    "Kaisa": {
+      "id": "Kaisa",
+      "key": "145",
+      "name": "Kai'Sa",
+      "title": "a Filha do Vazio",
+      "tags": [
+        "Marksman",
+        "Mage"
+      ],
+      "attackrange": 525
+    },
+    "Kalista": {
+      "id": "Kalista",
+      "key": "429",
+      "name": "Kalista",
+      "title": "a Lança da Vingança",
+      "tags": [
+        "Marksman"
+      ],
+      "attackrange": 525
+    },
+    "Karma": {
+      "id": "Karma",
+      "key": "43",
+      "name": "Karma",
+      "title": "a Iluminada",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "attackrange": 525
+    },
+    "Karthus": {
+      "id": "Karthus",
+      "key": "30",
+      "name": "Karthus",
+      "title": "a Voz Mortal",
+      "tags": [
+        "Mage"
+      ],
+      "attackrange": 450
+    },
+    "Kassadin": {
+      "id": "Kassadin",
+      "key": "38",
+      "name": "Kassadin",
+      "title": "o Andarilho do Vazio",
+      "tags": [
+        "Assassin",
+        "Mage"
+      ],
+      "attackrange": 150
+    },
+    "Katarina": {
+      "id": "Katarina",
+      "key": "55",
+      "name": "Katarina",
+      "title": "a Lâmina Sinistra",
+      "tags": [
+        "Assassin",
+        "Mage"
+      ],
+      "attackrange": 125
+    },
+    "Kayle": {
+      "id": "Kayle",
+      "key": "10",
+      "name": "Kayle",
+      "title": "a Justa",
+      "tags": [
+        "Marksman",
+        "Mage"
+      ],
+      "attackrange": 175
+    },
+    "Kayn": {
+      "id": "Kayn",
+      "key": "141",
+      "name": "Kayn",
+      "title": "o Ceifador das Sombras",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "attackrange": 175
+    },
+    "Kennen": {
+      "id": "Kennen",
+      "key": "85",
+      "name": "Kennen",
+      "title": "o Coração da Tempestade",
+      "tags": [
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "Khazix": {
+      "id": "Khazix",
+      "key": "121",
+      "name": "Kha'Zix",
+      "title": "o Ceifador do Vazio",
+      "tags": [
+        "Assassin"
+      ],
+      "attackrange": 125
+    },
+    "Kindred": {
+      "id": "Kindred",
+      "key": "203",
+      "name": "Kindred",
+      "title": "os Caçadores Eternos",
+      "tags": [
+        "Marksman"
+      ],
+      "attackrange": 500
+    },
+    "Kled": {
+      "id": "Kled",
+      "key": "240",
+      "name": "Kled",
+      "title": "o Cavaleiro Intratável",
+      "tags": [
+        "Fighter"
+      ],
+      "attackrange": 125
+    },
+    "KogMaw": {
+      "id": "KogMaw",
+      "key": "96",
+      "name": "Kog'Maw",
+      "title": "a Boca do Abismo",
+      "tags": [
+        "Marksman",
+        "Mage"
+      ],
+      "attackrange": 500
+    },
+    "KSante": {
+      "id": "KSante",
+      "key": "897",
+      "name": "K'Sante",
+      "title": "o Orgulho de Nazumah.",
+      "tags": [
+        "Tank",
+        "Fighter"
+      ],
+      "attackrange": 150
+    },
+    "Leblanc": {
+      "id": "Leblanc",
+      "key": "7",
+      "name": "LeBlanc",
+      "title": "a Farsante",
+      "tags": [
+        "Assassin",
+        "Mage"
+      ],
+      "attackrange": 525
+    },
+    "LeeSin": {
+      "id": "LeeSin",
+      "key": "64",
+      "name": "Lee Sin",
+      "title": "o Monge Cego",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "attackrange": 125
+    },
+    "Leona": {
+      "id": "Leona",
+      "key": "89",
+      "name": "Leona",
+      "title": "a Alvorada Radiante",
+      "tags": [
+        "Tank",
+        "Support"
+      ],
+      "attackrange": 125
+    },
+    "Lillia": {
+      "id": "Lillia",
+      "key": "876",
+      "name": "Lillia",
+      "title": "o Florir Receoso",
+      "tags": [
+        "Fighter",
+        "Mage"
+      ],
+      "attackrange": 325
+    },
+    "Lissandra": {
+      "id": "Lissandra",
+      "key": "127",
+      "name": "Lissandra",
+      "title": "a Bruxa Gélida",
+      "tags": [
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "Locke": {
+      "id": "Locke",
+      "key": "805",
+      "name": "Locke",
+      "title": "o Exorcista das Cinzas",
+      "tags": [
+        "Assassin",
+        "Mage"
+      ],
+      "attackrange": 125
+    },
+    "Lucian": {
+      "id": "Lucian",
+      "key": "236",
+      "name": "Lucian",
+      "title": "o Purificador",
+      "tags": [
+        "Marksman",
+        "Assassin"
+      ],
+      "attackrange": 500
+    },
+    "Lulu": {
+      "id": "Lulu",
+      "key": "117",
+      "name": "Lulu",
+      "title": "a Fada Feiticeira",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "Lux": {
+      "id": "Lux",
+      "key": "99",
+      "name": "Lux",
+      "title": "a Dama da Luz",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "attackrange": 550
+    },
+    "Malphite": {
+      "id": "Malphite",
+      "key": "54",
+      "name": "Malphite",
+      "title": "o Fragmento do Monolito",
+      "tags": [
+        "Tank",
+        "Mage"
+      ],
+      "attackrange": 125
+    },
+    "Malzahar": {
+      "id": "Malzahar",
+      "key": "90",
+      "name": "Malzahar",
+      "title": "o Profeta do Vazio",
+      "tags": [
+        "Mage"
+      ],
+      "attackrange": 500
+    },
+    "Maokai": {
+      "id": "Maokai",
+      "key": "57",
+      "name": "Maokai",
+      "title": "o Ente Sinistro",
+      "tags": [
+        "Tank",
+        "Support"
+      ],
+      "attackrange": 125
+    },
+    "MasterYi": {
+      "id": "MasterYi",
+      "key": "11",
+      "name": "Master Yi",
+      "title": "o Espadachim Wuju",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "attackrange": 175
+    },
+    "Mel": {
+      "id": "Mel",
+      "key": "800",
+      "name": "Mel",
+      "title": "o Reflexo da Alma",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "attackrange": 550
+    },
+    "Milio": {
+      "id": "Milio",
+      "key": "902",
+      "name": "Milio",
+      "title": "A Chama Gentil",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "attackrange": 525
+    },
+    "MissFortune": {
+      "id": "MissFortune",
+      "key": "21",
+      "name": "Miss Fortune",
+      "title": "a Caçadora de Recompensas",
+      "tags": [
+        "Marksman",
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "MonkeyKing": {
+      "id": "MonkeyKing",
+      "key": "62",
+      "name": "Wukong",
+      "title": "o Macaco Rei",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "attackrange": 175
+    },
+    "Mordekaiser": {
+      "id": "Mordekaiser",
+      "key": "82",
+      "name": "Mordekaiser",
+      "title": "o Revenã de Ferro",
+      "tags": [
+        "Fighter",
+        "Mage"
+      ],
+      "attackrange": 175
+    },
+    "Morgana": {
+      "id": "Morgana",
+      "key": "25",
+      "name": "Morgana",
+      "title": "a Caída",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "attackrange": 450
+    },
+    "Naafiri": {
+      "id": "Naafiri",
+      "key": "950",
+      "name": "Naafiri",
+      "title": "Fera das Cem Mordidas",
+      "tags": [
+        "Assassin",
+        "Fighter"
+      ],
+      "attackrange": 125
+    },
+    "Nami": {
+      "id": "Nami",
+      "key": "267",
+      "name": "Nami",
+      "title": "a Conjuradora das Marés",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "Nasus": {
+      "id": "Nasus",
+      "key": "75",
+      "name": "Nasus",
+      "title": "o Curador das Areias",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "attackrange": 125
+    },
+    "Nautilus": {
+      "id": "Nautilus",
+      "key": "111",
+      "name": "Nautilus",
+      "title": "o Titã das Profundezas",
+      "tags": [
+        "Tank",
+        "Support"
+      ],
+      "attackrange": 175
+    },
+    "Neeko": {
+      "id": "Neeko",
+      "key": "518",
+      "name": "Neeko",
+      "title": "a Camaleoa Curiosa",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "attackrange": 550
+    },
+    "Nidalee": {
+      "id": "Nidalee",
+      "key": "76",
+      "name": "Nidalee",
+      "title": "a Caçadora Bestial",
+      "tags": [
+        "Assassin",
+        "Mage"
+      ],
+      "attackrange": 525
+    },
+    "Nilah": {
+      "id": "Nilah",
+      "key": "895",
+      "name": "Nilah",
+      "title": "a Alegria Irrestrita",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "attackrange": 225
+    },
+    "Nocturne": {
+      "id": "Nocturne",
+      "key": "56",
+      "name": "Nocturne",
+      "title": "o Eterno Pesadelo",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "attackrange": 125
+    },
+    "Nunu": {
+      "id": "Nunu",
+      "key": "20",
+      "name": "Nunu e Willump",
+      "title": "o Garoto e seu Yeti",
+      "tags": [
+        "Tank",
+        "Mage"
+      ],
+      "attackrange": 125
+    },
+    "Olaf": {
+      "id": "Olaf",
+      "key": "2",
+      "name": "Olaf",
+      "title": "o Berserker",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "attackrange": 125
+    },
+    "Orianna": {
+      "id": "Orianna",
+      "key": "61",
+      "name": "Orianna",
+      "title": "a Donzela Mecânica",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "attackrange": 525
+    },
+    "Ornn": {
+      "id": "Ornn",
+      "key": "516",
+      "name": "Ornn",
+      "title": "O Fogo sob a Montanha",
+      "tags": [
+        "Tank"
+      ],
+      "attackrange": 175
+    },
+    "Pantheon": {
+      "id": "Pantheon",
+      "key": "80",
+      "name": "Pantheon",
+      "title": "a Lança Indestrutível",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "attackrange": 175
+    },
+    "Poppy": {
+      "id": "Poppy",
+      "key": "78",
+      "name": "Poppy",
+      "title": "a Guardiã do Martelo",
+      "tags": [
+        "Tank",
+        "Fighter"
+      ],
+      "attackrange": 125
+    },
+    "Pyke": {
+      "id": "Pyke",
+      "key": "555",
+      "name": "Pyke",
+      "title": "o Estripador das Águas Sangrentas",
+      "tags": [
+        "Support",
+        "Assassin"
+      ],
+      "attackrange": 150
+    },
+    "Qiyana": {
+      "id": "Qiyana",
+      "key": "246",
+      "name": "Qiyana",
+      "title": "a Imperatriz dos Elementos",
+      "tags": [
+        "Assassin"
+      ],
+      "attackrange": 150
+    },
+    "Quinn": {
+      "id": "Quinn",
+      "key": "133",
+      "name": "Quinn",
+      "title": "as Asas de Demacia",
+      "tags": [
+        "Marksman",
+        "Assassin"
+      ],
+      "attackrange": 525
+    },
+    "Rakan": {
+      "id": "Rakan",
+      "key": "497",
+      "name": "Rakan",
+      "title": "O Charmoso",
+      "tags": [
+        "Support"
+      ],
+      "attackrange": 300
+    },
+    "Rammus": {
+      "id": "Rammus",
+      "key": "33",
+      "name": "Rammus",
+      "title": "o Tatu Blindado",
+      "tags": [
+        "Tank"
+      ],
+      "attackrange": 125
+    },
+    "RekSai": {
+      "id": "RekSai",
+      "key": "421",
+      "name": "Rek'Sai",
+      "title": "a Escavadora do Vazio",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "attackrange": 175
+    },
+    "Rell": {
+      "id": "Rell",
+      "key": "526",
+      "name": "Rell",
+      "title": "a Dama de Ferro",
+      "tags": [
+        "Tank",
+        "Support"
+      ],
+      "attackrange": 175
+    },
+    "Renata": {
+      "id": "Renata",
+      "key": "888",
+      "name": "Renata Glasc",
+      "title": "a Baronesa da Química",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "Renekton": {
+      "id": "Renekton",
+      "key": "58",
+      "name": "Renekton",
+      "title": "o Carniceiro das Areias",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "attackrange": 125
+    },
+    "Rengar": {
+      "id": "Rengar",
+      "key": "107",
+      "name": "Rengar",
+      "title": "o Acossador da Alcateia",
+      "tags": [
+        "Assassin",
+        "Fighter"
+      ],
+      "attackrange": 125
+    },
+    "Riven": {
+      "id": "Riven",
+      "key": "92",
+      "name": "Riven",
+      "title": "a Exilada",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "attackrange": 125
+    },
+    "Rumble": {
+      "id": "Rumble",
+      "key": "68",
+      "name": "Rumble",
+      "title": "a Ameaça Mecânica",
+      "tags": [
+        "Fighter",
+        "Mage"
+      ],
+      "attackrange": 125
+    },
+    "Ryze": {
+      "id": "Ryze",
+      "key": "13",
+      "name": "Ryze",
+      "title": "o Mago Rúnico",
+      "tags": [
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "Samira": {
+      "id": "Samira",
+      "key": "360",
+      "name": "Samira",
+      "title": "a Rosa do Deserto",
+      "tags": [
+        "Marksman",
+        "Assassin"
+      ],
+      "attackrange": 500
+    },
+    "Sejuani": {
+      "id": "Sejuani",
+      "key": "113",
+      "name": "Sejuani",
+      "title": "a Fúria do Norte",
+      "tags": [
+        "Tank"
+      ],
+      "attackrange": 150
+    },
+    "Senna": {
+      "id": "Senna",
+      "key": "235",
+      "name": "Senna",
+      "title": "A Redentora",
+      "tags": [
+        "Support",
+        "Marksman"
+      ],
+      "attackrange": 600
+    },
+    "Seraphine": {
+      "id": "Seraphine",
+      "key": "147",
+      "name": "Seraphine",
+      "title": "a Cantora Sonhadora",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "attackrange": 525
+    },
+    "Sett": {
+      "id": "Sett",
+      "key": "875",
+      "name": "Sett",
+      "title": "o Chefe",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "attackrange": 125
+    },
+    "Shaco": {
+      "id": "Shaco",
+      "key": "35",
+      "name": "Shaco",
+      "title": "o Bufão Demoníaco",
+      "tags": [
+        "Assassin"
+      ],
+      "attackrange": 125
+    },
+    "Shen": {
+      "id": "Shen",
+      "key": "98",
+      "name": "Shen",
+      "title": "o Olho do Crepúsculo",
+      "tags": [
+        "Tank"
+      ],
+      "attackrange": 125
+    },
+    "Shyvana": {
+      "id": "Shyvana",
+      "key": "102",
+      "name": "Shyvana",
+      "title": "a Meio-Dragão",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "attackrange": 150
+    },
+    "Singed": {
+      "id": "Singed",
+      "key": "27",
+      "name": "Singed",
+      "title": "o Químico Louco",
+      "tags": [
+        "Tank",
+        "Mage"
+      ],
+      "attackrange": 125
+    },
+    "Sion": {
+      "id": "Sion",
+      "key": "14",
+      "name": "Sion",
+      "title": "o Colosso Morto-Vivo",
+      "tags": [
+        "Tank",
+        "Fighter"
+      ],
+      "attackrange": 175
+    },
+    "Sivir": {
+      "id": "Sivir",
+      "key": "15",
+      "name": "Sivir",
+      "title": "a Mestra da Batalha",
+      "tags": [
+        "Marksman"
+      ],
+      "attackrange": 500
+    },
+    "Skarner": {
+      "id": "Skarner",
+      "key": "72",
+      "name": "Skarner",
+      "title": "o Soberano Primordial",
+      "tags": [
+        "Tank",
+        "Fighter"
+      ],
+      "attackrange": 150
+    },
+    "Smolder": {
+      "id": "Smolder",
+      "key": "901",
+      "name": "Smolder",
+      "title": "o Filhote Flamejante",
+      "tags": [
+        "Marksman",
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "Sona": {
+      "id": "Sona",
+      "key": "37",
+      "name": "Sona",
+      "title": "a Mestra das Cordas",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "Soraka": {
+      "id": "Soraka",
+      "key": "16",
+      "name": "Soraka",
+      "title": "a Filha das Estrelas",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "Swain": {
+      "id": "Swain",
+      "key": "50",
+      "name": "Swain",
+      "title": "o Grande General Noxiano",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "attackrange": 525
+    },
+    "Sylas": {
+      "id": "Sylas",
+      "key": "517",
+      "name": "Sylas",
+      "title": "o Abjugado",
+      "tags": [
+        "Mage",
+        "Assassin"
+      ],
+      "attackrange": 175
+    },
+    "Syndra": {
+      "id": "Syndra",
+      "key": "134",
+      "name": "Syndra",
+      "title": "a Soberana Sombria",
+      "tags": [
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "TahmKench": {
+      "id": "TahmKench",
+      "key": "223",
+      "name": "Tahm Kench",
+      "title": "o Rei do Rio",
+      "tags": [
+        "Tank",
+        "Support"
+      ],
+      "attackrange": 175
+    },
+    "Taliyah": {
+      "id": "Taliyah",
+      "key": "163",
+      "name": "Taliyah",
+      "title": "a Tecelã de Pedras",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "attackrange": 525
+    },
+    "Talon": {
+      "id": "Talon",
+      "key": "91",
+      "name": "Talon",
+      "title": "a Sombra da Lâmina",
+      "tags": [
+        "Assassin"
+      ],
+      "attackrange": 125
+    },
+    "Taric": {
+      "id": "Taric",
+      "key": "44",
+      "name": "Taric",
+      "title": "o Escudo de Valoran",
+      "tags": [
+        "Support",
+        "Tank"
+      ],
+      "attackrange": 150
+    },
+    "Teemo": {
+      "id": "Teemo",
+      "key": "17",
+      "name": "Teemo",
+      "title": "o Explorador Veloz",
+      "tags": [
+        "Marksman",
+        "Mage"
+      ],
+      "attackrange": 500
+    },
+    "Thresh": {
+      "id": "Thresh",
+      "key": "412",
+      "name": "Thresh",
+      "title": "o Guardião das Correntes",
+      "tags": [
+        "Support",
+        "Tank"
+      ],
+      "attackrange": 450
+    },
+    "Tristana": {
+      "id": "Tristana",
+      "key": "18",
+      "name": "Tristana",
+      "title": "a Artilheira Yordle",
+      "tags": [
+        "Marksman",
+        "Assassin"
+      ],
+      "attackrange": 550
+    },
+    "Trundle": {
+      "id": "Trundle",
+      "key": "48",
+      "name": "Trundle",
+      "title": "o Rei dos Trolls",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "attackrange": 175
+    },
+    "Tryndamere": {
+      "id": "Tryndamere",
+      "key": "23",
+      "name": "Tryndamere",
+      "title": "o Rei Bárbaro",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "attackrange": 175
+    },
+    "TwistedFate": {
+      "id": "TwistedFate",
+      "key": "4",
+      "name": "Twisted Fate",
+      "title": "o Mestre das Cartas",
+      "tags": [
+        "Mage",
+        "Marksman"
+      ],
+      "attackrange": 525
+    },
+    "Twitch": {
+      "id": "Twitch",
+      "key": "29",
+      "name": "Twitch",
+      "title": "o Semeador da Peste",
+      "tags": [
+        "Marksman",
+        "Assassin"
+      ],
+      "attackrange": 550
+    },
+    "Udyr": {
+      "id": "Udyr",
+      "key": "77",
+      "name": "Udyr",
+      "title": "o Andarilho Espiritual",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "attackrange": 125
+    },
+    "Urgot": {
+      "id": "Urgot",
+      "key": "6",
+      "name": "Urgot",
+      "title": "o Encouraçado",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "attackrange": 350
+    },
+    "Varus": {
+      "id": "Varus",
+      "key": "110",
+      "name": "Varus",
+      "title": "a Flecha da Vingança",
+      "tags": [
+        "Marksman",
+        "Mage"
+      ],
+      "attackrange": 575
+    },
+    "Vayne": {
+      "id": "Vayne",
+      "key": "67",
+      "name": "Vayne",
+      "title": "a Caçadora Noturna",
+      "tags": [
+        "Marksman",
+        "Assassin"
+      ],
+      "attackrange": 550
+    },
+    "Veigar": {
+      "id": "Veigar",
+      "key": "45",
+      "name": "Veigar",
+      "title": "o Pequeno Mestre do Mal",
+      "tags": [
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "Velkoz": {
+      "id": "Velkoz",
+      "key": "161",
+      "name": "Vel'Koz",
+      "title": "o Olho do Vazio",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "attackrange": 525
+    },
+    "Vex": {
+      "id": "Vex",
+      "key": "711",
+      "name": "Vex",
+      "title": "a Melancolista",
+      "tags": [
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "Vi": {
+      "id": "Vi",
+      "key": "254",
+      "name": "Vi",
+      "title": "a Defensora de Piltover",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "attackrange": 125
+    },
+    "Viego": {
+      "id": "Viego",
+      "key": "234",
+      "name": "Viego",
+      "title": "O Rei Destruído",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "attackrange": 200
+    },
+    "Viktor": {
+      "id": "Viktor",
+      "key": "112",
+      "name": "Viktor",
+      "title": "o Arauto do Arcano",
+      "tags": [
+        "Mage"
+      ],
+      "attackrange": 525
+    },
+    "Vladimir": {
+      "id": "Vladimir",
+      "key": "8",
+      "name": "Vladimir",
+      "title": "o Sanguinário Escarlate",
+      "tags": [
+        "Mage",
+        "Fighter"
+      ],
+      "attackrange": 450
+    },
+    "Volibear": {
+      "id": "Volibear",
+      "key": "106",
+      "name": "Volibear",
+      "title": "a Tempestade Implacável",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "attackrange": 150
+    },
+    "Warwick": {
+      "id": "Warwick",
+      "key": "19",
+      "name": "Warwick",
+      "title": "a Ira Desimpedida de Zaun",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "attackrange": 125
+    },
+    "Xayah": {
+      "id": "Xayah",
+      "key": "498",
+      "name": "Xayah",
+      "title": "a Rebelde",
+      "tags": [
+        "Marksman"
+      ],
+      "attackrange": 525
+    },
+    "Xerath": {
+      "id": "Xerath",
+      "key": "101",
+      "name": "Xerath",
+      "title": "o Mago Ascendente",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "attackrange": 525
+    },
+    "XinZhao": {
+      "id": "XinZhao",
+      "key": "5",
+      "name": "Xin Zhao",
+      "title": "o Senescal de Demacia",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "attackrange": 175
+    },
+    "Yasuo": {
+      "id": "Yasuo",
+      "key": "157",
+      "name": "Yasuo",
+      "title": "o Imperdoável",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "attackrange": 175
+    },
+    "Yone": {
+      "id": "Yone",
+      "key": "777",
+      "name": "Yone",
+      "title": "o Inesquecido",
+      "tags": [
+        "Fighter",
+        "Assassin"
+      ],
+      "attackrange": 175
+    },
+    "Yorick": {
+      "id": "Yorick",
+      "key": "83",
+      "name": "Yorick",
+      "title": "o Pastor de Almas",
+      "tags": [
+        "Fighter",
+        "Tank"
+      ],
+      "attackrange": 175
+    },
+    "Yunara": {
+      "id": "Yunara",
+      "key": "804",
+      "name": "Yunara",
+      "title": "a Fé Inabalável",
+      "tags": [
+        "Marksman"
+      ],
+      "attackrange": 575
+    },
+    "Yuumi": {
+      "id": "Yuumi",
+      "key": "350",
+      "name": "Yuumi",
+      "title": "a Gata Mágica",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "attackrange": 425
+    },
+    "Zaahen": {
+      "id": "Zaahen",
+      "key": "904",
+      "name": "Zaahen",
+      "title": "O Indissociável",
+      "tags": [
+        "Fighter"
+      ],
+      "attackrange": 175
+    },
+    "Zac": {
+      "id": "Zac",
+      "key": "154",
+      "name": "Zac",
+      "title": "a Arma Secreta",
+      "tags": [
+        "Tank",
+        "Fighter"
+      ],
+      "attackrange": 175
+    },
+    "Zed": {
+      "id": "Zed",
+      "key": "238",
+      "name": "Zed",
+      "title": "o Mestre das Sombras",
+      "tags": [
+        "Assassin"
+      ],
+      "attackrange": 125
+    },
+    "Zeri": {
+      "id": "Zeri",
+      "key": "221",
+      "name": "Zeri",
+      "title": "A Faísca de Zaun",
+      "tags": [
+        "Marksman"
+      ],
+      "attackrange": 550
+    },
+    "Ziggs": {
+      "id": "Ziggs",
+      "key": "115",
+      "name": "Ziggs",
+      "title": "o Especialista em Hexplosivos",
+      "tags": [
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "Zilean": {
+      "id": "Zilean",
+      "key": "26",
+      "name": "Zilean",
+      "title": "o Guardião do Tempo",
+      "tags": [
+        "Support",
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "Zoe": {
+      "id": "Zoe",
+      "key": "142",
+      "name": "Zoe",
+      "title": "o Aspecto do Crepúsculo",
+      "tags": [
+        "Mage"
+      ],
+      "attackrange": 550
+    },
+    "Zyra": {
+      "id": "Zyra",
+      "key": "143",
+      "name": "Zyra",
+      "title": "a Ascensão dos Espinhos",
+      "tags": [
+        "Mage",
+        "Support"
+      ],
+      "attackrange": 575
+    }
+  },
+  "items": {
+    "1001": {
+      "id": "1001",
+      "name": "Botas",
+      "plaintext": "Aumenta levemente a Velocidade de Movimento",
+      "gold": 300,
+      "tags": [
+        "Boots"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1004": {
+      "id": "1004",
+      "name": "Amuleto da Fada",
+      "plaintext": "Aumenta levemente a Regeneração de Mana",
+      "gold": 200,
+      "tags": [
+        "ManaRegen"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1006": {
+      "id": "1006",
+      "name": "Pérola do Rejuvenescimento",
+      "plaintext": "Aumenta levemente a Regeneração de Vida",
+      "gold": 300,
+      "tags": [
+        "HealthRegen"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1011": {
+      "id": "1011",
+      "name": "Cinto do Gigante",
+      "plaintext": "Aumenta drasticamente a Vida",
+      "gold": 900,
+      "tags": [
+        "Health"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1018": {
+      "id": "1018",
+      "name": "Capa da Agilidade",
+      "plaintext": "Aumenta a Chance de Acerto Crítico",
+      "gold": 600,
+      "tags": [
+        "CriticalStrike"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1026": {
+      "id": "1026",
+      "name": "Varinha Explosiva",
+      "plaintext": "Aumenta moderadamente o Poder de Habilidade",
+      "gold": 850,
+      "tags": [
+        "SpellDamage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1027": {
+      "id": "1027",
+      "name": "Cristal de Safira",
+      "plaintext": "Aumenta a Mana",
+      "gold": 300,
+      "tags": [
+        "Mana"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1028": {
+      "id": "1028",
+      "name": "Cristal de Rubi",
+      "plaintext": "Aumenta a Vida",
+      "gold": 400,
+      "tags": [
+        "Health"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1029": {
+      "id": "1029",
+      "name": "Couraça de Pano",
+      "plaintext": "Aumenta levemente a Armadura",
+      "gold": 300,
+      "tags": [
+        "Armor"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1031": {
+      "id": "1031",
+      "name": "Cota de Malha",
+      "plaintext": "Aumenta drasticamente a Armadura",
+      "gold": 800,
+      "tags": [
+        "Armor"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1033": {
+      "id": "1033",
+      "name": "Manto Anula-Magia",
+      "plaintext": "Aumenta levemente a Resistência Mágica",
+      "gold": 400,
+      "tags": [
+        "SpellBlock"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1036": {
+      "id": "1036",
+      "name": "Espada Longa",
+      "plaintext": "Aumenta levemente o Dano de Ataque",
+      "gold": 350,
+      "tags": [
+        "Damage",
+        "Lane"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1037": {
+      "id": "1037",
+      "name": "Picareta",
+      "plaintext": "Aumenta moderadamente o Dano de Ataque",
+      "gold": 875,
+      "tags": [
+        "Damage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1038": {
+      "id": "1038",
+      "name": "Espada G. p. C.",
+      "plaintext": "Aumenta drasticamente o Dano de Ataque",
+      "gold": 1300,
+      "tags": [
+        "Damage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1042": {
+      "id": "1042",
+      "name": "Adaga",
+      "plaintext": "Aumenta levemente a Velocidade de Ataque",
+      "gold": 250,
+      "tags": [
+        "AttackSpeed"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1043": {
+      "id": "1043",
+      "name": "Arco Recurvo",
+      "plaintext": "Aumenta drasticamente a Velocidade de Ataque",
+      "gold": 700,
+      "tags": [
+        "AttackSpeed",
+        "OnHit"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1052": {
+      "id": "1052",
+      "name": "Tomo Amplificador",
+      "plaintext": "Aumenta levemente o Poder de Habilidade",
+      "gold": 400,
+      "tags": [
+        "SpellDamage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1053": {
+      "id": "1053",
+      "name": "Cetro Vampírico",
+      "plaintext": "Ataques básicos restauram Vida",
+      "gold": 900,
+      "tags": [
+        "Damage",
+        "LifeSteal"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1054": {
+      "id": "1054",
+      "name": "Escudo de Doran",
+      "plaintext": "Bom item iniciante defensivo",
+      "gold": 450,
+      "tags": [
+        "Health",
+        "HealthRegen",
+        "Lane"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1055": {
+      "id": "1055",
+      "name": "Lâmina de Doran",
+      "plaintext": "Bom item iniciante para atacantes",
+      "gold": 450,
+      "tags": [
+        "Health",
+        "Damage",
+        "LifeSteal",
+        "SpellVamp",
+        "Lane"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1056": {
+      "id": "1056",
+      "name": "Anel de Doran",
+      "plaintext": "Bom item iniciante para conjuradores",
+      "gold": 400,
+      "tags": [
+        "Health",
+        "Lane",
+        "ManaRegen",
+        "SpellDamage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1057": {
+      "id": "1057",
+      "name": "Capa Negatron",
+      "plaintext": "Aumenta moderadamente a Resistência Mágica",
+      "gold": 850,
+      "tags": [
+        "SpellBlock"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1058": {
+      "id": "1058",
+      "name": "Bastão Desnecessariamente Grande",
+      "plaintext": "Aumenta drasticamente o Poder de Habilidade",
+      "gold": 1200,
+      "tags": [
+        "SpellDamage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1082": {
+      "id": "1082",
+      "name": "Lacre Sombrio",
+      "plaintext": "Proporciona Poder de Habilidade e Mana. Seu poder aumenta conforme abate inimigos.",
+      "gold": 350,
+      "tags": [
+        "Health",
+        "SpellDamage",
+        "Lane"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1083": {
+      "id": "1083",
+      "name": "Abatedora",
+      "plaintext": "Proporciona dano e Roubo de Vida ao contato. Abater tropas concede ouro adicional",
+      "gold": 450,
+      "tags": [
+        "Damage",
+        "OnHit",
+        "Lane"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1086": {
+      "id": "1086",
+      "name": "Arco de Doran",
+      "plaintext": "",
+      "gold": 400,
+      "tags": [
+        "Damage",
+        "AttackSpeed",
+        "SpellVamp",
+        "Lane"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1101": {
+      "id": "1101",
+      "name": "Filhote de Garrabrasa",
+      "plaintext": "",
+      "gold": 450,
+      "tags": [
+        "Jungle"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1102": {
+      "id": "1102",
+      "name": "Cria de Andabrisas",
+      "plaintext": "",
+      "gold": 450,
+      "tags": [
+        "Jungle"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1103": {
+      "id": "1103",
+      "name": "Broto de Esmagamusgo",
+      "plaintext": "",
+      "gold": 450,
+      "tags": [
+        "Jungle"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1105": {
+      "id": "1105",
+      "name": "Broto de Esmagamusgo",
+      "plaintext": "",
+      "gold": 450,
+      "tags": [
+        "Jungle"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1106": {
+      "id": "1106",
+      "name": "Cria de Andabrisas",
+      "plaintext": "",
+      "gold": 450,
+      "tags": [
+        "Jungle"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1107": {
+      "id": "1107",
+      "name": "Filhote de Garrabrasa",
+      "plaintext": "",
+      "gold": 450,
+      "tags": [
+        "Jungle"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "1120": {
+      "id": "1120",
+      "name": "Elmo de Doran",
+      "plaintext": "",
+      "gold": 450,
+      "tags": [
+        "Health",
+        "SpellBlock",
+        "Armor",
+        "Lane"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2003": {
+      "id": "2003",
+      "name": "Poção de Vida",
+      "plaintext": "Consuma para restaurar Vida ao longo do tempo",
+      "gold": 50,
+      "tags": [
+        "HealthRegen",
+        "Consumable",
+        "Lane",
+        "Jungle"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2019": {
+      "id": "2019",
+      "name": "Sigilo de Aço",
+      "plaintext": "",
+      "gold": 1100,
+      "tags": [
+        "Armor",
+        "Damage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2020": {
+      "id": "2020",
+      "name": "Brutalizador",
+      "plaintext": "",
+      "gold": 1337,
+      "tags": [
+        "Damage",
+        "CooldownReduction",
+        "ArmorPenetration"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2021": {
+      "id": "2021",
+      "name": "Tunelizador",
+      "plaintext": "",
+      "gold": 1150,
+      "tags": [
+        "Health",
+        "Damage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2022": {
+      "id": "2022",
+      "name": "Partícula Brilhante",
+      "plaintext": "",
+      "gold": 250,
+      "tags": [
+        "CooldownReduction"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2031": {
+      "id": "2031",
+      "name": "Poção com Refil",
+      "plaintext": "Restaura Vida ao longo do tempo. Recarrega na loja",
+      "gold": 150,
+      "tags": [
+        "HealthRegen",
+        "Consumable",
+        "Active",
+        "Lane",
+        "Jungle"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2051": {
+      "id": "2051",
+      "name": "Berrante do Guardião",
+      "plaintext": "Bom item iniciante para tanques",
+      "gold": 950,
+      "tags": [
+        "Health",
+        "HealthRegen",
+        "Lane"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2055": {
+      "id": "2055",
+      "name": "Sentinela de Controle",
+      "plaintext": "Usada para desativar sentinelas e armadilhas invisíveis em uma área",
+      "gold": 75,
+      "tags": [
+        "Consumable",
+        "Lane",
+        "Stealth",
+        "Vision"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2065": {
+      "id": "2065",
+      "name": "Hino Bélico de Shurelya",
+      "plaintext": "Ative para acelerar aliados próximos",
+      "gold": 2200,
+      "tags": [
+        "SpellDamage",
+        "ManaRegen",
+        "Active",
+        "CooldownReduction",
+        "NonbootsMovement",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2138": {
+      "id": "2138",
+      "name": "Elixir de Ferro",
+      "plaintext": "Temporariamente aumenta as defesas. Deixa um rastro para que seus aliados sigam",
+      "gold": 500,
+      "tags": [
+        "Health",
+        "Consumable",
+        "NonbootsMovement",
+        "Tenacity"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2139": {
+      "id": "2139",
+      "name": "Elixir da Feitiçaria",
+      "plaintext": "Temporariamente concede Poder de Habilidade e dano adicional a Campeões e torres",
+      "gold": 500,
+      "tags": [
+        "Consumable",
+        "ManaRegen",
+        "SpellDamage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2140": {
+      "id": "2140",
+      "name": "Elixir da Ira",
+      "plaintext": "Temporariamente concede Dano de Ataque e cura ao causar Dano Físico a Campeões",
+      "gold": 500,
+      "tags": [
+        "Consumable",
+        "Damage",
+        "LifeSteal",
+        "SpellVamp"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2141": {
+      "id": "2141",
+      "name": "Suco de Chapéu",
+      "plaintext": "",
+      "gold": 300,
+      "tags": [
+        "Damage",
+        "Consumable"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2420": {
+      "id": "2420",
+      "name": "Armaguarda da Caçadora",
+      "plaintext": "Ative para ficar invencível, mas incapaz de realizar qualquer ação",
+      "gold": 1600,
+      "tags": [
+        "Armor",
+        "SpellDamage",
+        "Active"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2421": {
+      "id": "2421",
+      "name": "Armaguarda Despedaçada",
+      "plaintext": "Aprimoramentos para o Cronômetro",
+      "gold": 1600,
+      "tags": [],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2501": {
+      "id": "2501",
+      "name": "Armadura Sangrenta do Suserano",
+      "plaintext": "",
+      "gold": 3300,
+      "tags": [
+        "Health",
+        "Damage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2502": {
+      "id": "2502",
+      "name": "Desespero Eterno",
+      "plaintext": "",
+      "gold": 2800,
+      "tags": [
+        "Health",
+        "Armor",
+        "CooldownReduction",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2503": {
+      "id": "2503",
+      "name": "Tocha de Chamas Negras",
+      "plaintext": "",
+      "gold": 2800,
+      "tags": [
+        "SpellDamage",
+        "Mana",
+        "CooldownReduction",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2504": {
+      "id": "2504",
+      "name": "Rookern Lamúrico",
+      "plaintext": "",
+      "gold": 2900,
+      "tags": [
+        "Health",
+        "SpellBlock",
+        "HealthRegen"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2508": {
+      "id": "2508",
+      "name": "Cinzas do Destino",
+      "plaintext": "",
+      "gold": 900,
+      "tags": [
+        "SpellDamage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2510": {
+      "id": "2510",
+      "name": "Aurora e Crepúsculo",
+      "plaintext": "",
+      "gold": 3100,
+      "tags": [
+        "Health",
+        "AttackSpeed",
+        "SpellDamage",
+        "OnHit",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2512": {
+      "id": "2512",
+      "name": "Dardos de Caça-Demônios",
+      "plaintext": "",
+      "gold": 2650,
+      "tags": [
+        "CriticalStrike",
+        "AttackSpeed",
+        "NonbootsMovement",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2517": {
+      "id": "2517",
+      "name": "Fome Eterna",
+      "plaintext": "",
+      "gold": 3100,
+      "tags": [
+        "Damage",
+        "LifeSteal",
+        "SpellVamp",
+        "Tenacity",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2520": {
+      "id": "2520",
+      "name": "Quebra-Bastião",
+      "plaintext": "",
+      "gold": 3000,
+      "tags": [
+        "Damage",
+        "ArmorPenetration",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2522": {
+      "id": "2522",
+      "name": "Concretizador",
+      "plaintext": "",
+      "gold": 2800,
+      "tags": [
+        "SpellDamage",
+        "Mana",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2523": {
+      "id": "2523",
+      "name": "Hexótica C44",
+      "plaintext": "",
+      "gold": 2800,
+      "tags": [
+        "Damage",
+        "CriticalStrike"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2524": {
+      "id": "2524",
+      "name": "Bandocanos",
+      "plaintext": "",
+      "gold": 2300,
+      "tags": [
+        "Health",
+        "SpellBlock",
+        "Armor",
+        "AttackSpeed",
+        "NonbootsMovement",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2525": {
+      "id": "2525",
+      "name": "Couraça Protoplasmática",
+      "plaintext": "",
+      "gold": 2600,
+      "tags": [
+        "Health",
+        "NonbootsMovement",
+        "Tenacity",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "2526": {
+      "id": "2526",
+      "name": "Tiara Sussurrante",
+      "plaintext": "",
+      "gold": 2250,
+      "tags": [
+        "Health",
+        "Mana",
+        "ManaRegen"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3003": {
+      "id": "3003",
+      "name": "Cajado do Arcanjo",
+      "plaintext": "Aumenta o Poder de Habilidade com base na Mana máxima",
+      "gold": 2900,
+      "tags": [
+        "SpellDamage",
+        "Mana",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3004": {
+      "id": "3004",
+      "name": "Manamune",
+      "plaintext": "Aumenta o Dano de Ataque com base na Mana máxima",
+      "gold": 2900,
+      "tags": [
+        "Damage",
+        "Mana",
+        "CooldownReduction",
+        "OnHit",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3006": {
+      "id": "3006",
+      "name": "Grevas do Berserker",
+      "plaintext": "Aprimora a Velocidade de Movimento e de Ataque",
+      "gold": 1100,
+      "tags": [
+        "AttackSpeed",
+        "Boots"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3008": {
+      "id": "3008",
+      "name": "Grevas Vorazes",
+      "plaintext": "Aumenta o Dano de Ataque com base na Mana máxima",
+      "gold": 1100,
+      "tags": [
+        "LifeSteal",
+        "SpellVamp",
+        "Boots"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3009": {
+      "id": "3009",
+      "name": "Botas da Rapidez",
+      "plaintext": "Aprimora a Velocidade de Movimento e reduz o efeito de Lentidões",
+      "gold": 1000,
+      "tags": [
+        "Boots"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3020": {
+      "id": "3020",
+      "name": "Sapatos do Feiticeiro",
+      "plaintext": "Aprimora a Velocidade de Movimento e o Dano Mágico",
+      "gold": 1100,
+      "tags": [
+        "Boots",
+        "MagicPenetration"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3024": {
+      "id": "3024",
+      "name": "Broquel Glacial",
+      "plaintext": "Aumenta a Armadura e Redução do Tempo de Recarga",
+      "gold": 900,
+      "tags": [
+        "Armor",
+        "Mana",
+        "CooldownReduction",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3026": {
+      "id": "3026",
+      "name": "Anjo Guardião",
+      "plaintext": "Periodicamente ressuscita um campeão ao morrer",
+      "gold": 3200,
+      "tags": [
+        "Armor",
+        "Damage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3031": {
+      "id": "3031",
+      "name": "Gume do Infinito",
+      "plaintext": "Aprimora drasticamente os acertos críticos",
+      "gold": 3500,
+      "tags": [
+        "CriticalStrike",
+        "Damage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3032": {
+      "id": "3032",
+      "name": "Flechatroz de Yun Tal",
+      "plaintext": "",
+      "gold": 3000,
+      "tags": [
+        "Damage",
+        "CriticalStrike",
+        "AttackSpeed"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3033": {
+      "id": "3033",
+      "name": "Lembrete Mortal",
+      "plaintext": "Supera inimigos que têm muita recuperação de Vida e Armadura",
+      "gold": 3000,
+      "tags": [
+        "Damage",
+        "CriticalStrike",
+        "ArmorPenetration"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3035": {
+      "id": "3035",
+      "name": "Último Sussurro",
+      "plaintext": "Supera inimigos que têm muita Armadura",
+      "gold": 1450,
+      "tags": [
+        "ArmorPenetration",
+        "Damage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3036": {
+      "id": "3036",
+      "name": "Lembranças do Lorde Dominik",
+      "plaintext": "Supera inimigos com muita Vida e Armadura",
+      "gold": 3300,
+      "tags": [
+        "Damage",
+        "CriticalStrike",
+        "ArmorPenetration"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3041": {
+      "id": "3041",
+      "name": "Ladrão de Almas de Mejai",
+      "plaintext": "Concede Poder de Habilidade por abates e assistências",
+      "gold": 1500,
+      "tags": [
+        "Health",
+        "SpellDamage",
+        "NonbootsMovement"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3044": {
+      "id": "3044",
+      "name": "Fago",
+      "plaintext": "Ataques e abates dão um efeito curto de velocidade",
+      "gold": 1100,
+      "tags": [
+        "Health",
+        "Damage",
+        "NonbootsMovement"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3046": {
+      "id": "3046",
+      "name": "Dançarina Fantasma",
+      "plaintext": "Move-se mais rápido ao atacar inimigos e ganha um escudo quando está com pouca Vida",
+      "gold": 2650,
+      "tags": [
+        "CriticalStrike",
+        "AttackSpeed",
+        "NonbootsMovement"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3047": {
+      "id": "3047",
+      "name": "Botas Galvanizadas de Aço",
+      "plaintext": "Aprimora a Velocidade de Movimento e reduz o dano de ataques básicos recebidos",
+      "gold": 1200,
+      "tags": [
+        "Armor",
+        "Boots"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3050": {
+      "id": "3050",
+      "name": "Convergência de Zeke",
+      "plaintext": "Concede efeitos a você e seu aliado ao conjurar sua ultimate",
+      "gold": 2200,
+      "tags": [
+        "Health",
+        "SpellBlock",
+        "Armor",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3051": {
+      "id": "3051",
+      "name": "Machado Termestre",
+      "plaintext": "",
+      "gold": 1200,
+      "tags": [
+        "Damage",
+        "AttackSpeed"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3053": {
+      "id": "3053",
+      "name": "Sinal de Sterak",
+      "plaintext": "Protege contra fortes rajadas de dano",
+      "gold": 3200,
+      "tags": [
+        "Health",
+        "Damage",
+        "Tenacity"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3057": {
+      "id": "3057",
+      "name": "Fulgor",
+      "plaintext": "Concede um efeito ao ataque básico feito após uma conjuração",
+      "gold": 900,
+      "tags": [
+        "OnHit",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3065": {
+      "id": "3065",
+      "name": "Semblante Espiritual",
+      "plaintext": "Aumenta a Vida e efeitos de cura",
+      "gold": 2700,
+      "tags": [
+        "Health",
+        "SpellBlock",
+        "HealthRegen",
+        "CooldownReduction",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3066": {
+      "id": "3066",
+      "name": "Couraça Lunar Alada",
+      "plaintext": "",
+      "gold": 800,
+      "tags": [
+        "Health",
+        "NonbootsMovement"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3067": {
+      "id": "3067",
+      "name": "Gema Ardente",
+      "plaintext": "Aumenta a Vida e a Redução do Tempo de Recarga",
+      "gold": 800,
+      "tags": [
+        "Health",
+        "CooldownReduction",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3068": {
+      "id": "3068",
+      "name": "Égide de Fogo Solar",
+      "plaintext": "Fornece muita Armadura. Causa dano constante a inimigos próximos. Imobilizar inimigos libera uma onda de dano flamejante.",
+      "gold": 2800,
+      "tags": [
+        "Health",
+        "Armor",
+        "Aura",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3070": {
+      "id": "3070",
+      "name": "Lágrima da Deusa",
+      "plaintext": "Aumenta a Mana máxima conforme ela é gasta",
+      "gold": 400,
+      "tags": [
+        "Mana",
+        "ManaRegen"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3071": {
+      "id": "3071",
+      "name": "Cutelo Negro",
+      "plaintext": "Causar dano físico reduz Armadura de Campeões inimigos",
+      "gold": 3000,
+      "tags": [
+        "Health",
+        "Damage",
+        "CooldownReduction",
+        "OnHit",
+        "NonbootsMovement",
+        "ArmorPenetration",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3072": {
+      "id": "3072",
+      "name": "Sedenta por Sangue",
+      "plaintext": "Concede Dano de Ataque, Roubo de Vida. O Roubo de Vida pode sobrecurar",
+      "gold": 3400,
+      "tags": [
+        "Damage",
+        "LifeSteal"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3073": {
+      "id": "3073",
+      "name": "Hexoplaca Experimental",
+      "plaintext": "Aumenta a Mana máxima conforme ela é gasta",
+      "gold": 3000,
+      "tags": [
+        "Health",
+        "Damage",
+        "AttackSpeed",
+        "CooldownReduction",
+        "NonbootsMovement",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3074": {
+      "id": "3074",
+      "name": "Hidra Raivosa",
+      "plaintext": "Ataques corpo a corpo atingem inimigos próximos, causando dano restaurando Vida",
+      "gold": 3300,
+      "tags": [
+        "Damage",
+        "LifeSteal",
+        "CooldownReduction",
+        "OnHit",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3075": {
+      "id": "3075",
+      "name": "Armadura de Espinhos",
+      "plaintext": "",
+      "gold": 2450,
+      "tags": [
+        "Health",
+        "Armor"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3076": {
+      "id": "3076",
+      "name": "Colete Espinhoso",
+      "plaintext": "",
+      "gold": 800,
+      "tags": [
+        "Armor"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3077": {
+      "id": "3077",
+      "name": "Tiamat",
+      "plaintext": "Ataques corpo a corpo atingem inimigos próximos",
+      "gold": 1200,
+      "tags": [
+        "Damage",
+        "OnHit"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3078": {
+      "id": "3078",
+      "name": "Força da Trindade",
+      "plaintext": "Toneladas de dano",
+      "gold": 3333,
+      "tags": [
+        "Health",
+        "Damage",
+        "AttackSpeed",
+        "CooldownReduction",
+        "OnHit",
+        "NonbootsMovement",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3082": {
+      "id": "3082",
+      "name": "Carapaça do Vigia",
+      "plaintext": "",
+      "gold": 1000,
+      "tags": [
+        "Armor"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3083": {
+      "id": "3083",
+      "name": "Armadura de Warmog",
+      "plaintext": "Concede uma boa quantidade de Vida e de Regeneração de Vida",
+      "gold": 3100,
+      "tags": [
+        "Health",
+        "HealthRegen"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3084": {
+      "id": "3084",
+      "name": "Coração de Aço",
+      "plaintext": "Restaura Vida em abates ou assistências",
+      "gold": 3000,
+      "tags": [
+        "Health",
+        "HealthRegen"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3085": {
+      "id": "3085",
+      "name": "Furacão de Runaan",
+      "plaintext": "Ataques à distância disparam dois projéteis em inimigos próximos",
+      "gold": 2650,
+      "tags": [
+        "CriticalStrike",
+        "AttackSpeed",
+        "OnHit",
+        "NonbootsMovement"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3086": {
+      "id": "3086",
+      "name": "Zelo",
+      "plaintext": "Leve aprimoramento na Chance de Acerto Crítico, Velocidade de Movimento e de Ataque",
+      "gold": 1200,
+      "tags": [
+        "CriticalStrike",
+        "AttackSpeed",
+        "NonbootsMovement"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3087": {
+      "id": "3087",
+      "name": "Faca de Statikk",
+      "plaintext": "Movimentação acumula cargas que desferem um relâmpago em ataques básicos",
+      "gold": 3000,
+      "tags": [
+        "Damage",
+        "AttackSpeed",
+        "SpellDamage",
+        "OnHit",
+        "NonbootsMovement"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3089": {
+      "id": "3089",
+      "name": "Capuz da Morte de Rabadon",
+      "plaintext": "Aumenta drasticamente o Poder de Habilidade",
+      "gold": 3500,
+      "tags": [
+        "SpellDamage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3091": {
+      "id": "3091",
+      "name": "Limite da Razão",
+      "plaintext": "Resista a Dano Mágico e arranque sua Vida de volta.",
+      "gold": 2800,
+      "tags": [
+        "SpellBlock",
+        "AttackSpeed",
+        "OnHit",
+        "Tenacity"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3094": {
+      "id": "3094",
+      "name": "Canhão Fumegante",
+      "plaintext": "Movimentação acumula cargas que desferem um ataque flamejante",
+      "gold": 2650,
+      "tags": [
+        "CriticalStrike",
+        "AttackSpeed",
+        "NonbootsMovement"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3095": {
+      "id": "3095",
+      "name": "Chuva de Canivete",
+      "plaintext": "Fortalece absurdamente outros efeitos Energizados",
+      "gold": 3200,
+      "tags": [
+        "Damage",
+        "CriticalStrike",
+        "AttackSpeed",
+        "NonbootsMovement"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3100": {
+      "id": "3100",
+      "name": "Perdição de Lich",
+      "plaintext": "Concede um efeito ao ataque básico feito após uma conjuração",
+      "gold": 2900,
+      "tags": [
+        "SpellDamage",
+        "OnHit",
+        "NonbootsMovement",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3102": {
+      "id": "3102",
+      "name": "Véu da Banshee",
+      "plaintext": "Periodicamente bloqueia habilidades inimigas",
+      "gold": 3000,
+      "tags": [
+        "SpellBlock",
+        "SpellDamage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3107": {
+      "id": "3107",
+      "name": "Redenção",
+      "plaintext": "Ative para curar aliados e causar dano a inimigos em uma área",
+      "gold": 2300,
+      "tags": [
+        "SpellDamage",
+        "ManaRegen",
+        "CooldownReduction",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3108": {
+      "id": "3108",
+      "name": "Códex Demoníaco",
+      "plaintext": "Aumenta o Poder de Habilidade e a Redução do Tempo de Recarga",
+      "gold": 850,
+      "tags": [
+        "SpellDamage",
+        "CooldownReduction",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3109": {
+      "id": "3109",
+      "name": "Juramento do Cavaleiro",
+      "plaintext": "Faça uma Parceria com um aliado para proteger um ao outro",
+      "gold": 2300,
+      "tags": [
+        "Health",
+        "HealthRegen",
+        "Armor",
+        "Aura",
+        "Active",
+        "CooldownReduction",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3110": {
+      "id": "3110",
+      "name": "Coração Congelado",
+      "plaintext": "Aumenta drasticamente a Armadura e reduz a velocidade dos ataques básicos inimigos",
+      "gold": 2500,
+      "tags": [
+        "Armor",
+        "Mana",
+        "Aura",
+        "CooldownReduction",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3111": {
+      "id": "3111",
+      "name": "Passos de Mercúrio",
+      "plaintext": "Aumenta a Velocidade de Movimento e reduz a duração de efeitos debilitantes",
+      "gold": 1250,
+      "tags": [
+        "Boots",
+        "SpellBlock",
+        "Tenacity"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3112": {
+      "id": "3112",
+      "name": "Orbe do Guardião",
+      "plaintext": "Bom item iniciante para magos",
+      "gold": 950,
+      "tags": [
+        "Health",
+        "SpellDamage",
+        "ManaRegen",
+        "Lane"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3113": {
+      "id": "3113",
+      "name": "Cintilação Etérea",
+      "plaintext": "Aumenta o Poder de Habilidade e a Velocidade de Movimento",
+      "gold": 900,
+      "tags": [
+        "NonbootsMovement",
+        "SpellDamage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3114": {
+      "id": "3114",
+      "name": "Ídolo Proibido",
+      "plaintext": "Aumenta o poder de curas e escudos, Regeneração de Mana e Redução do Tempo de Recarga",
+      "gold": 600,
+      "tags": [
+        "ManaRegen"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3115": {
+      "id": "3115",
+      "name": "Dente de Na'Shor",
+      "plaintext": "Aumenta a Velocidade de Ataque, Poder de Habilidade e Redução do Tempo de Recarga",
+      "gold": 2900,
+      "tags": [
+        "AttackSpeed",
+        "SpellDamage",
+        "OnHit",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3116": {
+      "id": "3116",
+      "name": "Cetro de Cristal de Rylai",
+      "plaintext": "Habilidades reduzem a velocidade de inimigos",
+      "gold": 2600,
+      "tags": [
+        "Health",
+        "SpellDamage",
+        "Slow"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3118": {
+      "id": "3118",
+      "name": "Malevolência",
+      "plaintext": "Faça uma Parceria com um aliado para proteger um ao outro",
+      "gold": 2700,
+      "tags": [
+        "SpellDamage",
+        "Mana",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3119": {
+      "id": "3119",
+      "name": "Aproximação Invernal",
+      "plaintext": "",
+      "gold": 2400,
+      "tags": [
+        "Health",
+        "Mana",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3123": {
+      "id": "3123",
+      "name": "Chamado do Carrasco",
+      "plaintext": "Supera inimigos com alto recebimento de vida",
+      "gold": 800,
+      "tags": [
+        "Damage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3124": {
+      "id": "3124",
+      "name": "Lâmina da Fúria de Guinsoo",
+      "plaintext": "",
+      "gold": 3000,
+      "tags": [
+        "Damage",
+        "AttackSpeed",
+        "SpellDamage",
+        "OnHit"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3133": {
+      "id": "3133",
+      "name": "Martelo de Guerra de Caulfield",
+      "plaintext": "Dano de Ataque e Redução do Tempo de Recarga",
+      "gold": 1050,
+      "tags": [
+        "Damage",
+        "CooldownReduction",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3134": {
+      "id": "3134",
+      "name": "Punhal Serrilhado",
+      "plaintext": "Aumenta o Dano de Ataque e a Letalidade",
+      "gold": 1000,
+      "tags": [
+        "Damage",
+        "ArmorPenetration"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3135": {
+      "id": "3135",
+      "name": "Cajado do Vazio",
+      "plaintext": "Aumenta o Dano Mágico",
+      "gold": 3000,
+      "tags": [
+        "MagicPenetration",
+        "SpellDamage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3137": {
+      "id": "3137",
+      "name": "Criptoflora",
+      "plaintext": "Ative para remover todos os efeitos negativos e conceder Velocidade de Movimento drástica",
+      "gold": 3000,
+      "tags": [
+        "SpellDamage",
+        "MagicPenetration",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3139": {
+      "id": "3139",
+      "name": "Cimitarra Mercurial",
+      "plaintext": "Ative para remover todos os efeitos negativos de controle de grupo e conceder Velocidade de Movimento drástica",
+      "gold": 3200,
+      "tags": [
+        "SpellBlock",
+        "Damage",
+        "LifeSteal",
+        "Active",
+        "NonbootsMovement",
+        "Tenacity"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3140": {
+      "id": "3140",
+      "name": "Bandana de Mercúrio",
+      "plaintext": "Ative para remover todos os efeitos negativos de controle de grupo",
+      "gold": 1300,
+      "tags": [
+        "Active",
+        "SpellBlock"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3142": {
+      "id": "3142",
+      "name": "Lâmina Fantasma de Youmuu",
+      "plaintext": "Ative para aumentar drasticamente a Velocidade de Movimento",
+      "gold": 2800,
+      "tags": [
+        "Damage",
+        "Active",
+        "NonbootsMovement",
+        "ArmorPenetration"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3143": {
+      "id": "3143",
+      "name": "Presságio de Randuin",
+      "plaintext": "Aumenta drasticamente a defesa. Ative para reduzir a velocidade de inimigos próximos",
+      "gold": 2700,
+      "tags": [
+        "Health",
+        "Armor",
+        "Active",
+        "Slow"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3144": {
+      "id": "3144",
+      "name": "Estilingue do Patrulheiro",
+      "plaintext": "Ative para causar Dano Mágico e reduzir a velocidade do Campeão-alvo inimigo ",
+      "gold": 600,
+      "tags": [
+        "AttackSpeed"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3145": {
+      "id": "3145",
+      "name": "Alternador Hextec",
+      "plaintext": "Aumenta o Poder de Habilidade. Causa Dano Mágico adicional periodicamente ao atacar",
+      "gold": 1100,
+      "tags": [
+        "SpellDamage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3146": {
+      "id": "3146",
+      "name": "Pistola Laminar Hextec",
+      "plaintext": "Aumenta o Dano de Ataque e o Poder de Habilidade; ative para reduzir a velocidade de um alvo",
+      "gold": 3000,
+      "tags": [
+        "Damage",
+        "LifeSteal",
+        "SpellDamage",
+        "Active",
+        "SpellVamp"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3147": {
+      "id": "3147",
+      "name": "Máscara Assustadora",
+      "plaintext": "Causa Dano Físico adicional ao emboscar inimigos",
+      "gold": 1300,
+      "tags": [
+        "Health",
+        "SpellDamage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3152": {
+      "id": "3152",
+      "name": "Explocinturão Hextec",
+      "plaintext": "Ative para avançar e desferir uma explosão de fogo",
+      "gold": 2650,
+      "tags": [
+        "Health",
+        "SpellDamage",
+        "Active",
+        "CooldownReduction",
+        "NonbootsMovement",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3153": {
+      "id": "3153",
+      "name": "Espada do Rei Destruído",
+      "plaintext": "Causa dano com base na Vida do alvo. Pode roubar Velocidade de Movimento",
+      "gold": 3200,
+      "tags": [
+        "Damage",
+        "AttackSpeed",
+        "LifeSteal",
+        "Slow",
+        "OnHit"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3155": {
+      "id": "3155",
+      "name": "Hexdrinker",
+      "plaintext": "Aumenta o Dano de Ataque e a Resistência Mágica",
+      "gold": 1300,
+      "tags": [
+        "Damage",
+        "SpellBlock"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3156": {
+      "id": "3156",
+      "name": "Mandíbula de Malmortius",
+      "plaintext": "Concede Dano de Ataque adicional quando a Vida estiver baixa",
+      "gold": 3100,
+      "tags": [
+        "SpellBlock",
+        "Damage",
+        "LifeSteal",
+        "SpellVamp",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3157": {
+      "id": "3157",
+      "name": "Ampulheta de Zhonya",
+      "plaintext": "Ative para ficar invencível, mas incapaz de realizar qualquer ação",
+      "gold": 3250,
+      "tags": [
+        "Armor",
+        "SpellDamage",
+        "Active"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3158": {
+      "id": "3158",
+      "name": "Botas Ionianas da Lucidez",
+      "plaintext": "Aumenta a Velocidade de Movimento e a Redução do Tempo de Recarga",
+      "gold": 900,
+      "tags": [
+        "Boots",
+        "CooldownReduction"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3161": {
+      "id": "3161",
+      "name": "Lança de Shojin",
+      "plaintext": "Reduz o dano sofrido por Campeões em uma quantidade fixa. Ataque perto de múltiplos Campeões inimigos para aumentar essa quantidade por um curto período",
+      "gold": 3100,
+      "tags": [
+        "Health",
+        "Damage",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3165": {
+      "id": "3165",
+      "name": "Morellonomicon",
+      "plaintext": "Aumenta o Dano Mágico",
+      "gold": 2850,
+      "tags": [
+        "Health",
+        "SpellDamage",
+        "CooldownReduction",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3168": {
+      "id": "3168",
+      "name": "Caminho Imortal",
+      "plaintext": "",
+      "gold": 1100,
+      "tags": [
+        "LifeSteal",
+        "SpellVamp",
+        "Boots"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3170": {
+      "id": "3170",
+      "name": "Marcha Célere",
+      "plaintext": "Aumenta a defesa e reduz a duração de efeitos debilitantes",
+      "gold": 1000,
+      "tags": [
+        "Boots"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3171": {
+      "id": "3171",
+      "name": "Lucidez Escarlate",
+      "plaintext": "",
+      "gold": 900,
+      "tags": [
+        "CooldownReduction",
+        "Boots"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3172": {
+      "id": "3172",
+      "name": "Grevas Bélicas",
+      "plaintext": "Mobilidade e Tenacidade",
+      "gold": 1100,
+      "tags": [
+        "AttackSpeed",
+        "LifeSteal",
+        "NonbootsMovement"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3173": {
+      "id": "3173",
+      "name": "Esmagadores Acorrentados",
+      "plaintext": "Aumenta a Velocidade de Movimento e a Redução do Tempo de Recarga",
+      "gold": 1250,
+      "tags": [
+        "SpellBlock",
+        "Boots",
+        "Tenacity",
+        "MagicResist"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3174": {
+      "id": "3174",
+      "name": "Mobilização Blindada",
+      "plaintext": "Causa dano para fortalecer suas curas e escudos",
+      "gold": 1200,
+      "tags": [
+        "Armor",
+        "Boots"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3175": {
+      "id": "3175",
+      "name": "Sapatos Enfeitiçados",
+      "plaintext": "",
+      "gold": 1100,
+      "tags": [
+        "Boots",
+        "MagicPenetration"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3177": {
+      "id": "3177",
+      "name": "Lâmina do Guardião",
+      "plaintext": "Bom item inicial para atacantes.",
+      "gold": 950,
+      "tags": [
+        "Health",
+        "Damage",
+        "Lane",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3179": {
+      "id": "3179",
+      "name": "Glaive Sombria",
+      "plaintext": "Detecta periodicamente armadilhas e sentinelas",
+      "gold": 2800,
+      "tags": [
+        "Damage",
+        "Vision",
+        "CooldownReduction",
+        "ArmorPenetration",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3181": {
+      "id": "3181",
+      "name": "Quebracascos",
+      "plaintext": "",
+      "gold": 3000,
+      "tags": [
+        "Health",
+        "Damage",
+        "NonbootsMovement"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3184": {
+      "id": "3184",
+      "name": "Martelo do Guardião",
+      "plaintext": "Bom item iniciante para atacantes",
+      "gold": 950,
+      "tags": [
+        "Health",
+        "Damage",
+        "LifeSteal",
+        "Lane"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3190": {
+      "id": "3190",
+      "name": "Medalhão dos Solari de Ferro",
+      "plaintext": "Ative para proteger aliados próximos contra dano",
+      "gold": 2200,
+      "tags": [
+        "Health",
+        "SpellBlock",
+        "Armor",
+        "Aura",
+        "Active",
+        "MagicResist",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3211": {
+      "id": "3211",
+      "name": "Capuz do Espectro",
+      "plaintext": "Aprimora a defesa e concede regeneração ao receber dano",
+      "gold": 1250,
+      "tags": [
+        "Health",
+        "HealthRegen",
+        "SpellBlock"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3222": {
+      "id": "3222",
+      "name": "Bênção de Mikael",
+      "plaintext": "Ative para remover todos os efeitos debilitantes de um Campeão aliado",
+      "gold": 2300,
+      "tags": [
+        "Health",
+        "ManaRegen",
+        "Active",
+        "CooldownReduction",
+        "Tenacity",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3302": {
+      "id": "3302",
+      "name": "Terminus",
+      "plaintext": "Periodicamente abate tropas para curar e conceder ouro a um aliado próximo",
+      "gold": 3000,
+      "tags": [
+        "Damage",
+        "AttackSpeed",
+        "OnHit",
+        "MagicPenetration",
+        "ArmorPenetration"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3340": {
+      "id": "3340",
+      "name": "Sentinela Invisível",
+      "plaintext": "Periodicamente posiciona uma Sentinela Invisível",
+      "gold": 0,
+      "tags": [
+        "Active",
+        "Jungle",
+        "Lane",
+        "Trinket",
+        "Vision"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3363": {
+      "id": "3363",
+      "name": "Alteração Vidente",
+      "plaintext": "Concede alcance aumentado e revela a área-alvo",
+      "gold": 0,
+      "tags": [
+        "Active",
+        "Trinket",
+        "Vision"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3364": {
+      "id": "3364",
+      "name": "Lente do Oráculo",
+      "plaintext": "Desarma sentinelas e armadilhas invisíveis próximas por um período de tempo",
+      "gold": 0,
+      "tags": [
+        "Active",
+        "Trinket",
+        "Vision"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3504": {
+      "id": "3504",
+      "name": "Turíbulo Ardente",
+      "plaintext": "Efeitos de cura e escudo em outras unidades concedem Velocidade de Ataque a você e a elas, e seus ataques causam Dano Mágico adicional ao contato",
+      "gold": 2200,
+      "tags": [
+        "AttackSpeed",
+        "SpellDamage",
+        "ManaRegen",
+        "NonbootsMovement"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3508": {
+      "id": "3508",
+      "name": "Colhedor de Essência",
+      "plaintext": "",
+      "gold": 3050,
+      "tags": [
+        "Damage",
+        "CriticalStrike",
+        "ManaRegen",
+        "CooldownReduction",
+        "OnHit",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3742": {
+      "id": "3742",
+      "name": "Couraça do Defunto",
+      "plaintext": "Acumula Embalo com a movimentação, descarregando-o em inimigos",
+      "gold": 2900,
+      "tags": [
+        "Health",
+        "Armor",
+        "Slow",
+        "NonbootsMovement"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3748": {
+      "id": "3748",
+      "name": "Hidra Titânica",
+      "plaintext": "Causa dano em área com base na vida de seu dono",
+      "gold": 3300,
+      "tags": [
+        "Health",
+        "HealthRegen",
+        "Damage",
+        "OnHit"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3801": {
+      "id": "3801",
+      "name": "Braçadeira Cristalina",
+      "plaintext": "Concede Vida e Regeneração de Vida",
+      "gold": 800,
+      "tags": [
+        "Health",
+        "HealthRegen"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3802": {
+      "id": "3802",
+      "name": "Capítulo Perdido",
+      "plaintext": "Restaura Mana ao subir de nível",
+      "gold": 1200,
+      "tags": [
+        "SpellDamage",
+        "Mana",
+        "ManaRegen",
+        "CooldownReduction",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3803": {
+      "id": "3803",
+      "name": "Catalisador das Eras",
+      "plaintext": "",
+      "gold": 1300,
+      "tags": [
+        "Health",
+        "HealthRegen",
+        "Mana",
+        "ManaRegen"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3814": {
+      "id": "3814",
+      "name": "Limiar da Noite",
+      "plaintext": "Periodicamente bloqueia habilidades inimigas",
+      "gold": 3000,
+      "tags": [
+        "Health",
+        "Damage",
+        "ArmorPenetration"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3865": {
+      "id": "3865",
+      "name": "Atlas Mundial",
+      "plaintext": "",
+      "gold": 400,
+      "tags": [
+        "Health",
+        "ManaRegen",
+        "Vision",
+        "GoldPer",
+        "Lane"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3869": {
+      "id": "3869",
+      "name": "Oposição Celestial",
+      "plaintext": "",
+      "gold": 400,
+      "tags": [
+        "Health",
+        "HealthRegen",
+        "ManaRegen",
+        "Vision",
+        "GoldPer",
+        "Lane"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3870": {
+      "id": "3870",
+      "name": "Criassonhos",
+      "plaintext": "",
+      "gold": 400,
+      "tags": [
+        "Health",
+        "HealthRegen",
+        "ManaRegen",
+        "Vision",
+        "GoldPer",
+        "Lane"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3871": {
+      "id": "3871",
+      "name": "Invadomínio de Zaz'Zak",
+      "plaintext": "",
+      "gold": 400,
+      "tags": [
+        "Health",
+        "HealthRegen",
+        "ManaRegen",
+        "Vision",
+        "GoldPer",
+        "Lane"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3876": {
+      "id": "3876",
+      "name": "Trenó do Solstício",
+      "plaintext": "",
+      "gold": 400,
+      "tags": [
+        "Health",
+        "HealthRegen",
+        "ManaRegen",
+        "Vision",
+        "GoldPer",
+        "Lane"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3877": {
+      "id": "3877",
+      "name": "Canção de Sangue",
+      "plaintext": "",
+      "gold": 400,
+      "tags": [
+        "Health",
+        "HealthRegen",
+        "ManaRegen",
+        "Vision",
+        "GoldPer",
+        "Lane"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "3916": {
+      "id": "3916",
+      "name": "Orbe do Oblívio",
+      "plaintext": "Aumenta o Dano Mágico",
+      "gold": 800,
+      "tags": [
+        "SpellDamage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "4005": {
+      "id": "4005",
+      "name": "Mandato Imperial",
+      "plaintext": "Defere dano posteriormente.",
+      "gold": 2400,
+      "tags": [
+        "SpellDamage",
+        "ManaRegen",
+        "CooldownReduction",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "4401": {
+      "id": "4401",
+      "name": "Força da Natureza",
+      "plaintext": "Velocidade de Movimento, Resistência Mágica e Regeneração de Vida máxima",
+      "gold": 2800,
+      "tags": [
+        "Health",
+        "SpellBlock",
+        "NonbootsMovement"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "4628": {
+      "id": "4628",
+      "name": "Foco do Horizonte",
+      "plaintext": "Imobilizar um Campeão causa dano a ele com um relâmpago.",
+      "gold": 2700,
+      "tags": [
+        "SpellDamage",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "4629": {
+      "id": "4629",
+      "name": "Ímpeto Cósmico",
+      "plaintext": "Grande Redução do Tempo de Recarga.",
+      "gold": 3000,
+      "tags": [
+        "Health",
+        "SpellDamage",
+        "NonbootsMovement",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "4630": {
+      "id": "4630",
+      "name": "Joia da Ruína",
+      "plaintext": "",
+      "gold": 1100,
+      "tags": [
+        "MagicPenetration",
+        "SpellDamage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "4632": {
+      "id": "4632",
+      "name": "Barreira Verdejante",
+      "plaintext": "",
+      "gold": 1600,
+      "tags": [
+        "SpellBlock",
+        "SpellDamage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "4633": {
+      "id": "4633",
+      "name": "Criafendas",
+      "plaintext": "",
+      "gold": 3100,
+      "tags": [
+        "Health",
+        "SpellDamage",
+        "CooldownReduction",
+        "SpellVamp"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "4642": {
+      "id": "4642",
+      "name": "Espelho de Bandópolis",
+      "plaintext": "",
+      "gold": 900,
+      "tags": [
+        "SpellDamage",
+        "ManaRegen",
+        "CooldownReduction",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "4645": {
+      "id": "4645",
+      "name": "Chama Sombria",
+      "plaintext": "",
+      "gold": 3200,
+      "tags": [
+        "SpellDamage",
+        "MagicPenetration"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "4646": {
+      "id": "4646",
+      "name": "Ápice da Tempestade",
+      "plaintext": "",
+      "gold": 2800,
+      "tags": [
+        "SpellDamage",
+        "GoldPer",
+        "NonbootsMovement",
+        "MagicPenetration"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6333": {
+      "id": "6333",
+      "name": "Dança da Morte",
+      "plaintext": "",
+      "gold": 3300,
+      "tags": [
+        "Armor",
+        "Damage",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6609": {
+      "id": "6609",
+      "name": "Serrespada Quimiopunk",
+      "plaintext": "",
+      "gold": 3000,
+      "tags": [
+        "Health",
+        "Damage",
+        "CooldownReduction",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6610": {
+      "id": "6610",
+      "name": "Céu Dividido",
+      "plaintext": "",
+      "gold": 3100,
+      "tags": [
+        "Health",
+        "Damage",
+        "CooldownReduction",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6616": {
+      "id": "6616",
+      "name": "Cajado Aquafluxo",
+      "plaintext": "Suas curas e Escudos reduzem Controles de Grupo e concedem Velocidade de Movimento.",
+      "gold": 2250,
+      "tags": [
+        "SpellDamage",
+        "ManaRegen",
+        "CooldownReduction",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6617": {
+      "id": "6617",
+      "name": "Regenerador de Pedra Lunar",
+      "plaintext": "Suas curas e Escudos recarregam mais rapidamente e são mais eficazes em aliados com Vida baixa.",
+      "gold": 2200,
+      "tags": [
+        "Health",
+        "SpellDamage",
+        "ManaRegen",
+        "CooldownReduction",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6620": {
+      "id": "6620",
+      "name": "Ecos de Helia",
+      "plaintext": "Causar dano a inimigos com Vida baixa ativa uma explosão amaldiçoada que causa dano e Lentidão a inimigos próximos.",
+      "gold": 2200,
+      "tags": [
+        "Health",
+        "SpellDamage",
+        "ManaRegen",
+        "CooldownReduction",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6621": {
+      "id": "6621",
+      "name": "Auronúcleo",
+      "plaintext": "",
+      "gold": 2500,
+      "tags": [
+        "SpellDamage",
+        "ManaRegen"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6631": {
+      "id": "6631",
+      "name": "Quebrapassos",
+      "plaintext": "",
+      "gold": 3300,
+      "tags": [
+        "Health",
+        "Damage",
+        "AttackSpeed",
+        "Slow"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6653": {
+      "id": "6653",
+      "name": "Tormento de Liandry",
+      "plaintext": "Carregue em combate para causar muito dano ao longo do tempo, especialmente a inimigos resistentes.",
+      "gold": 3000,
+      "tags": [
+        "Health",
+        "SpellDamage"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6655": {
+      "id": "6655",
+      "name": "Eco de Luden",
+      "plaintext": "Grande quantidade de dano explosivo. Bom item contra alvos frágeis.",
+      "gold": 2750,
+      "tags": [
+        "SpellDamage",
+        "Mana",
+        "CooldownReduction",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6657": {
+      "id": "6657",
+      "name": "Bastão das Eras",
+      "plaintext": "",
+      "gold": 2600,
+      "tags": [
+        "Health",
+        "HealthRegen",
+        "SpellDamage",
+        "Mana",
+        "ManaRegen"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6660": {
+      "id": "6660",
+      "name": "Brasa de Bami",
+      "plaintext": "",
+      "gold": 900,
+      "tags": [
+        "Health",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6662": {
+      "id": "6662",
+      "name": "Manopla dos Glacinatas",
+      "plaintext": "Grande quantidade de Resistência Mágica. Causa Lentidão passivamente a inimigos próximos. Quando Habilidades são conjuradas perto de você, libera uma onda de energia que causa dano e Lentidão.",
+      "gold": 2900,
+      "tags": [
+        "Health",
+        "Armor",
+        "CooldownReduction",
+        "Slow",
+        "OnHit",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6664": {
+      "id": "6664",
+      "name": "Resplendor Vazio",
+      "plaintext": "Imobilizar inimigos invoca um escudo. Ativar faz você correr mais rápido em direção a oponentes.",
+      "gold": 2800,
+      "tags": [
+        "Health",
+        "SpellBlock",
+        "HealthRegen",
+        "Aura",
+        "MagicResist",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6665": {
+      "id": "6665",
+      "name": "Jak'Sho, o Inconstante",
+      "plaintext": "",
+      "gold": 3200,
+      "tags": [
+        "Health",
+        "SpellBlock",
+        "Armor",
+        "MagicResist"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6670": {
+      "id": "6670",
+      "name": "Aljava Vespertina",
+      "plaintext": "",
+      "gold": 1300,
+      "tags": [
+        "Damage",
+        "CriticalStrike"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6672": {
+      "id": "6672",
+      "name": "Mata-Cráquens",
+      "plaintext": "",
+      "gold": 3000,
+      "tags": [
+        "Damage",
+        "AttackSpeed",
+        "OnHit",
+        "NonbootsMovement"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6673": {
+      "id": "6673",
+      "name": "Arco-escudo Imortal",
+      "plaintext": "",
+      "gold": 3000,
+      "tags": [
+        "Damage",
+        "CriticalStrike"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6675": {
+      "id": "6675",
+      "name": "Adaga Oscilante Navori",
+      "plaintext": "",
+      "gold": 2650,
+      "tags": [
+        "CriticalStrike",
+        "AttackSpeed",
+        "NonbootsMovement"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6676": {
+      "id": "6676",
+      "name": "A Coletora",
+      "plaintext": "",
+      "gold": 3000,
+      "tags": [
+        "Damage",
+        "CriticalStrike",
+        "ArmorPenetration"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6690": {
+      "id": "6690",
+      "name": "Retriz",
+      "plaintext": "",
+      "gold": 775,
+      "tags": [
+        "Damage",
+        "NonbootsMovement"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6692": {
+      "id": "6692",
+      "name": "Eclipse",
+      "plaintext": "",
+      "gold": 2900,
+      "tags": [
+        "Damage",
+        "CooldownReduction",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6694": {
+      "id": "6694",
+      "name": "Rancor de Serylda",
+      "plaintext": "",
+      "gold": 3000,
+      "tags": [
+        "Damage",
+        "CooldownReduction",
+        "ArmorPenetration",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6695": {
+      "id": "6695",
+      "name": "Presa da Serpente",
+      "plaintext": "",
+      "gold": 2500,
+      "tags": [
+        "Damage",
+        "ArmorPenetration"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6696": {
+      "id": "6696",
+      "name": "Arco do Axioma",
+      "plaintext": "",
+      "gold": 2750,
+      "tags": [
+        "Damage",
+        "ArmorPenetration",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6697": {
+      "id": "6697",
+      "name": "Húbris",
+      "plaintext": "",
+      "gold": 2800,
+      "tags": [
+        "Damage",
+        "Active",
+        "CooldownReduction",
+        "ArmorPenetration",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6698": {
+      "id": "6698",
+      "name": "Hidra Profana",
+      "plaintext": "",
+      "gold": 2850,
+      "tags": [
+        "Damage",
+        "Active",
+        "CooldownReduction",
+        "ArmorPenetration",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "6699": {
+      "id": "6699",
+      "name": "Cicloespada Voltaica",
+      "plaintext": "",
+      "gold": 3000,
+      "tags": [
+        "Damage",
+        "Active",
+        "CooldownReduction",
+        "ArmorPenetration",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "8010": {
+      "id": "8010",
+      "name": "Maldição Sanguinária",
+      "plaintext": "",
+      "gold": 2900,
+      "tags": [
+        "Health",
+        "SpellDamage",
+        "CooldownReduction",
+        "MagicPenetration"
+      ],
+      "maps11": true,
+      "purchasable": true
+    },
+    "8020": {
+      "id": "8020",
+      "name": "Máscara Abissal",
+      "plaintext": "",
+      "gold": 2650,
+      "tags": [
+        "Health",
+        "SpellBlock",
+        "CooldownReduction",
+        "MagicResist",
+        "AbilityHaste"
+      ],
+      "maps11": true,
+      "purchasable": true
+    }
+  },
+  "runeTrees": [
+    {
+      "id": 8100,
+      "key": "Domination",
+      "name": "Dominação",
+      "slots": [
+        {
+          "runes": [
+            {
+              "id": 8112,
+              "key": "Electrocute",
+              "name": "Eletrocutar",
+              "shortDesc": "Acertar um Campeão com 3 ataques ou habilidades <b>separadas</b> em 3s causa <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_AdaptiveDmg'>Dano Adaptativo</lol-uikit-tooltipped-keyword> adicional."
+            },
+            {
+              "id": 8128,
+              "key": "DarkHarvest",
+              "name": "Colheita Sombria",
+              "shortDesc": "Causar dano a um Campeão que está com pouca Vida inflige <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_AdaptiveDmg'>Dano Adaptativo</lol-uikit-tooltipped-keyword> e colhe a alma de sua vítima."
+            },
+            {
+              "id": 9923,
+              "key": "HailOfBlades",
+              "name": "Chuva de Lâminas",
+              "shortDesc": "Recebe uma grande quantidade de Velocidade de Ataque e <trueDamage>Dano Verdadeiro</trueDamage> adicional pelos primeiros 3 ataques contra Campeões inimigos."
+            }
+          ]
+        },
+        {
+          "runes": [
+            {
+              "id": 8126,
+              "key": "CheapShot",
+              "name": "Golpe Desleal",
+              "shortDesc": "Causa Dano Verdadeiro adicional a Campeões inimigos com <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_ImpairAct'>mobilidade ou ações debilitadas</lol-uikit-tooltipped-keyword>. "
+            },
+            {
+              "id": 8139,
+              "key": "TasteOfBlood",
+              "name": "Gosto de Sangue",
+              "shortDesc": "Cura ao causar dano a um Campeão inimigo."
+            },
+            {
+              "id": 8143,
+              "key": "SuddenImpact",
+              "name": "Impacto Repentino",
+              "shortDesc": "Depois de usar um avanço, salto, teleporte ou ao sair da furtividade, seus ataques básicos e habilidades de dano causam Dano Verdadeiro adicional a Campeões inimigos."
+            }
+          ]
+        },
+        {
+          "runes": [
+            {
+              "id": 8137,
+              "key": "SixthSense",
+              "name": "Sexto Sentido",
+              "shortDesc": "Com um longo Tempo de Recarga, detecta automaticamente uma sentinela oculta próxima, rastreando-a para a equipe. <br><br>Nível 11: também revela a sentinela por 10s."
+            },
+            {
+              "id": 8140,
+              "key": "GrislyMementos",
+              "name": "Lembranças Aterrorizantes",
+              "shortDesc": "Colete 1 Lembranças ao <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>eliminar</lol-uikit-tooltipped-keyword> Campeões, até um máximo de 18.<br><br>Recebe 6 de Aceleração de Amuleto para cada Lembrança coletada."
+            },
+            {
+              "id": 8141,
+              "key": "DeepWard",
+              "name": "Sentinela Profunda",
+              "shortDesc": "Suas sentinelas na selva inimiga são <keywordMajor>Profundas</keywordMajor>, recebendo Vida e Duração.<br><br>Nível 9: As sentinelas no rio também são <keywordMajor>Profundas</keywordMajor>."
+            }
+          ]
+        },
+        {
+          "runes": [
+            {
+              "id": 8135,
+              "key": "TreasureHunter",
+              "name": "Caçador de Tesouros",
+              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>Eliminações</lol-uikit-tooltipped-keyword> <b>únicas</b> concedem ouro adicional na primeira vez que são coletadas. "
+            },
+            {
+              "id": 8105,
+              "key": "RelentlessHunter",
+              "name": "Caça Incansável",
+              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>Eliminações</lol-uikit-tooltipped-keyword> <b>únicas</b> concedem <b><lol-uikit-tooltipped-keyword key='LinkTooltip_Description_MS'>VdM</lol-uikit-tooltipped-keyword></b> permanente fora de combate. "
+            },
+            {
+              "id": 8106,
+              "key": "UltimateHunter",
+              "name": "Caça Suprema",
+              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>Eliminações</lol-uikit-tooltipped-keyword> <b>únicas</b> concedem Redução de Tempo de Recarga permanente para a ultimate. "
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 8300,
+      "key": "Inspiration",
+      "name": "Inspiração",
+      "slots": [
+        {
+          "runes": [
+            {
+              "id": 8351,
+              "key": "GlacialAugment",
+              "name": "Aprimoramento Glacial",
+              "shortDesc": "Imobilizar um Campeão inimigo invocará 3 raios glaciais que causam Lentidão a inimigos próximos e reduzem o dano deles contra seus aliados."
+            },
+            {
+              "id": 8360,
+              "key": "UnsealedSpellbook",
+              "name": "Livro de Feitiços Deslacrado",
+              "shortDesc": "Troque Feitiços de Invocador enquanto estiver fora de combate. Trocar para Feitiços de Invocador únicos aumentará a frequência com que você poderá fazer trocas futuras."
+            },
+            {
+              "id": 8369,
+              "key": "FirstStrike",
+              "name": "Primeiro Ataque",
+              "shortDesc": "Ao iniciar um combate contra um Campeão, você causa 7% de dano adicional por 3s e recebe ouro com base no dano causado."
+            }
+          ]
+        },
+        {
+          "runes": [
+            {
+              "id": 8306,
+              "key": "HextechFlashtraption",
+              "name": "Flashtração Hextec",
+              "shortDesc": "Enquanto o Flash estiver em Tempo de Recarga, ele é substituído pelo <i>Flash Hextec</i>.<br><br><i>Flash Hextec</i>: canalize e depois se teletransporte para um novo local."
+            },
+            {
+              "id": 8304,
+              "key": "MagicalFootwear",
+              "name": "Calçados Mágicos",
+              "shortDesc": "Concede botas gratuitamente aos 12 mins, mas não é possível comprar botas antes disso. Cada <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>eliminação</lol-uikit-tooltipped-keyword> bem-sucedida faz suas botas virem 45s mais cedo."
+            },
+            {
+              "id": 8321,
+              "key": "CashBack",
+              "name": "Reembolso",
+              "shortDesc": "Recebe parte do ouro de volta ao comprar itens Lendários."
+            }
+          ]
+        },
+        {
+          "runes": [
+            {
+              "id": 8313,
+              "key": "PerfectTiming",
+              "name": "Tônico Triplo",
+              "shortDesc": "Ao alcançar o nível 3, recebe um Elixir da Avareza.<br>Ao alcançar o nível 6, recebe um Elixir da Força.<br>Ao alcançar o nível 9, recebe um Elixir da Habilidade. "
+            },
+            {
+              "id": 8352,
+              "key": "TimeWarpTonic",
+              "name": "Tônico de Distorção no Tempo",
+              "shortDesc": "Poções concedem um pouco de restauração imediatamente."
+            },
+            {
+              "id": 8345,
+              "key": "BiscuitDelivery",
+              "name": "Entrega de Biscoitos",
+              "shortDesc": "Ganha um Biscoito grátis a cada 2min, até o minuto 6. Consumir ou vender Biscoitos aumenta permanentemente sua Vida máxima e restaura Vida."
+            }
+          ]
+        },
+        {
+          "runes": [
+            {
+              "id": 8347,
+              "key": "CosmicInsight",
+              "name": "Perspicácia Cósmica",
+              "shortDesc": "+<attention>18</attention> de Aceleração de Feitiço de Invocador<br>+<attention>10</attention> de Aceleração de Item"
+            },
+            {
+              "id": 8410,
+              "key": "ApproachVelocity",
+              "name": "Velocidade de Aproximação",
+              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_MS'>VdM</lol-uikit-tooltipped-keyword> adicional em direção a Campeões inimigos próximos com <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_ImpairMov'>movimento debilitado</lol-uikit-tooltipped-keyword>, aumentada em Campeões inimigos cujo movimento você debilitou."
+            },
+            {
+              "id": 8316,
+              "key": "JackOfAllTrades",
+              "name": "Quebra-galho",
+              "shortDesc": "A cada atributo diferente recebido de itens, recebe um acúmulo de Quebra-galho. Cada acúmulo concede a você <speed>1 de Aceleração de Habilidade</speed>.<br><br>Recebe <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Adaptive'>Força Adaptativa</lol-uikit-tooltipped-keyword> adicional com 5 e 10 acúmulos."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 8000,
+      "key": "Precision",
+      "name": "Precisão",
+      "slots": [
+        {
+          "runes": [
+            {
+              "id": 8005,
+              "key": "PressTheAttack",
+              "name": "Pressione o Ataque",
+              "shortDesc": "Atingir um Campeão inimigo 3 vezes consecutivas causa dano adicional e amplifica seu dano até sair de combate contra Campeões."
+            },
+            {
+              "id": 8008,
+              "key": "LethalTempo",
+              "name": "Ritmo Fatal",
+              "shortDesc": "Atacar um Campeão inimigo concede a você Velocidade de Ataque, até 6 acúmulos. Com o máximo de acúmulos, causa <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_AdaptiveDmg'><font color='#48C4B7'>Dano Adaptativo adicional</font></lol-uikit-tooltipped-keyword> ao contato."
+            },
+            {
+              "id": 8021,
+              "key": "FleetFootwork",
+              "name": "Agilidade nos Pés",
+              "shortDesc": "Atacar e se movimentar geram acúmulos de Energia. Com 100 acúmulos, seu próximo ataque cura você e concede um aumento de <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_MS'>VdM</lol-uikit-tooltipped-keyword>."
+            },
+            {
+              "id": 8010,
+              "key": "Conqueror",
+              "name": "Conquistador",
+              "shortDesc": "Ganha acúmulos de Força Adaptativa ao atacar Campeões inimigos. Após alcançar 12 acúmulos, cura uma parte do dano causado a Campeões."
+            }
+          ]
+        },
+        {
+          "runes": [
+            {
+              "id": 9101,
+              "key": "AbsorbLife",
+              "name": "Absorção Vital",
+              "shortDesc": "Abater um alvo cura você."
+            },
+            {
+              "id": 9111,
+              "key": "Triumph",
+              "name": "Triunfo",
+              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>Eliminações</lol-uikit-tooltipped-keyword> restauram 5% da sua Vida perdida e concedem 20 de ouro adicional. "
+            },
+            {
+              "id": 8009,
+              "key": "PresenceOfMind",
+              "name": "Presença de Espírito",
+              "shortDesc": "Restaura uma pequena quantidade de Mana ou Energia ao causar dano a um Campeão inimigo. Eliminações restauram Mana ou Energia."
+            }
+          ]
+        },
+        {
+          "runes": [
+            {
+              "id": 9104,
+              "key": "LegendAlacrity",
+              "name": "Lenda: Espontaneidade",
+              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>Eliminações</lol-uikit-tooltipped-keyword> de inimigos concedem <b>Velocidade de Ataque</b> permanente. "
+            },
+            {
+              "id": 9105,
+              "key": "LegendHaste",
+              "name": "Lenda: Aceleração",
+              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>Eliminar</lol-uikit-tooltipped-keyword> inimigos concede <b>Aceleração</b> permanente de habilidades básicas. "
+            },
+            {
+              "id": 9103,
+              "key": "LegendBloodline",
+              "name": "Lenda: Linhagem",
+              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>Eliminações</lol-uikit-tooltipped-keyword> de inimigos concedem <b>Roubo de Vida</b> permanente até um limite. Quando o limite é atingido, aumentam sua Vida máxima. Fraco no começo mas fica mais forte do que as outras runas Lenda no fim de jogo."
+            }
+          ]
+        },
+        {
+          "runes": [
+            {
+              "id": 8014,
+              "key": "CoupDeGrace",
+              "name": "Golpe de Misericórdia",
+              "shortDesc": "Causa mais dano a Campeões inimigos com pouca Vida."
+            },
+            {
+              "id": 8017,
+              "key": "CutDown",
+              "name": "Dilacerar",
+              "shortDesc": "Causa mais dano a Campeões inimigos com muita Vida."
+            },
+            {
+              "id": 8299,
+              "key": "LastStand",
+              "name": "Até a Morte",
+              "shortDesc": "Cause mais dano a Campeões enquanto estiver com pouca Vida."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 8400,
+      "key": "Resolve",
+      "name": "Determinação",
+      "slots": [
+        {
+          "runes": [
+            {
+              "id": 8437,
+              "key": "GraspOfTheUndying",
+              "name": "Aperto dos Mortos-Vivos",
+              "shortDesc": "A cada 4s, seu próximo ataque contra um Campeão causa Dano Mágico adicional, cura você e aumenta permanentemente sua Vida."
+            },
+            {
+              "id": 8439,
+              "key": "Aftershock",
+              "name": "Pós-choque",
+              "shortDesc": "Após <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Immobilize'>imobilizar</lol-uikit-tooltipped-keyword> um Campeão inimigo, ganha defesas e depois causa um ataque de Dano Mágico explosivo ao seu redor."
+            },
+            {
+              "id": 8465,
+              "key": "Guardian",
+              "name": "Guardião",
+              "shortDesc": "Protege aliados nos quais você conjurou habilidades e aliados muito próximos a você. Se você ou um Campeão aliado protegido sofrer dano com base no nível, ambos recebem um escudo."
+            }
+          ]
+        },
+        {
+          "runes": [
+            {
+              "id": 8446,
+              "key": "Demolish",
+              "name": "Demolir",
+              "shortDesc": "Seu terceiro ataque contra torres causa dano adicional."
+            },
+            {
+              "id": 8463,
+              "key": "FontOfLife",
+              "name": "Fonte da Vida",
+              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_ImpairMov'>Debilitar</lol-uikit-tooltipped-keyword> o movimento de um Campeão inimigo cura Campeões aliados próximos. "
+            },
+            {
+              "id": 8401,
+              "key": "ShieldBash",
+              "name": "Golpe de Escudo",
+              "shortDesc": "Sempre que receber um escudo, seu próximo ataque básico contra um Campeão causará <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Adaptive'><font color='#48C4B7'>Dano Adaptativo</font></lol-uikit-tooltipped-keyword> adicional."
+            }
+          ]
+        },
+        {
+          "runes": [
+            {
+              "id": 8429,
+              "key": "Conditioning",
+              "name": "Condicionamento",
+              "shortDesc": "Depois de 12min, recebe +8 de Armadura, +8 de Resistência Mágica e aumenta sua Armadura e Resistência Mágica em 3%."
+            },
+            {
+              "id": 8444,
+              "key": "SecondWind",
+              "name": "Ventos Revigorantes",
+              "shortDesc": "Após receber dano de um Campeão inimigo, um pouco da Vida perdida é restaurada ao longo do tempo. "
+            },
+            {
+              "id": 8473,
+              "key": "BonePlating",
+              "name": "Osso Revestido",
+              "shortDesc": "Após sofrer dano de um Campeão inimigo, os próximos 3 Ataques ou Habilidades que você sofrer desse inimigo causarão 30 - 60 (com base no nível) a menos de dano.<br><br>Duração: 1.5s<br>Tempo de Recarga: 55s"
+            }
+          ]
+        },
+        {
+          "runes": [
+            {
+              "id": 8451,
+              "key": "Overgrowth",
+              "name": "Crescimento Excessivo",
+              "shortDesc": "Recebe Vida máxima permanente quando tropas inimigas ou monstros são abatidos perto de você."
+            },
+            {
+              "id": 8453,
+              "key": "Revitalize",
+              "name": "Revitalizar",
+              "shortDesc": "Recebe 5% de Cura e Resistência do Escudo.<br><br>Curas e Escudos conjurados ou recebidos são 10% mais fortes em alvos com menos de 40% de Vida."
+            },
+            {
+              "id": 8242,
+              "key": "Unflinching",
+              "name": "Inabalável",
+              "shortDesc": "Recebe Armadura e Resistência Mágica ao sofrer Controle de Grupo."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 8200,
+      "key": "Sorcery",
+      "name": "Feitiçaria",
+      "slots": [
+        {
+          "runes": [
+            {
+              "id": 8214,
+              "key": "SummonAery",
+              "name": "Invocar Aery",
+              "shortDesc": "Seus ataques e habilidades enviam Aery até um alvo, causando dano a inimigos ou protegendo aliados com um escudo."
+            },
+            {
+              "id": 8229,
+              "key": "ArcaneComet",
+              "name": "Cometa Arcano",
+              "shortDesc": "Ao causar dano a um Campeão com uma habilidade, um cometa é lançado onde ele estiver."
+            },
+            {
+              "id": 8230,
+              "key": "PhaseRush",
+              "name": "Avanço da Tempestade",
+              "shortDesc": "Causar dano equivalente a 25% da Vida máxima de um Campeão concede um impulso de <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_MS'>VdM</lol-uikit-tooltipped-keyword> e Resistência a Lentidão. "
+            },
+            {
+              "id": 8992,
+              "key": "DeathfireTouch",
+              "name": "Toque Ígneo",
+              "shortDesc": "Causar dano a um Campeão com uma habilidade o queima ao longo do tempo."
+            }
+          ]
+        },
+        {
+          "runes": [
+            {
+              "id": 8224,
+              "key": "NullifyingOrb",
+              "name": "Arcanista do Axioma",
+              "shortDesc": "Sua ultimate causa mais dano e recebe mais cura e Escudo. Eliminar um Campeão inimigo reduz o Tempo de Recarga atual da sua ultimate."
+            },
+            {
+              "id": 8226,
+              "key": "ManaflowBand",
+              "name": "Faixa de Fluxo de Mana",
+              "shortDesc": "Atingir um Campeão inimigo com uma habilidade aumenta permanentemente seu Mana máximo em 25, até o total de 250 de Mana.<br><br>Após atingir 250 de Mana adicional, 1% da seu Mana perdido é restaurado a cada 5s"
+            },
+            {
+              "id": 8275,
+              "key": "NimbusCloak",
+              "name": "Manto de Nimbus",
+              "shortDesc": "Após conjurar um Feitiço de Invocador, concede um breve aumento de <speed>Velocidade de Movimento</speed> que permite atravessar unidades."
+            }
+          ]
+        },
+        {
+          "runes": [
+            {
+              "id": 8210,
+              "key": "Transcendence",
+              "name": "Transcendência",
+              "shortDesc": "Recebe efeitos adicionais ao atingir os seguintes níveis:<br>Nível 5: +5 <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_CDR'>de Aceleração de Habilidade</lol-uikit-tooltipped-keyword> <br>Nível 8: +5 <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_CDR'>de Aceleração de Habilidade</lol-uikit-tooltipped-keyword> <br>Nível 11: ao eliminar um Campeão inimigo, reduz o Tempo de Recarga restante das habilidades básicas em 20%."
+            },
+            {
+              "id": 8234,
+              "key": "Celerity",
+              "name": "Celeridade",
+              "shortDesc": "Todos os efeitos de <speed>Velocidade de Movimento</speed> adicional são 7% mais eficazes em você, além de conceder <speed>1% de Velocidade de Movimento</speed>."
+            },
+            {
+              "id": 8233,
+              "key": "AbsoluteFocus",
+              "name": "Foco Absoluto",
+              "shortDesc": "Acima de 70% de Vida, recebe <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_AdaptiveDmg'>Dano Adaptativo</lol-uikit-tooltipped-keyword> adicional."
+            }
+          ]
+        },
+        {
+          "runes": [
+            {
+              "id": 8237,
+              "key": "Scorch",
+              "name": "Chamuscar",
+              "shortDesc": "Sua primeira habilidade de dano a atingir o alvo a cada 10s incinerará Campeões."
+            },
+            {
+              "id": 8232,
+              "key": "Waterwalking",
+              "name": "Caminhar Sobre as Águas",
+              "shortDesc": "Concede <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_MS'>VdM</lol-uikit-tooltipped-keyword> e PdH ou DdA <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Adaptive'>Adaptativos</lol-uikit-tooltipped-keyword> no rio."
+            },
+            {
+              "id": 8236,
+              "key": "GatheringStorm",
+              "name": "Tempestade Crescente",
+              "shortDesc": "Recebe quantidades crescentes de DdA ou PdH <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Adaptive'>Adaptativo</lol-uikit-tooltipped-keyword> ao longo da partida."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

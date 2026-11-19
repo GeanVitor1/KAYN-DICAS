@@ -1,0 +1,16 @@
+appId: com.geanvitor.kayndicas
+productName: KAYN-DICAS
+directories:
+  output: release
+files:
+  - dist/**/*
+  - dist-electron/**/*
+  - package.json
+win:
+  target:
+    - target: portable
+      arch:
+        - x64
+  signAndEditExecutable: false
+portable:
+  artifactName: KAYN-DICAS-${version}-portable.exe
