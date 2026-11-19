@@ -15,6 +15,7 @@ import type {
   FrozenPreGameCard,
   PersistedAppState,
   ReviewMatch,
+  StudyLesson,
   TrainingScenario,
 } from '../shared/types';
 
@@ -56,6 +57,11 @@ function getBrowserFallbackState(): PersistedAppState {
     trainingScenarios: [...DEMO_TRAINING_SCENARIOS],
     reviews: [...DEMO_REVIEWS],
     activeReviewId: DEMO_REVIEWS[0].id,
+    customLessons: [],
+    favoriteMicroIds: [
+      'caiozera-micro-rhaast-e-wall-pivot',
+      'drill-blue-w-motion',
+    ],
   };
 }
 
@@ -159,6 +165,30 @@ const browserFallbackApi: KaynDesktopApi = {
   async setActiveReview(reviewId: string) {
     const s = getBrowserFallbackState();
     return saveBrowserFallbackState({ ...s, activeReviewId: reviewId });
+  },
+  async saveCustomLesson(lesson: StudyLesson) {
+    const s = getBrowserFallbackState();
+    const customLessons = [
+      lesson,
+      ...(s.customLessons ?? []).filter((l) => l.id !== lesson.id),
+    ];
+    return saveBrowserFallbackState({ ...s, customLessons });
+  },
+  async deleteCustomLesson(lessonId: string) {
+    const s = getBrowserFallbackState();
+    return saveBrowserFallbackState({
+      ...s,
+      customLessons: (s.customLessons ?? []).filter((l) => l.id !== lessonId),
+      favoriteMicroIds: (s.favoriteMicroIds ?? []).filter((id) => id !== lessonId),
+    });
+  },
+  async setFavoriteMicroIds(ids: string[]) {
+    const s = getBrowserFallbackState();
+    return saveBrowserFallbackState({ ...s, favoriteMicroIds: ids.slice(0, 3) });
+  },
+  async openExternalUrl(url: string) {
+    window.open(url, '_blank', 'noopener,noreferrer');
+    return { ok: true };
   },
   async resetDemoData() {
     localStorage.removeItem(LOCAL_STORAGE_KEY);

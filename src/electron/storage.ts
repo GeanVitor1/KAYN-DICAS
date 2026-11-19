@@ -5,6 +5,7 @@ import {
   DEMO_REVIEWS,
   DEMO_TRAINING_SCENARIOS,
 } from '../engine/demos';
+import { MAX_FAVORITE_MICRO_CARDS } from '../engine/studyLibrary';
 import type {
   AppSettings,
   CardWindowOptions,
@@ -14,10 +15,11 @@ import type {
   LaneRole,
   PersistedAppState,
   ReviewMatch,
+  StudyLesson,
   TrainingScenario,
 } from '../shared/types';
 
-export const CURRENT_SCHEMA_VERSION = 1;
+export const CURRENT_SCHEMA_VERSION = 2;
 
 export const DEFAULT_CARD_OPTIONS: CardWindowOptions = {
   alwaysOnTop: true,
@@ -51,6 +53,11 @@ export function createDefaultPersistedState(): PersistedAppState {
     trainingScenarios: [...DEMO_TRAINING_SCENARIOS],
     reviews: [...DEMO_REVIEWS],
     activeReviewId: DEMO_REVIEWS[0].id,
+    customLessons: [],
+    favoriteMicroIds: [
+      'caiozera-micro-rhaast-e-wall-pivot',
+      'drill-blue-w-motion',
+    ],
   };
 }
 
@@ -170,10 +177,19 @@ export function sanitizePersistedState(raw: unknown): PersistedAppState {
     .filter((d): d is DraftState => Boolean(d));
 
   const trainingScenariosRaw = Array.isArray(obj.trainingScenarios) ? obj.trainingScenarios : [];
-  const trainingScenarios = trainingScenariosRaw.filter(
+  const trainingScenariosUser = trainingScenariosRaw.filter(
     (s): s is TrainingScenario =>
       Boolean(s && typeof s === 'object' && typeof (s as TrainingScenario).id === 'string' && typeof (s as TrainingScenario).minute === 'number'),
   );
+  // Garante que novos cenários de lições adicionados na Fase 2 estejam disponíveis ao migrar da v1
+  const existingScenarioIds = new Set(trainingScenariosUser.map((s) => s.id));
+  const mergedTrainingScenarios =
+    trainingScenariosUser.length > 0
+      ? [
+          ...trainingScenariosUser,
+          ...DEMO_TRAINING_SCENARIOS.filter((d) => !existingScenarioIds.has(d.id)),
+        ]
+      : defaults.trainingScenarios;
 
   const reviewsRaw = Array.isArray(obj.reviews) ? obj.reviews : [];
   const reviews = reviewsRaw.filter(
@@ -187,15 +203,37 @@ export function sanitizePersistedState(raw: unknown): PersistedAppState {
       ? obj.activeReviewId
       : finalReviews[0].id;
 
+  const customLessonsRaw = Array.isArray(obj.customLessons) ? obj.customLessons : [];
+  const customLessons = customLessonsRaw.filter(
+    (l): l is StudyLesson =>
+      Boolean(
+        l &&
+          typeof l === 'object' &&
+          typeof (l as StudyLesson).id === 'string' &&
+          typeof (l as StudyLesson).title === 'string' &&
+          typeof (l as StudyLesson).videoUrl === 'string',
+      ),
+  );
+
+  const favoriteMicroIds = Array.isArray(obj.favoriteMicroIds)
+    ? Array.from(
+        new Set(
+          obj.favoriteMicroIds.filter((id): id is string => typeof id === 'string' && id.trim().length > 0),
+        ),
+      ).slice(0, MAX_FAVORITE_MICRO_CARDS)
+    : defaults.favoriteMicroIds;
+
   return {
     schemaVersion: CURRENT_SCHEMA_VERSION,
     settings,
     currentDraft,
     savedDrafts: savedDrafts.length > 0 ? savedDrafts : defaults.savedDrafts,
     frozenCard: sanitizeFrozenCard(obj.frozenCard),
-    trainingScenarios: trainingScenarios.length > 0 ? trainingScenarios : defaults.trainingScenarios,
+    trainingScenarios: mergedTrainingScenarios,
     reviews: finalReviews,
     activeReviewId,
+    customLessons,
+    favoriteMicroIds,
   };
 }
 

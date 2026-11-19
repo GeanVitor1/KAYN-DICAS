@@ -5,6 +5,7 @@ import { analyzeTrainingScenario } from '../../engine/trainingSimulator';
 import type {
   LanePrioState,
   MapSide,
+  TrainingOptionId,
   TrainingScenario,
   TriStateBool,
 } from '../../shared/types';
@@ -12,18 +13,25 @@ import { ExpandableSection } from '../components/ExpandableSection';
 
 export function TrainingPage({
   scenarios,
+  selectedScenarioId,
   onSaveScenario,
 }: {
   scenarios: TrainingScenario[];
+  selectedScenarioId?: string | null;
   onSaveScenario: (scenario: TrainingScenario) => Promise<void>;
 }) {
   const [selectedId, setSelectedId] = useState<string>(
-    scenarios[0]?.id ?? DEMO_TRAINING_SCENARIOS[0].id,
+    selectedScenarioId || scenarios[0]?.id || DEMO_TRAINING_SCENARIOS[0].id,
   );
-  const [scenario, setScenario] = useState<TrainingScenario>(
-    () => scenarios[0] ?? DEMO_TRAINING_SCENARIOS[0],
-  );
+  const [scenario, setScenario] = useState<TrainingScenario>(() => {
+    const found = selectedScenarioId
+      ? scenarios.find((s) => s.id === selectedScenarioId)
+      : undefined;
+    return found ?? scenarios[0] ?? DEMO_TRAINING_SCENARIOS[0];
+  });
   const [savedNotice, setSavedNotice] = useState<string | null>(null);
+  const [quizHideAnswer, setQuizHideAnswer] = useState(false);
+  const [userPick, setUserPick] = useState<TrainingOptionId | null>(null);
 
   const analysis = useMemo(() => analyzeTrainingScenario(scenario), [scenario]);
 
@@ -31,6 +39,7 @@ export function TrainingPage({
     setSelectedId(s.id);
     setScenario({ ...s });
     setSavedNotice(null);
+    setUserPick(null);
   };
 
   const handleSaveCopy = async () => {
@@ -87,7 +96,60 @@ export function TrainingPage({
         ) : null}
       </div>
 
+      {/* Desafio rápido: escolher antes de revelar */}
+      <div className="panel">
+        <div className="panel-header">
+          <strong className="small-text">Teste seu reflexo antes de ler a resposta:</strong>
+          <label className="switch-row">
+            <input
+              type="checkbox"
+              checked={quizHideAnswer}
+              onChange={(e) => {
+                setQuizHideAnswer(e.target.checked);
+                if (e.target.checked) setUserPick(null);
+              }}
+            />
+            <span>Ocultar análise até eu escolher</span>
+          </label>
+        </div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+          {(
+            [
+              ['gank_bot', 'Gankar Bot'],
+              ['gank_other_lane', 'Gankar Mid/Top'],
+              ['start_objective', 'Jogar pelo Objetivo'],
+              ['farm_route', 'Farmar campos'],
+              ['reset_spend_gold', 'Resetar (Base)'],
+            ] as Array<[TrainingOptionId, string]>
+          ).map(([id, label]) => (
+            <button
+              key={id}
+              type="button"
+              className={`btn btn-xs ${userPick === id ? 'btn-blue' : ''}`}
+              onClick={() => setUserPick(id)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        {userPick ? (
+          <div className="panel-subtle small-text">
+            <strong>
+              {userPick === analysis.preferredOption.optionId
+                ? 'Sua escolha bateu com a 1ª opção!'
+                : userPick === analysis.secondOption.optionId
+                  ? 'Sua escolha é a 2ª opção viável — compare os trade-offs abaixo.'
+                  : 'Atenção ao trade-off: essa escolha ficou atrás das opções principais neste cenário.'}
+            </strong>{' '}
+            {analysis.rankedOptions
+              .find((o) => o.optionId === userPick)
+              ?.reasons.join(' ')}
+          </div>
+        ) : null}
+      </div>
+
       {/* Resultado Principal */}
+      {!quizHideAnswer || userPick !== null ? (
       <div className="grid-2">
         <section className="panel">
           <h2 className="panel-title">Decisão Recomendada</h2>
@@ -196,6 +258,11 @@ export function TrainingPage({
           ) : null}
         </section>
       </div>
+      ) : (
+        <div className="banner banner-warning">
+          Escolha uma das 5 opções acima para revelar a análise completa e os trade-offs.
+        </div>
+      )}
 
       {/* Formulário editável do cenário */}
       <div className="panel">

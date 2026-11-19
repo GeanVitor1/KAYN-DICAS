@@ -17,6 +17,7 @@ import type {
   CatalogSnapshot,
   CatalogStatus,
   DraftState,
+  FrozenMicroComboCard,
   FrozenPreGameCard,
   LaneRole,
   TargetLane,
@@ -38,6 +39,7 @@ export function DraftPage({
   draft,
   savedDrafts,
   frozenCard,
+  pinnedMicroCards,
   catalog,
   catalogStatus,
   preferBlueAsTiebreaker,
@@ -51,6 +53,7 @@ export function DraftPage({
   draft: DraftState;
   savedDrafts: DraftState[];
   frozenCard: FrozenPreGameCard | null;
+  pinnedMicroCards: FrozenMicroComboCard[];
   catalog: CatalogSnapshot;
   catalogStatus: CatalogStatus;
   preferBlueAsTiebreaker: boolean;
@@ -111,10 +114,10 @@ export function DraftPage({
   };
 
   const handleFreeze = async () => {
-    const card = createFrozenCardFromAnalysis(draft, analysis);
+    const card = createFrozenCardFromAnalysis(draft, analysis, pinnedMicroCards);
     await onFreezeCard(card);
     setFreezeNotice(
-      `Plano pré-jogo congelado às ${new Date(card.frozenAt).toLocaleTimeString('pt-BR')}! Não muda durante a partida.`,
+      `Plano pré-jogo congelado às ${new Date(card.frozenAt).toLocaleTimeString('pt-BR')} (${pinnedMicroCards.length}/3 combos incluídos)! Não muda durante a partida.`,
     );
   };
 
@@ -179,7 +182,7 @@ export function DraftPage({
             className="btn btn-primary"
             onClick={() => void handleFreeze()}
           >
-            <Pin size={14} /> Salvar plano pré-jogo
+            <Pin size={14} /> Salvar plano pré-jogo ({pinnedMicroCards.length}/3 combos)
           </button>
           <button
             type="button"

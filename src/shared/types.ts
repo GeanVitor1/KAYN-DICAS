@@ -277,6 +277,100 @@ export interface FrozenPreGameCard {
     suggestedStart: string;
     note: string;
   };
+  pinnedMicroCards?: FrozenMicroComboCard[];
+}
+
+export type StudyCreator = 'caiozera' | 'karasmai' | 'training_drill';
+export type StudyTopic = 'macro' | 'micro';
+export type StudyKaynForm = 'base' | 'blue' | 'red' | 'both';
+export type StudyVerificationStatus =
+  | 'verified_transcript_and_visual'
+  | 'visual_only'
+  | 'generic_drill'
+  | 'pending_curation';
+
+export type StudyAttributionLabel =
+  | 'Observado no CaiozeraLoL'
+  | 'Observado no Karasmai'
+  | 'Exercício de treino'
+  | 'Fonte pendente';
+
+export interface ComboStep {
+  key: string;
+  label?: string;
+  uncertain?: boolean;
+  note?: string;
+}
+
+export interface MacroLessonDetail {
+  beforePlayContext: string;
+  visibleRiskOrOpportunity: string;
+  actionAndAlternative: string;
+  whatWouldChangeDecision: string;
+  howToApply: string;
+  worksWhen: string;
+  chooseDifferentWhen: string;
+  sessionDrillOrQuestion: string;
+}
+
+export interface MicroCardDetail {
+  situation: string;
+  steps: ComboStep[];
+  sequenceUncertaintyNote?: string;
+  prerequisite: string;
+  heldAbility: string;
+  heldAbilityReason: string;
+  targetDodgesOrDashes: string;
+  commonMistake: string;
+  practiceModeDrill: string;
+  patchCompatibility: 'verified_16_23_1' | 'not_verified' | 'historical_reference';
+}
+
+export interface KarasmaiPtExplanation {
+  whatHeDid: string;
+  whatHeExplained: string;
+  howToTrain: string;
+  englishTerms: Array<{ term: string; meaningPt: string }>;
+}
+
+export interface StudyLesson {
+  id: string;
+  title: string;
+  creator: StudyCreator;
+  creatorDisplayName: string;
+  attributionLabel: StudyAttributionLabel;
+  topic: StudyTopic;
+  form: StudyKaynForm;
+  verificationStatus: StudyVerificationStatus;
+  speechVerified: boolean;
+  isHistoricalReference: boolean;
+  patch: string;
+  videoUrl: string;
+  videoTitle: string;
+  channelName: string;
+  channelUrl: string;
+  contextStartSeconds: number | null;
+  playMomentSeconds: number | null;
+  timestampDisplay: string;
+  gameClockDisplay: string;
+  shortSummaryPt: string;
+  evidenceNote: string;
+  macro?: MacroLessonDetail;
+  micro?: MicroCardDetail;
+  karasmaiPt?: KarasmaiPtExplanation;
+  linkedTrainingScenarioId?: string;
+  isCustom?: boolean;
+}
+
+export interface FrozenMicroComboCard {
+  lessonId: string;
+  title: string;
+  attributionLabel: StudyAttributionLabel;
+  form: StudyKaynForm;
+  steps: ComboStep[];
+  conditionToUse: string;
+  heldAbilityHint: string;
+  patchCompatibility: MicroCardDetail['patchCompatibility'];
 }
 
 export interface CardWindowOptions {
@@ -393,6 +487,7 @@ export interface ReviewEvent {
   enemyResponseCertainty: EnemyResponseCertainty;
   executionNote: string;
   decisionContextSource: 'manual_observed' | 'api_partial_hypothesis';
+  linkedLessonId?: string | null;
 }
 
 export interface ReviewMatch {
@@ -469,4 +564,6 @@ export interface PersistedAppState {
   trainingScenarios: TrainingScenario[];
   reviews: ReviewMatch[];
   activeReviewId: string;
+  customLessons: StudyLesson[];
+  favoriteMicroIds: string[];
 }

@@ -4,6 +4,7 @@ import type {
   ConfidenceLevel,
   DraftAnalysis,
   DraftState,
+  FrozenMicroComboCard,
   FrozenPreGameCard,
   KaynFormChoice,
   LaneAnalysis,
@@ -635,6 +636,7 @@ export function analyzeDraft(
 export function createFrozenCardFromAnalysis(
   draft: DraftState,
   analysis: DraftAnalysis,
+  pinnedMicroCards: FrozenMicroComboCard[] = [],
 ): FrozenPreGameCard {
   const activeSituational = analysis.build.situational
     .filter((s) => s.activeInDraft)
@@ -708,5 +710,6 @@ export function createFrozenCardFromAnalysis(
       suggestedStart,
       note: 'Diagrama estático congelado antes da partida — não lê eventos ao vivo nem minimapa.',
     },
+    pinnedMicroCards: pinnedMicroCards.slice(0, 3),
   };
 }

@@ -61,17 +61,24 @@ npm install
 - **Regra de desempate pelo Azul:** só decide drafts na faixa equilibrada — nunca mascara uma composição claramente favorável ao Rhaast.
 - **Mecânica de orbes da Foice Darkin:** considera a diferença entre forma mais forte na comp e forma mais fácil de desbloquear primeiro, além do bloqueio de 4 minutos (-5s por orbe do tipo desejado).
 
-### 2. Durante a partida — Cartão Pré-Jogo Estático (`Abrir cartão`)
+### 2. Aba **Aprender** — Macro e Micro (CaiozeraLoL & Karasmai)
+- **Como abrir:** clique na aba **Aprender** na barra superior do app.
+- **Filtros e organização:** filtre por **Criador** (`CaiozeraLoL`, `Karasmai` ou `Exercícios de Modo Treino`), **Assunto** (`Macro` ou `Micro`) e **Forma** (`Kayn Base`, `Kayn Azul`, `Rhaast` ou `Ambas`). O CaiozeraLoL aparece no topo por padrão.
+- **Transparência de evidência:** o app separa explicitamente trechos **`Verificado (legenda + visual)`**, **`Análise visual (fala não verificada)`**, **`Exercício de treino`** e **`Referência histórica`** (ex.: vídeos da Season 13 marcados para não misturar itens antigos). Termos em inglês do Karasmai (`shove`, `skip camp`, `hover`, `flank`) são resumidos e explicados em português.
+- **Fixar combos no Cartão Pré-Jogo (até 3):** em qualquer cartão de **Micro** pronto, clique em **Fixar no cartão**; depois, na aba **Draft**, clique em **Salvar plano pré-jogo** para congelar esses combos (forma, sequência de teclas, condição de uso e habilidade a guardar) na janela compacta offline.
+- **Cadastrar vídeo e timestamp manualmente:** abra a seção expansível **Fontes pendentes de curadoria & Cadastro manual de vídeo** no final da aba **Aprender**, preencha título, URL `https://...`, timestamp (`MM:SS` ou segundos), criador, assunto e forma e clique em **Cadastrar como fonte pendente** (tudo é salvo localmente e fica isolado das lições prontas).
+
+### 3. Durante a partida — Cartão Pré-Jogo Estático (`Abrir cartão`)
 - Janela compacta separada, sem som, com opção **Sempre no topo**, **Opacidade regulável**, **Clique atravessado** (destravável com `Ctrl+Shift+L`), atalho global configurável (`Ctrl+Shift+K` por padrão) para mostrar/esconder e posição/tamanho persistidos longe do minimapa.
-- Congela uma cópia estática ao clicar em **Salvar plano pré-jogo**, incluindo runas, núcleo, condições das lanes, lembretes e um mapa esquemático estático original.
+- Congela uma cópia estática ao clicar em **Salvar plano pré-jogo**, incluindo runas, núcleo, condições das lanes, até 3 combos fixados da aba Aprender, lembretes e um mapa esquemático estático original.
 
-### 3. Treino de decisões (`Treino`)
-- Simulador offline independente da interface e do cartão para comparar **Objetivo**, **Gank Bot**, **Outra Lane**, **Rota de Farm** e **Reset**.
-- Separa explicitamente **CS de lane** e **campos da jungle**, distingue **Estado Observado**, **Hipóteses** e **Dados Desconhecidos** (com decisões condicionais quando faltam dados), e traz os **6 cenários Diamante** prontos (Dragão sem prio mesmo com CS alto, JG inimigo no Top, setup na Bot, armadilha de espera longa na Bot, reset antes do objetivo e recuperação atrás sem visão).
+### 4. Treino de decisões (`Treino`)
+- Simulador offline independente da interface e do cartão para comparar **Objetivo**, **Gank Bot**, **Outra Lane**, **Rota de Farm** e **Reset**, incluindo cenários derivados das lições verificadas do CaiozeraLoL e Karasmai e modo de testar sua escolha antes de revelar a análise.
+- Separa explicitamente **CS de lane** e **campos da jungle**, distingue **Estado Observado**, **Hipóteses** e **Dados Desconhecidos** (com decisões condicionais quando faltam dados), e traz cenários Diamante prontos.
 
-### 4. Revisão pós-jogo (`Revisão`)
+### 5. Revisão pós-jogo (`Revisão`)
 - Fluxo manual completo + importação/exportação em JSON local ([formato documentado](docs/REVIEW_JSON_FORMAT.md)) + integração opcional com **Riot Match-V5** (`americas.api.riotgames.com` para BR1).
-- Analisa tentativas na Bot, não trata gank sem kill (como forçar Flash/recall rápido) como falha automática, separa **qualidade da decisão (pelas informações da hora)** de **falha de execução mecânica**, distingue resposta adversária **`[CONFIRMADO]`** vs **`[HIPÓTESE]`** (editável), aponta até **3 padrões recorrentes** citando os minutos reais da timeline e define **1 foco** para as próximas partidas.
+- Analisa tentativas na Bot, não trata gank sem kill (como forçar Flash/recall rápido) como falha automática, separa **qualidade da decisão (pelas informações da hora)** de **falha de execução mecânica**, distingue resposta adversária **`[CONFIRMADO]`** vs **`[HIPÓTESE]`** (editável), permite vincular lições da aba **Aprender** para comparar o que o streamer viu antes da jogada, aponta até **3 padrões recorrentes** citando os minutos reais da timeline e define **1 foco** para as próximas partidas.
 
 ---
 

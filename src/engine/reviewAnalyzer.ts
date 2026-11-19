@@ -465,6 +465,10 @@ export function parseAndValidateReviewJson(rawText: string): {
         rawEv.decisionContextSource === 'api_partial_hypothesis'
           ? 'api_partial_hypothesis'
           : 'manual_observed',
+      linkedLessonId:
+        typeof rawEv.linkedLessonId === 'string' && rawEv.linkedLessonId.trim()
+          ? rawEv.linkedLessonId
+          : null,
     });
   }
 

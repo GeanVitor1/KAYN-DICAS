@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { analyzeReviewMatch } from '../../engine/reviewAnalyzer';
+import { filterStudyLessons, getAllStudyLessons } from '../../engine/studyLibrary';
 import type { RiotMatchListEntry } from '../../shared/ipc';
 import type {
   EnemyResponseCertainty,
@@ -19,6 +20,7 @@ import type {
   ReviewLaneFocus,
   ReviewMatch,
   ReviewOutcome,
+  StudyLesson,
 } from '../../shared/types';
 import { ExpandableSection } from '../components/ExpandableSection';
 
@@ -52,6 +54,7 @@ function decisionBadgeClass(q: string): string {
 export function ReviewPage({
   reviews,
   activeReviewId,
+  customLessons = [],
   onSelectReview,
   onSaveReview,
   onDeleteReview,
@@ -62,6 +65,7 @@ export function ReviewPage({
 }: {
   reviews: ReviewMatch[];
   activeReviewId: string;
+  customLessons?: StudyLesson[];
   onSelectReview: (id: string) => Promise<void>;
   onSaveReview: (review: ReviewMatch) => Promise<void>;
   onDeleteReview: (id: string) => Promise<void>;
@@ -99,6 +103,17 @@ export function ReviewPage({
   const analysis = useMemo(
     () => (activeReview ? analyzeReviewMatch(activeReview) : null),
     [activeReview],
+  );
+
+  const linkableLessons = useMemo(
+    () =>
+      filterStudyLessons(getAllStudyLessons(customLessons), {
+        creator: 'all',
+        topic: 'all',
+        form: 'all',
+        includePending: false,
+      }),
+    [customLessons],
   );
 
   if (!activeReview || !analysis) {
@@ -352,6 +367,9 @@ export function ReviewPage({
           {sortedEvents.map((ev) => {
             const evAnalysis = analysis.perEvent.find((a) => a.eventId === ev.id);
             const isEditing = editingEventId === ev.id && draftEvent;
+            const linkedLesson = ev.linkedLessonId
+              ? linkableLessons.find((l) => l.id === ev.linkedLessonId)
+              : undefined;
 
             return (
               <div key={ev.id} className="panel-subtle">
@@ -434,6 +452,20 @@ export function ReviewPage({
                       <strong>Alternativa plausível:</strong> {evAnalysis.plausibleAlternative}{' '}
                       <span className="muted-text">(Trade-off: {evAnalysis.alternativeTradeoff})</span>
                     </div>
+                    {linkedLesson ? (
+                      <div className="panel" style={{ marginTop: 6, padding: 8, borderColor: 'var(--blue-border)' }}>
+                        <div style={{ fontWeight: 700, color: 'var(--blue)' }}>
+                          Comparação com lição vinculada: {linkedLesson.title} ({linkedLesson.creatorDisplayName})
+                        </div>
+                        <div>
+                          <strong>O que o streamer observou antes da jogada:</strong>{' '}
+                          {linkedLesson.macro?.beforePlayContext ?? linkedLesson.shortSummaryPt}
+                        </div>
+                        <div className="muted-text">
+                          <strong>O que você sabia na sua partida (Min {ev.minute}):</strong> Prio {ev.allyPrio}, JG inimigo estimado: {ev.estimatedEnemyJungler}, vida {ev.kaynHpPercent ?? 'N/D'}%, tempo gasto {ev.timeSpentSeconds ?? 'N/D'}s.
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
                 ) : null}
 
@@ -617,6 +649,26 @@ export function ReviewPage({
                           setDraftEvent({ ...draftEvent, executionNote: e.target.value })
                         }
                       />
+                    </label>
+                    <label className="field-label">
+                      <span>Vincular lição da aba Aprender (comparar antes da jogada)</span>
+                      <select
+                        className="select"
+                        value={draftEvent.linkedLessonId ?? ''}
+                        onChange={(e) =>
+                          setDraftEvent({
+                            ...draftEvent,
+                            linkedLessonId: e.target.value ? e.target.value : null,
+                          })
+                        }
+                      >
+                        <option value="">Nenhuma lição vinculada</option>
+                        {linkableLessons.map((l) => (
+                          <option key={l.id} value={l.id}>
+                            [{l.creatorDisplayName} · {l.topic.toUpperCase()}] {l.title}
+                          </option>
+                        ))}
+                      </select>
                     </label>
                     <div style={{ display: 'flex', gap: 8 }}>
                       <button

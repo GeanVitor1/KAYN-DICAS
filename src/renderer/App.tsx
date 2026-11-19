@@ -2,10 +2,15 @@ import {
   BookOpen,
   ClipboardCheck,
   Compass,
+  GraduationCap,
   Settings,
   Swords,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import {
+  buildFrozenMicroCards,
+  getAllStudyLessons,
+} from '../engine/studyLibrary';
 import type { InitialHydrationPayload } from '../shared/ipc';
 import type {
   AppSettings,
@@ -14,16 +19,18 @@ import type {
   FrozenPreGameCard,
   PersistedAppState,
   ReviewMatch,
+  StudyLesson,
   TrainingScenario,
 } from '../shared/types';
 import { getDesktopApi, isRunningInElectron } from './desktopBridge';
 import { CardWindowPage } from './pages/CardWindowPage';
 import { DraftPage } from './pages/DraftPage';
+import { LearnPage } from './pages/LearnPage';
 import { ReviewPage } from './pages/ReviewPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { TrainingPage } from './pages/TrainingPage';
 
-type TabKey = 'draft' | 'training' | 'review' | 'settings';
+type TabKey = 'draft' | 'learn' | 'training' | 'review' | 'settings';
 
 export function App() {
   const isCardRoute = window.location.hash.startsWith('#/card');
@@ -31,6 +38,7 @@ export function App() {
 
   const [hydration, setHydration] = useState<InitialHydrationPayload | null>(null);
   const [activeTab, setActiveTab] = useState<TabKey>('draft');
+  const [selectedTrainingScenarioId, setSelectedTrainingScenarioId] = useState<string | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -92,6 +100,11 @@ export function App() {
 
   const { state, catalog, catalogStatus } = hydration;
 
+  const pinnedMicroCards = buildFrozenMicroCards(
+    state.favoriteMicroIds ?? [],
+    getAllStudyLessons(state.customLessons ?? []),
+  );
+
   const updateState = (nextState: PersistedAppState) => {
     setHydration((prev) => (prev ? { ...prev, state: nextState } : prev));
   };
@@ -149,6 +162,14 @@ export function App() {
           </button>
           <button
             type="button"
+            data-testid="nav-learn"
+            className={`nav-tab ${activeTab === 'learn' ? 'active' : ''}`}
+            onClick={() => setActiveTab('learn')}
+          >
+            <GraduationCap size={15} /> Aprender
+          </button>
+          <button
+            type="button"
             data-testid="nav-training"
             className={`nav-tab ${activeTab === 'training' ? 'active' : ''}`}
             onClick={() => setActiveTab('training')}
@@ -180,6 +201,7 @@ export function App() {
             draft={state.currentDraft}
             savedDrafts={state.savedDrafts}
             frozenCard={state.frozenCard}
+            pinnedMicroCards={pinnedMicroCards}
             catalog={catalog}
             catalogStatus={catalogStatus}
             preferBlueAsTiebreaker={state.settings.preferBlueAsTiebreaker}
@@ -212,9 +234,38 @@ export function App() {
           />
         ) : null}
 
+        {activeTab === 'learn' ? (
+          <LearnPage
+            customLessons={state.customLessons ?? []}
+            favoriteMicroIds={state.favoriteMicroIds ?? []}
+            onToggleFavoriteMicro={async (ids: string[]) => {
+              const next = await api.setFavoriteMicroIds(ids);
+              updateState(next);
+            }}
+            onSaveCustomLesson={async (lesson: StudyLesson) => {
+              const next = await api.saveCustomLesson(lesson);
+              updateState(next);
+            }}
+            onDeleteCustomLesson={async (lessonId: string) => {
+              const next = await api.deleteCustomLesson(lessonId);
+              updateState(next);
+            }}
+            onOpenExternalUrl={async (url: string) => {
+              await api.openExternalUrl(url);
+            }}
+            onPracticeInTraining={(scenarioId: string) => {
+              setSelectedTrainingScenarioId(scenarioId);
+              setActiveTab('training');
+            }}
+            onOpenDraftTab={() => setActiveTab('draft')}
+          />
+        ) : null}
+
         {activeTab === 'training' ? (
           <TrainingPage
+            key={selectedTrainingScenarioId ?? 'training-default'}
             scenarios={state.trainingScenarios}
+            selectedScenarioId={selectedTrainingScenarioId}
             onSaveScenario={async (scenario: TrainingScenario) => {
               const next = await api.saveTrainingScenario(scenario);
               updateState(next);
@@ -226,6 +277,7 @@ export function App() {
           <ReviewPage
             reviews={state.reviews}
             activeReviewId={state.activeReviewId}
+            customLessons={state.customLessons ?? []}
             onSelectReview={async (id: string) => {
               const next = await api.setActiveReview(id);
               updateState(next);

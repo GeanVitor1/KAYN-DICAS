@@ -1,5 +1,6 @@
 import { Eye, EyeOff, Lock, Map, Pin, Unlock, X } from 'lucide-react';
 import type { CardWindowOptions, FrozenPreGameCard } from '../../shared/types';
+import { ComboSequenceBadge } from '../components/ComboSequenceBadge';
 import { FormBadge } from '../components/FormBadge';
 import { TacticalMapSvg } from '../components/TacticalMapSvg';
 
@@ -179,6 +180,32 @@ export function CardWindowPage({
                 <strong>Plano de farm:</strong> {frozenCard.farmPlan}
               </div>
             </div>
+
+            {frozenCard.pinnedMicroCards && frozenCard.pinnedMicroCards.length > 0 ? (
+              <div className="panel" style={{ padding: 9 }} data-testid="card-pinned-micros">
+                <strong className="small-text">Combos fixados ({frozenCard.pinnedMicroCards.length}/3):</strong>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {frozenCard.pinnedMicroCards.map((mc) => (
+                    <div key={mc.lessonId} className="panel-subtle" style={{ padding: 7, fontSize: 11.5, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                        <FormBadge
+                          form={mc.form === 'blue' ? 'blue' : mc.form === 'red' ? 'red' : 'open'}
+                          label={mc.form === 'blue' ? 'Azul' : mc.form === 'red' ? 'Rhaast' : 'Base/Ambas'}
+                        />
+                        <span className="muted-text" style={{ fontSize: 10.5 }}>{mc.attributionLabel}</span>
+                      </div>
+                      <ComboSequenceBadge compact steps={mc.steps} form={mc.form} />
+                      <div>
+                        <strong>Uso:</strong> {mc.conditionToUse}
+                      </div>
+                      <div className="muted-text">
+                        <strong>Guardar:</strong> {mc.heldAbilityHint}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
 
             {frozenCard.staticReminders.length > 0 ? (
               <div className="panel" style={{ padding: 9 }}>

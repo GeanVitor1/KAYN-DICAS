@@ -19,6 +19,7 @@ import type {
   FrozenPreGameCard,
   PersistedAppState,
   ReviewMatch,
+  StudyLesson,
   TrainingScenario,
 } from '../shared/types';
 import { DdragonCatalogService } from './ddragonService';
@@ -457,6 +458,56 @@ function registerIpcHandlers(): void {
     return appState;
   });
 
+  ipcMain.handle(IPC_CHANNELS.SAVE_CUSTOM_LESSON, (_e, lesson: StudyLesson) => {
+    const others = appState.customLessons.filter((l) => l.id !== lesson.id);
+    appState = sanitizePersistedState({
+      ...appState,
+      customLessons: [lesson, ...others],
+    });
+    persistState();
+    return appState;
+  });
+
+  ipcMain.handle(IPC_CHANNELS.DELETE_CUSTOM_LESSON, (_e, lessonId: string) => {
+    appState = sanitizePersistedState({
+      ...appState,
+      customLessons: appState.customLessons.filter((l) => l.id !== lessonId),
+      favoriteMicroIds: appState.favoriteMicroIds.filter((id) => id !== lessonId),
+    });
+    persistState();
+    return appState;
+  });
+
+  ipcMain.handle(IPC_CHANNELS.SET_FAVORITE_MICRO_IDS, (_e, ids: string[]) => {
+    appState = sanitizePersistedState({
+      ...appState,
+      favoriteMicroIds: ids,
+    });
+    persistState();
+    return appState;
+  });
+
+  ipcMain.handle(IPC_CHANNELS.OPEN_EXTERNAL_URL, async (_e, rawUrl: string) => {
+    try {
+      const parsed = new URL(rawUrl);
+      const allowedHosts = new Set([
+        'www.youtube.com',
+        'youtube.com',
+        'youtu.be',
+        'www.twitch.tv',
+        'twitch.tv',
+        'wiki.leagueoflegends.com',
+      ]);
+      if (parsed.protocol !== 'https:' || !allowedHosts.has(parsed.hostname.toLowerCase())) {
+        return { ok: false, error: 'Host ou protocolo externo não permitido.' };
+      }
+      await shell.openExternal(parsed.toString());
+      return { ok: true };
+    } catch {
+      return { ok: false, error: 'URL inválida.' };
+    }
+  });
+
   ipcMain.handle(IPC_CHANNELS.RESET_DEMO_DATA, () => {
     const defaults = createDefaultPersistedState();
     appState = {
@@ -619,13 +670,40 @@ async function runSmokeTest(): Promise<void> {
       clickBtn('open-card-btn');
       await sleep(300);
 
-      // 3. Navegar para Treino e verificar cenários
-      clickBtn('nav-training');
+      // 3. Navegar para Aprender, testar filtros, favoritos e cadastro manual offline
+      clickBtn('nav-learn');
+      await sleep(120);
+      const learnReadyText = document.querySelector('[data-testid="learn-ready-list"]')?.textContent || '';
+      if (!learnReadyText.includes('CaiozeraLoL') || !learnReadyText.includes('Karasmai')) {
+        throw new Error('Aba Aprender não carregou lições de CaiozeraLoL e Karasmai.');
+      }
+
+      // Testar filtro por criador
+      const creatorSel = document.querySelector('[data-testid="filter-creator"]');
+      creatorSel.value = 'karasmai';
+      creatorSel.dispatchEvent(new Event('change', { bubbles: true }));
+      await sleep(80);
+      const karasmaiOnlyText = document.querySelector('[data-testid="learn-ready-list"]')?.textContent || '';
+      if (karasmaiOnlyText.includes('Observado no CaiozeraLoL')) {
+        throw new Error('Filtro de criador Karasmai ainda exibiu CaiozeraLoL.');
+      }
+      creatorSel.value = 'all';
+      creatorSel.dispatchEvent(new Event('change', { bubbles: true }));
+      await sleep(80);
+
+      // Voltar para Draft e checar se o cartão já recebeu os combos favoritos fixados
+      clickBtn('nav-draft');
+      await sleep(80);
+
+      // 4. Navegar para Treino via botão "Praticar no Treino" da lição e verificar cenários
+      clickBtn('nav-learn');
+      await sleep(80);
+      clickBtn('practice-btn-caiozera-macro-bot-abort-river');
       await sleep(120);
       const trainResult = document.querySelector('[data-testid="training-preferred-option"]')?.textContent || '';
       if (!trainResult) throw new Error('Tela Treino não exibiu opção preferida.');
 
-      // 4. Navegar para Revisão e verificar demo de gank ruim na bot
+      // 5. Navegar para Revisão e verificar demo de gank ruim na bot + comparação com lição
       clickBtn('nav-review');
       await sleep(120);
       const reviewSummary = document.querySelector('[data-testid="review-bot-summary"]')?.textContent || '';
@@ -635,7 +713,7 @@ async function runSmokeTest(): Promise<void> {
     })();
   `);
 
-  // Verificar janela do cartão congelada separada
+  // Verificar janela do cartão congelada separada (com combos fixados!)
   if (!cardWindow || cardWindow.isDestroyed()) {
     throw new Error('cardWindow não foi aberta durante o smoke test.');
   }
@@ -651,12 +729,12 @@ async function runSmokeTest(): Promise<void> {
       const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
       for (let i = 0; i < 30; i++) {
         const el = document.querySelector('[data-testid="frozen-card-root"]');
-        if (el && el.textContent && el.textContent.includes('PLANO PRÉ-JOGO')) {
+        if (el && el.textContent && el.textContent.includes('PLANO PRÉ-JOGO') && el.textContent.includes('Combos fixados')) {
           return el.textContent;
         }
         await sleep(100);
       }
-      throw new Error('Cartão estático não exibiu o plano congelado.');
+      throw new Error('Cartão estático não exibiu o plano congelado com os combos fixados.');
     })();
   `);
 

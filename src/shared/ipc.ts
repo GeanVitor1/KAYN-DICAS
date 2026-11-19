@@ -7,6 +7,7 @@ import type {
   FrozenPreGameCard,
   PersistedAppState,
   ReviewMatch,
+  StudyLesson,
   TrainingScenario,
 } from './types';
 
@@ -24,6 +25,10 @@ export const IPC_CHANNELS = {
   SAVE_REVIEW: 'kayn:save-review',
   DELETE_REVIEW: 'kayn:delete-review',
   SET_ACTIVE_REVIEW: 'kayn:set-active-review',
+  SAVE_CUSTOM_LESSON: 'kayn:save-custom-lesson',
+  DELETE_CUSTOM_LESSON: 'kayn:delete-custom-lesson',
+  SET_FAVORITE_MICRO_IDS: 'kayn:set-favorite-micro-ids',
+  OPEN_EXTERNAL_URL: 'kayn:open-external-url',
   RESET_DEMO_DATA: 'kayn:reset-demo-data',
   GET_CATALOG: 'kayn:get-catalog',
   REFRESH_DDRAGON: 'kayn:refresh-ddragon',
@@ -74,6 +79,10 @@ export interface KaynDesktopApi {
   saveReview: (review: ReviewMatch) => Promise<PersistedAppState>;
   deleteReview: (reviewId: string) => Promise<PersistedAppState>;
   setActiveReview: (reviewId: string) => Promise<PersistedAppState>;
+  saveCustomLesson: (lesson: StudyLesson) => Promise<PersistedAppState>;
+  deleteCustomLesson: (lessonId: string) => Promise<PersistedAppState>;
+  setFavoriteMicroIds: (ids: string[]) => Promise<PersistedAppState>;
+  openExternalUrl: (url: string) => Promise<{ ok: boolean; error?: string }>;
   resetDemoData: () => Promise<PersistedAppState>;
   refreshDdragon: () => Promise<{
     catalog: CatalogSnapshot;

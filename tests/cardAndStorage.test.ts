@@ -44,14 +44,60 @@ describe('Persistência Tolerante e Desacoplamento do Cartão', () => {
       },
     });
 
-    expect(sanitized.schemaVersion).toBe(1);
+    expect(sanitized.schemaVersion).toBe(2);
     expect(sanitized.settings.preferBlueAsTiebreaker).toBe(false);
     expect(sanitized.settings.cardWindow.opacity).toBe(1);
     expect(sanitized.settings.cardWindow.bounds).toBeUndefined();
     expect(sanitized.currentDraft.allies.top).toBe('Ornn');
     expect(sanitized.currentDraft.allies.jungle).toBe('Kayn');
     expect(sanitized.currentDraft.enemies.mid).toBe('Syndra');
-    expect(sanitized.trainingScenarios.length).toBe(6);
+    expect(sanitized.trainingScenarios.length).toBe(8);
+    expect(sanitized.favoriteMicroIds.length).toBeLessThanOrEqual(3);
+  });
+
+  it('preserva favoritos (máximo 3) e lições customizadas ao gravar e recarregar estado', () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'kayn-phase2-persist-'));
+    const filePath = path.join(tmpDir, 'state.json');
+
+    try {
+      const sanitized = sanitizePersistedState({
+        schemaVersion: 1,
+        favoriteMicroIds: ['a', 'b', 'a', 'c', 'd'],
+        customLessons: [
+          {
+            id: 'custom-1',
+            title: '[PENDENTE] Teste',
+            creator: 'caiozera',
+            creatorDisplayName: 'CaiozeraLoL',
+            attributionLabel: 'Fonte pendente',
+            topic: 'macro',
+            form: 'base',
+            verificationStatus: 'pending_curation',
+            speechVerified: false,
+            isHistoricalReference: false,
+            patch: 'Desconhecido',
+            videoUrl: 'https://www.youtube.com/watch?v=ubwHhx3DdZA',
+            videoTitle: 'Teste',
+            channelName: 'caíozera',
+            channelUrl: 'https://www.youtube.com/@caiozerinha',
+            contextStartSeconds: 60,
+            playMomentSeconds: 60,
+            timestampDisplay: '01:00',
+            gameClockDisplay: 'Pendente',
+            shortSummaryPt: 'Nota',
+            evidenceNote: 'Manual',
+            isCustom: true,
+          },
+        ],
+      });
+      writeStateFileSafely(filePath, sanitized);
+      const reloaded = readStateFileSafely(filePath).state;
+      expect(reloaded.favoriteMicroIds).toEqual(['a', 'b', 'c']);
+      expect(reloaded.customLessons.length).toBe(1);
+      expect(reloaded.customLessons[0].id).toBe('custom-1');
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
   });
 
   it('grava e recarrega o cartão congelado sem mutações', () => {
