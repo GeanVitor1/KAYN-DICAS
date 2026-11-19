@@ -7,6 +7,7 @@ import {
   dialog,
   globalShortcut,
   ipcMain,
+  protocol,
   screen,
   shell,
 } from 'electron';
@@ -22,6 +23,7 @@ import type {
   StudyLesson,
   TrainingScenario,
 } from '../shared/types';
+import { AssetCacheService, parseAssetUrl } from './assetCacheService';
 import { DdragonCatalogService } from './ddragonService';
 import {
   fetchAndConvertRiotMatch,
@@ -37,12 +39,26 @@ import {
 } from './storage';
 
 const IS_SMOKE_TEST = process.argv.includes('--smoke-test');
+const CAPTURE_DIR_ARG = process.argv.find((a) => a.startsWith('--capture-screens='));
+const CAPTURE_SCREENS_DIR = CAPTURE_DIR_ARG ? CAPTURE_DIR_ARG.slice('--capture-screens='.length) : null;
 const UNLOCK_CLICK_THROUGH_SHORTCUT = 'CommandOrControl+Shift+L';
 const EXCLUSIVE_FULLSCREEN_NOTE =
   'No Windows, jogos em Tela Cheia Exclusiva assumem o controle direto da GPU e ocultam janelas sobrepostas. Use o League of Legends em "Janela sem Bordas" ou arraste o cartão para um segundo monitor.';
 
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: 'kayn-asset',
+    privileges: {
+      standard: true,
+      secure: true,
+      supportFetchAPI: true,
+      corsEnabled: true,
+    },
+  },
+]);
+
 let smokeTempDir: string | null = null;
-if (IS_SMOKE_TEST) {
+if (IS_SMOKE_TEST || CAPTURE_SCREENS_DIR) {
   smokeTempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'kayn-dicas-smoke-'));
   app.setPath('userData', smokeTempDir);
 }
@@ -51,6 +67,7 @@ let mainWindow: BrowserWindow | null = null;
 let cardWindow: BrowserWindow | null = null;
 let appState: PersistedAppState;
 let catalogService: DdragonCatalogService;
+let assetCacheService: AssetCacheService;
 let stateFilePath: string;
 let riotKeyFilePath: string;
 let sessionRiotApiKey = '';
@@ -124,8 +141,8 @@ function computeSafeCardBounds(saved?: CardWindowOptions['bounds']): {
   const fallback = {
     x: primary.x + 24,
     y: primary.y + 72,
-    width: 392,
-    height: 540,
+    width: 316,
+    height: 530,
   };
 
   if (!saved) return fallback;
@@ -169,15 +186,15 @@ function openOrFocusCardWindow(): { ok: boolean; error?: string } {
     const bounds = computeSafeCardBounds(appState.settings.cardWindow.bounds);
     cardWindow = new BrowserWindow({
       ...bounds,
-      minWidth: 320,
-      minHeight: 280,
+      minWidth: 272,
+      minHeight: 320,
       frame: false,
       resizable: true,
       minimizable: false,
       maximizable: false,
       backgroundColor: '#0B101B',
       title: 'KAYN-DICAS — Cartão Pré-Jogo',
-      show: !IS_SMOKE_TEST,
+      show: !IS_SMOKE_TEST && !CAPTURE_SCREENS_DIR,
       webPreferences: {
         preload: path.join(__dirname, 'preload.js'),
         contextIsolation: true,
@@ -283,14 +300,15 @@ function registerShortcuts(): { registered: boolean; warning?: string } {
 
 function createMainWindow(): BrowserWindow {
   const win = new BrowserWindow({
-    width: 1220,
-    height: 800,
-    minWidth: 980,
-    minHeight: 660,
+    width: 1200,
+    height: 780,
+    minWidth: 940,
+    minHeight: 640,
+    useContentSize: Boolean(CAPTURE_SCREENS_DIR),
     backgroundColor: '#0B101B',
     title: 'KAYN-DICAS — Kayn Jungle (BR Solo/Duo)',
     autoHideMenuBar: true,
-    show: !IS_SMOKE_TEST,
+    show: !IS_SMOKE_TEST && !CAPTURE_SCREENS_DIR,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -486,6 +504,33 @@ function registerIpcHandlers(): void {
     persistState();
     return appState;
   });
+
+  ipcMain.handle(IPC_CHANNELS.SET_PINNED_REMINDER_IDS, (_e, ids: string[]) => {
+    appState = sanitizePersistedState({
+      ...appState,
+      pinnedReminderIds: ids,
+    });
+    persistState();
+    return appState;
+  });
+
+  ipcMain.handle(
+    IPC_CHANNELS.SAVE_TACTICAL_RULE_NOTE,
+    (_e, payload: { ruleId: string; note: string }) => {
+      const nextNotes = { ...(appState.tacticalRuleNotes ?? {}) };
+      if (payload.note.trim()) {
+        nextNotes[payload.ruleId] = payload.note.trim();
+      } else {
+        delete nextNotes[payload.ruleId];
+      }
+      appState = sanitizePersistedState({
+        ...appState,
+        tacticalRuleNotes: nextNotes,
+      });
+      persistState();
+      return appState;
+    },
+  );
 
   ipcMain.handle(IPC_CHANNELS.OPEN_EXTERNAL_URL, async (_e, rawUrl: string) => {
     try {
@@ -684,7 +729,7 @@ async function runSmokeTest(): Promise<void> {
       creatorSel.dispatchEvent(new Event('change', { bubbles: true }));
       await sleep(80);
       const karasmaiOnlyText = document.querySelector('[data-testid="learn-ready-list"]')?.textContent || '';
-      if (karasmaiOnlyText.includes('Observado no CaiozeraLoL')) {
+      if (karasmaiOnlyText.includes('CaiozeraLoL')) {
         throw new Error('Filtro de criador Karasmai ainda exibiu CaiozeraLoL.');
       }
       creatorSel.value = 'all';
@@ -695,15 +740,21 @@ async function runSmokeTest(): Promise<void> {
       clickBtn('nav-draft');
       await sleep(80);
 
-      // 4. Navegar para Treino via botão "Praticar no Treino" da lição e verificar cenários
+      // 4. Navegar para Treino via botão "Praticar" da lição, escolher antes de revelar e verificar resultado
       clickBtn('nav-learn');
       await sleep(80);
       clickBtn('practice-btn-caiozera-macro-bot-abort-river');
       await sleep(120);
+      // Resposta deve começar oculta até o jogador escolher
+      if (document.querySelector('[data-testid="training-preferred-option"]')) {
+        throw new Error('Treino exibiu a resposta antes de o jogador escolher uma ação.');
+      }
+      clickBtn('train-choice-farm_route');
+      await sleep(100);
       const trainResult = document.querySelector('[data-testid="training-preferred-option"]')?.textContent || '';
-      if (!trainResult) throw new Error('Tela Treino não exibiu opção preferida.');
+      if (!trainResult) throw new Error('Tela Treino não exibiu resposta após escolha.');
 
-      // 5. Navegar para Revisão e verificar demo de gank ruim na bot + comparação com lição
+      // 5. Navegar para Revisão e verificar demo de gank ruim na bot
       clickBtn('nav-review');
       await sleep(120);
       const reviewSummary = document.querySelector('[data-testid="review-bot-summary"]')?.textContent || '';
@@ -729,7 +780,7 @@ async function runSmokeTest(): Promise<void> {
       const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
       for (let i = 0; i < 30; i++) {
         const el = document.querySelector('[data-testid="frozen-card-root"]');
-        if (el && el.textContent && el.textContent.includes('PLANO PRÉ-JOGO') && el.textContent.includes('Combos fixados')) {
+        if (el && el.textContent && el.textContent.includes('Plano pré-jogo') && el.querySelector('[data-testid="card-pinned-micros"]')) {
           return el.textContent;
         }
         await sleep(100);
@@ -771,7 +822,7 @@ async function runSmokeTest(): Promise<void> {
       const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
       for (let i = 0; i < 30; i++) {
         const el = document.querySelector('[data-testid="frozen-card-root"]');
-        if (el && el.textContent && el.textContent.includes('PLANO PRÉ-JOGO')) {
+        if (el && el.textContent && el.textContent.includes('Plano pré-jogo')) {
           return el.textContent;
         }
         await sleep(100);
@@ -779,10 +830,177 @@ async function runSmokeTest(): Promise<void> {
       return '';
     })();
   `);
-  if (!reopenedText.includes('Draft Equilibrado')) {
+  if (!reopenedText.includes('Kayn Azul')) {
     throw new Error('Cartão reaberto não preservou o plano congelado original.');
   }
   console.log('[SMOKE] Reabertura do cartão preservou plano congelado!');
+}
+
+async function runCaptureScreens(outputDir: string): Promise<void> {
+  if (!mainWindow) throw new Error('mainWindow ausente para captura.');
+  fs.mkdirSync(outputDir, { recursive: true });
+
+  await new Promise<void>((resolve) => {
+    if (mainWindow!.webContents.isLoading()) {
+      mainWindow!.webContents.once('did-finish-load', () => resolve());
+    } else {
+      resolve();
+    }
+  });
+
+  const waitRender = async (win: BrowserWindow, ms = 350) => {
+    await new Promise((r) => setTimeout(r, ms));
+    await win.webContents.executeJavaScript(`
+      (async () => {
+        const imgs = Array.from(document.querySelectorAll('img'));
+        await Promise.all(
+          imgs.map((img) =>
+            img.complete
+              ? Promise.resolve()
+              : new Promise((res) => {
+                  img.addEventListener('load', res, { once: true });
+                  img.addEventListener('error', res, { once: true });
+                  setTimeout(res, 1500);
+                }),
+          ),
+        );
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      })();
+    `);
+  };
+
+  const snap = async (win: BrowserWindow, filename: string) => {
+    await waitRender(win, 350);
+    const img = await win.webContents.capturePage();
+    fs.writeFileSync(path.join(outputDir, filename), img.toPNG());
+    console.log(`[CAPTURE] Saved ${filename}`);
+  };
+
+  // Aguarda hidratação completa do Draft
+  await mainWindow.webContents.executeJavaScript(`
+    (async () => {
+      const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+      for (let i = 0; i < 60; i++) {
+        if (document.querySelector('[data-testid="demo-red"]')) break;
+        await sleep(100);
+      }
+    })();
+  `);
+
+  // 1. Draft Rhaast (1200x780)
+  await mainWindow.webContents.executeJavaScript(`
+    (async () => {
+      const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+      document.querySelector('[data-testid="demo-red"]')?.click();
+      for (let i = 0; i < 20; i++) {
+        if ((document.querySelector('[data-testid="recommended-form-label"]')?.textContent || '').includes('Rhaast')) break;
+        await sleep(50);
+      }
+    })();
+  `);
+  await snap(mainWindow, '01-draft-rhaast.png');
+
+  // Congelar Rhaast e abrir cartão flutuante
+  await mainWindow.webContents.executeJavaScript(`
+    document.querySelector('[data-testid="freeze-card-btn"]')?.click();
+  `);
+  await new Promise((r) => setTimeout(r, 250));
+  openOrFocusCardWindow();
+  if (cardWindow && !cardWindow.isDestroyed()) {
+    await new Promise<void>((resolve) => {
+      if (cardWindow!.webContents.isLoading()) {
+        cardWindow!.webContents.once('did-finish-load', () => resolve());
+      } else {
+        resolve();
+      }
+    });
+    await cardWindow.webContents.executeJavaScript(`
+      (async () => {
+        const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+        for (let i = 0; i < 30; i++) {
+          if (document.querySelector('[data-testid="frozen-card-root"]')) break;
+          await sleep(100);
+        }
+      })();
+    `);
+    await snap(cardWindow, '06-card-floating-rhaast.png');
+    cardWindow.close();
+  }
+
+  // 2. Draft Kayn Azul (1200x780)
+  await mainWindow.webContents.executeJavaScript(`
+    document.querySelector('[data-testid="demo-blue"]')?.click();
+  `);
+  await snap(mainWindow, '02-draft-blue.png');
+
+  // 3. Aba Aprender (cartões curtos)
+  await mainWindow.webContents.executeJavaScript(`
+    document.querySelector('[data-testid="nav-learn"]')?.click();
+  `);
+  await snap(mainWindow, '03-aprender-cards.png');
+
+  // 4. Aba Treino (antes e depois da escolha)
+  await mainWindow.webContents.executeJavaScript(`
+    document.querySelector('[data-testid="nav-training"]')?.click();
+  `);
+  await snap(mainWindow, '04a-treino-before-pick.png');
+
+  await mainWindow.webContents.executeJavaScript(`
+    document.querySelector('[data-testid="train-choice-farm_route"]')?.click();
+  `);
+  await snap(mainWindow, '04b-treino-after-pick.png');
+
+  // 5. Aba Revisão (timeline limpa)
+  await mainWindow.webContents.executeJavaScript(`
+    document.querySelector('[data-testid="nav-review"]')?.click();
+  `);
+  await snap(mainWindow, '05-revisao-timeline.png');
+
+  // 6. Configurações (Cartão + Dados)
+  await mainWindow.webContents.executeJavaScript(`
+    document.querySelector('[data-testid="nav-settings"]')?.click();
+  `);
+  await snap(mainWindow, '07-configuracoes.png');
+
+  await mainWindow.webContents.executeJavaScript(`
+    document.querySelector('[data-testid="settings-tab-data"]')?.click();
+  `);
+  await snap(mainWindow, '07b-configuracoes-dados.png');
+
+  // Verificar imagens quebradas no Draft Azul
+  await mainWindow.webContents.executeJavaScript(`
+    document.querySelector('[data-testid="nav-draft"]')?.click();
+  `);
+  await waitRender(mainWindow, 300);
+  const imgAudit = await mainWindow.webContents.executeJavaScript(`
+    (() => {
+      const imgs = Array.from(document.querySelectorAll('img'));
+      const broken = imgs.filter((i) => !i.complete || i.naturalWidth === 0).map((i) => i.src);
+      return { total: imgs.length, broken };
+    })();
+  `);
+  console.log('[CAPTURE] Image audit on Draft:', JSON.stringify(imgAudit));
+}
+
+function registerAssetProtocol(): void {
+  protocol.handle('kayn-asset', async (request) => {
+    const parsed = parseAssetUrl(request.url);
+    if (!parsed) {
+      return new Response('Not Found', { status: 404 });
+    }
+    const cdnBase = catalogService.getCatalog().cdnBase || 'https://ddragon.leagueoflegends.com/cdn';
+    const result = await assetCacheService.resolveAssetBytes(parsed, cdnBase);
+    if (!result) {
+      return new Response('Not Found', { status: 404 });
+    }
+    return new Response(new Uint8Array(result.bytes), {
+      status: 200,
+      headers: {
+        'Content-Type': result.mimeType,
+        'Cache-Control': 'public, max-age=31536000, immutable',
+      },
+    });
+  });
 }
 
 app.whenReady().then(async () => {
@@ -790,17 +1008,31 @@ app.whenReady().then(async () => {
   stateFilePath = path.join(userDataDir, 'kayn-dicas-state.json');
   riotKeyFilePath = path.join(userDataDir, 'riot-key.bin');
   const cacheFilePath = path.join(userDataDir, 'ddragon-cache.json');
+  const assetCacheDir = path.join(userDataDir, 'ddragon-assets');
+  const bundledAssetsDir = path.join(__dirname, '../../dist/ddragon-assets');
+
+  assetCacheService = new AssetCacheService({
+    cacheRoot: assetCacheDir,
+    bundledRoot: bundledAssetsDir,
+  });
 
   appState = readStateFileSafely(stateFilePath).state;
-  catalogService = new DdragonCatalogService(cacheFilePath);
+  catalogService = new DdragonCatalogService(cacheFilePath, {
+    assetCache: assetCacheService,
+  });
 
+  registerAssetProtocol();
   registerIpcHandlers();
   registerShortcuts();
   mainWindow = createMainWindow();
 
-  if (IS_SMOKE_TEST) {
+  if (IS_SMOKE_TEST || CAPTURE_SCREENS_DIR) {
     try {
-      await runSmokeTest();
+      if (CAPTURE_SCREENS_DIR) {
+        await runCaptureScreens(CAPTURE_SCREENS_DIR);
+      } else {
+        await runSmokeTest();
+      }
       globalShortcut.unregisterAll();
       if (cardWindow && !cardWindow.isDestroyed()) cardWindow.destroy();
       if (mainWindow && !mainWindow.isDestroyed()) mainWindow.destroy();
@@ -813,7 +1045,7 @@ app.whenReady().then(async () => {
       }
       app.exit(0);
     } catch (err) {
-      console.error('[SMOKE] FALHOU:', err);
+      console.error('[SMOKE/CAPTURE] FALHOU:', err);
       globalShortcut.unregisterAll();
       app.exit(1);
     }

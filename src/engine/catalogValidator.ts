@@ -1,8 +1,10 @@
 import type { CatalogSnapshot, CatalogValidationReport } from '../shared/types';
 import {
   BUILD_DATA_META,
+  RUNE_BLUEPRINTS,
   collectBlueprintItemIds,
   collectBlueprintRuneIds,
+  collectBlueprintStatShardIds,
 } from './buildProfiles';
 import { TACTICAL_DATA_META } from './championTactics';
 
@@ -42,13 +44,20 @@ export function validateCatalogSnapshot(raw: unknown): {
       (it) => it && (it.maps11 !== true || it.purchasable !== true || typeof it.name !== 'string'),
     );
     if (sampleInvalidItem) {
-      errors.push('Catálogo contém item incompatível com Summoner\'s Rift ou esquema inválido.');
+      errors.push("Catálogo contém item incompatível com Summoner's Rift ou esquema inválido.");
     }
   }
 
   const runeTrees = obj.runeTrees as Array<Record<string, unknown>> | undefined;
   if (!Array.isArray(runeTrees) || runeTrees.length < 5) {
     errors.push('Árvores de runas ausentes ou incompletas (esperado 5 árvores).');
+  } else {
+    const badTree = runeTrees.find(
+      (t) => !t || typeof t.id !== 'number' || !Array.isArray(t.slots) || t.slots.length < 4,
+    );
+    if (badTree) {
+      errors.push('Árvore de runas com estrutura de slots incompleta.');
+    }
   }
 
   if (errors.length > 0) {
@@ -73,17 +82,47 @@ export function validateRecommendationsAgainstCatalog(
   });
 
   const presentRuneIds = new Set<number>();
+  const runeMetaMap = new Map<number, { treeId: number; slotIndex: number; icon?: string }>();
   for (const tree of catalog.runeTrees) {
     presentRuneIds.add(tree.id);
-    for (const slot of tree.slots) {
+    tree.slots.forEach((slot, slotIndex) => {
       for (const r of slot.runes) {
         presentRuneIds.add(r.id);
+        runeMetaMap.set(r.id, { treeId: tree.id, slotIndex, icon: r.icon });
       }
-    }
+    });
   }
 
   const requiredRuneIds = collectBlueprintRuneIds();
   const missingRuneIds = requiredRuneIds.filter((id) => !presentRuneIds.has(id));
+
+  // Validar também árvore e slot exatos de cada blueprint (keystones no slot 0, menores nos slots 1..3, sem duplicar slot na secundária)
+  const invalidSlotRuneIdsSet = new Set<number>();
+  for (const bp of Object.values(RUNE_BLUEPRINTS)) {
+    bp.primaryRuneIds.forEach((runeId, expectedSlot) => {
+      const meta = runeMetaMap.get(runeId);
+      if (meta && (meta.treeId !== bp.primaryTreeId || meta.slotIndex !== expectedSlot)) {
+        invalidSlotRuneIdsSet.add(runeId);
+      }
+    });
+    const secSlots = new Set<number>();
+    for (const runeId of bp.secondaryRuneIds) {
+      const meta = runeMetaMap.get(runeId);
+      if (meta) {
+        if (meta.treeId !== bp.secondaryTreeId || meta.slotIndex < 1 || secSlots.has(meta.slotIndex)) {
+          invalidSlotRuneIdsSet.add(runeId);
+        }
+        secSlots.add(meta.slotIndex);
+      }
+    }
+  }
+  const invalidSlotRuneIds = Array.from(invalidSlotRuneIdsSet);
+
+  // Validar fragmentos (statShards) quando o catálogo fornece a lista
+  const presentShardIds = new Set((catalog.statShards ?? []).map((s) => s.id));
+  const missingShardIds = catalog.statShards
+    ? collectBlueprintStatShardIds().filter((id) => !presentShardIds.has(id))
+    : [];
 
   const patchMismatch =
     catalog.patch !== BUILD_DATA_META.validatedPatch ||
@@ -91,7 +130,7 @@ export function validateRecommendationsAgainstCatalog(
 
   if (patchMismatch) {
     warnings.push(
-      `Divergência de patch: catálogo está em ${catalog.patch}, mas os perfis táticos/builds foram validados em ${BUILD_DATA_META.validatedPatch}.`,
+      `Divergência de patch: catálogo ativo está em ${catalog.patch}, mas as builds/runas foram revisadas em ${BUILD_DATA_META.validatedPatch}.`,
     );
   }
   if (missingItemIds.length > 0) {
@@ -104,10 +143,24 @@ export function validateRecommendationsAgainstCatalog(
       `Runas recomendadas ausentes no catálogo (${catalog.patch}): ${missingRuneIds.join(', ')}.`,
     );
   }
+  if (invalidSlotRuneIds.length > 0) {
+    warnings.push(
+      `Runas em árvore ou slot incompatível no catálogo (${catalog.patch}): ${invalidSlotRuneIds.join(', ')}.`,
+    );
+  }
+  if (missingShardIds.length > 0) {
+    warnings.push(
+      `Fragmentos ausentes no catálogo (${catalog.patch}): ${missingShardIds.join(', ')}.`,
+    );
+  }
 
   return {
     validSnapshot: true,
-    validRecommendations: missingItemIds.length === 0 && missingRuneIds.length === 0,
+    validRecommendations:
+      missingItemIds.length === 0 &&
+      missingRuneIds.length === 0 &&
+      invalidSlotRuneIds.length === 0 &&
+      missingShardIds.length === 0,
     catalogPatch: catalog.patch,
     tacticalVersion: TACTICAL_DATA_META.tacticalVersion,
     tacticalValidatedPatch: TACTICAL_DATA_META.validatedPatch,
@@ -116,6 +169,8 @@ export function validateRecommendationsAgainstCatalog(
     patchMismatch,
     missingItemIds,
     missingRuneIds,
+    invalidSlotRuneIds,
+    missingShardIds,
     warnings,
   };
 }

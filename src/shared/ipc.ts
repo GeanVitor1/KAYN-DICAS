@@ -28,6 +28,8 @@ export const IPC_CHANNELS = {
   SAVE_CUSTOM_LESSON: 'kayn:save-custom-lesson',
   DELETE_CUSTOM_LESSON: 'kayn:delete-custom-lesson',
   SET_FAVORITE_MICRO_IDS: 'kayn:set-favorite-micro-ids',
+  SET_PINNED_REMINDER_IDS: 'kayn:set-pinned-reminder-ids',
+  SAVE_TACTICAL_RULE_NOTE: 'kayn:save-tactical-rule-note',
   OPEN_EXTERNAL_URL: 'kayn:open-external-url',
   RESET_DEMO_DATA: 'kayn:reset-demo-data',
   GET_CATALOG: 'kayn:get-catalog',
@@ -82,6 +84,8 @@ export interface KaynDesktopApi {
   saveCustomLesson: (lesson: StudyLesson) => Promise<PersistedAppState>;
   deleteCustomLesson: (lessonId: string) => Promise<PersistedAppState>;
   setFavoriteMicroIds: (ids: string[]) => Promise<PersistedAppState>;
+  setPinnedReminderIds: (ids: string[]) => Promise<PersistedAppState>;
+  saveTacticalRuleNote: (ruleId: string, note: string) => Promise<PersistedAppState>;
   openExternalUrl: (url: string) => Promise<{ ok: boolean; error?: string }>;
   resetDemoData: () => Promise<PersistedAppState>;
   refreshDdragon: () => Promise<{

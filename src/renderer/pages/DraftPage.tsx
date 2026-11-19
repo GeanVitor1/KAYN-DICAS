@@ -1,10 +1,16 @@
 import {
-  ArrowLeftRight,
+  AlertTriangle,
   BookmarkPlus,
+  ChevronDown,
+  ChevronRight,
+  ChevronUp,
   ExternalLink,
+  HelpCircle,
   Layers,
   Pin,
   RotateCcw,
+  Sparkles,
+  Swords,
   Trash2,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -12,41 +18,54 @@ import { DEMO_DRAFTS, createEmptyDraft } from '../../engine/demos';
 import {
   analyzeDraft,
   createFrozenCardFromAnalysis,
+  getShortFormReason,
 } from '../../engine/draftAnalyzer';
+import { selectPreGameReminders } from '../../engine/tacticalMemory';
 import type {
   CatalogSnapshot,
-  CatalogStatus,
   DraftState,
   FrozenMicroComboCard,
   FrozenPreGameCard,
   LaneRole,
+  TacticalRule,
   TargetLane,
 } from '../../shared/types';
-import { ChampionPicker } from '../components/ChampionPicker';
+import { getKaynSplashUrl } from '../assetUrls';
+import { ChampionPortraitSlot } from '../components/ChampionPicker';
 import { ExpandableSection } from '../components/ExpandableSection';
-import { ConfidenceBadge, FormBadge } from '../components/FormBadge';
+import { ConfidenceBadge } from '../components/FormBadge';
+import { ItemIconTile, RuneIconTile } from '../components/GameIcon';
 import { TacticalMapSvg } from '../components/TacticalMapSvg';
 
-const ROLES: Array<{ role: LaneRole; label: string }> = [
-  { role: 'top', label: 'Top' },
-  { role: 'jungle', label: 'Jungle' },
-  { role: 'mid', label: 'Mid' },
-  { role: 'bot', label: 'ADC' },
-  { role: 'support', label: 'Suporte' },
+const ROLES: Array<{ role: LaneRole; short: string; label: string }> = [
+  { role: 'top', short: 'TOP', label: 'Top' },
+  { role: 'jungle', short: 'JG', label: 'Jungle' },
+  { role: 'mid', short: 'MID', label: 'Mid' },
+  { role: 'bot', short: 'ADC', label: 'ADC' },
+  { role: 'support', short: 'SUP', label: 'Suporte' },
 ];
+
+const LANE_SHORT: Record<TargetLane, string> = {
+  top: 'Top',
+  mid: 'Mid',
+  bot: 'Bot',
+};
 
 export function DraftPage({
   draft,
   savedDrafts,
   frozenCard,
   pinnedMicroCards,
+  tacticalRules,
+  pinnedReminderIds,
+  tacticalRuleNotes,
   catalog,
-  catalogStatus,
   preferBlueAsTiebreaker,
   onChangeDraft,
   onSaveDraft,
   onDeleteDraft,
   onTogglePreferBlue,
+  onTogglePinnedReminder,
   onFreezeCard,
   onOpenCardWindow,
 }: {
@@ -54,23 +73,42 @@ export function DraftPage({
   savedDrafts: DraftState[];
   frozenCard: FrozenPreGameCard | null;
   pinnedMicroCards: FrozenMicroComboCard[];
+  tacticalRules: TacticalRule[];
+  pinnedReminderIds: string[];
+  tacticalRuleNotes: Record<string, string>;
   catalog: CatalogSnapshot;
-  catalogStatus: CatalogStatus;
   preferBlueAsTiebreaker: boolean;
   onChangeDraft: (next: DraftState) => void;
   onSaveDraft: (draft: DraftState) => void;
   onDeleteDraft: (id: string) => void;
   onTogglePreferBlue: (value: boolean) => void;
+  onTogglePinnedReminder: (ruleId: string) => Promise<void>;
   onFreezeCard: (card: FrozenPreGameCard) => Promise<void>;
   onOpenCardWindow: () => Promise<void>;
 }) {
   const [freezeNotice, setFreezeNotice] = useState<string | null>(null);
-  const [activeSituationalKey, setActiveSituationalKey] = useState<string>('all_active');
+  const [showWhy, setShowWhy] = useState(false);
+  const [showSituational, setShowSituational] = useState(false);
+  const [splashFailed, setSplashFailed] = useState(false);
 
   const analysis = useMemo(
     () => analyzeDraft(draft, catalog, { preferBlueAsTiebreaker }),
     [draft, catalog, preferBlueAsTiebreaker],
   );
+
+  const preGameReminders = useMemo(
+    () =>
+      selectPreGameReminders(
+        analysis,
+        tacticalRules,
+        pinnedReminderIds,
+        tacticalRuleNotes,
+        draft.staticNotes,
+      ),
+    [analysis, tacticalRules, pinnedReminderIds, tacticalRuleNotes, draft.staticNotes],
+  );
+
+  const shortReason = useMemo(() => getShortFormReason(analysis), [analysis]);
 
   const updateSlot = (side: 'allies' | 'enemies', role: LaneRole, champId: string | null) => {
     onChangeDraft({
@@ -86,7 +124,6 @@ export function DraftPage({
   const swapWithNextRole = (side: 'allies' | 'enemies', roleIndex: number) => {
     const r1 = ROLES[roleIndex].role;
     const r2 = ROLES[(roleIndex + 1) % ROLES.length].role;
-    // Evita tirar o Kayn da jungle aliada acidentalmente sem necessidade
     if (side === 'allies' && (r1 === 'jungle' || r2 === 'jungle')) {
       const target = ROLES[(roleIndex + 2) % ROLES.length].role;
       const sideObj = draft[side];
@@ -114,25 +151,70 @@ export function DraftPage({
   };
 
   const handleFreeze = async () => {
-    const card = createFrozenCardFromAnalysis(draft, analysis, pinnedMicroCards);
+    const card = createFrozenCardFromAnalysis(
+      draft,
+      analysis,
+      pinnedMicroCards,
+      preGameReminders.slice(0, 2).map((r) => ({
+        ruleId: r.ruleId,
+        text: r.text,
+        watchCondition: r.watchCondition,
+      })),
+    );
     await onFreezeCard(card);
     setFreezeNotice(
-      `Plano pré-jogo congelado às ${new Date(card.frozenAt).toLocaleTimeString('pt-BR')} (${pinnedMicroCards.length}/3 combos incluídos)! Não muda durante a partida.`,
+      `Plano salvo às ${new Date(card.frozenAt).toLocaleTimeString('pt-BR')} (estático na partida).`,
     );
   };
 
-  const shownSituational = analysis.build.situational.filter((s) =>
-    activeSituationalKey === 'all_active' ? s.activeInDraft : s.key === activeSituationalKey,
-  );
+  const formTitle =
+    analysis.recommendedForm === 'blue'
+      ? 'Kayn Azul'
+      : analysis.recommendedForm === 'red'
+        ? 'Rhaast'
+        : 'Indefinido';
+
+  const heroClass =
+    analysis.recommendedForm === 'blue'
+      ? 'form-hero-blue'
+      : analysis.recommendedForm === 'red'
+        ? 'form-hero-red'
+        : 'form-hero-open';
+
+  const keystoneAccent: 'gold' | 'blue' | 'red' =
+    analysis.recommendedForm === 'blue'
+      ? 'blue'
+      : analysis.recommendedForm === 'red'
+        ? 'gold'
+        : 'gold';
+
+  const keystone = analysis.runes.primaryRunes[0];
+  const primaryMinors = analysis.runes.primaryRunes.slice(1);
+  const activeSituationals = analysis.build.situational.filter((s) => s.activeInDraft);
+  const splashUrl = getKaynSplashUrl(catalog.patch);
+
+  const firstWindowLabel =
+    analysis.lanes.firstGankWindow === 'farm_first'
+      ? 'Farm primeiro'
+      : `Observar ${LANE_SHORT[analysis.lanes.firstGankWindow]}`;
+
+  const firstWindowShortNote =
+    analysis.lanes.firstGankWindow === 'farm_first'
+      ? 'Sem janela limpa no início — complete o clear antes de forçar.'
+      : analysis.lanes.perLane[analysis.lanes.firstGankWindow].favorableConditionSentence;
+
+  const shortFarmAlt =
+    analysis.lanes.bestPlayAroundLane === 'top'
+      ? 'Full clear Bot → Top; sem abertura, Aronguejo ou reset.'
+      : analysis.lanes.bestPlayAroundLane === 'bot'
+        ? 'Full clear Top → Bot; sem setup na Bot, volte aos campos.'
+        : 'Full clear avaliando Mid na travessia; resete no pico de ouro.';
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-      {/* Barra rápida para champion select */}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
+      {/* Barra compacta superior */}
       <div className="toolbar">
         <div className="toolbar-group">
-          <span className="small-text muted-text" style={{ fontWeight: 700 }}>
-            Demos Diamante:
-          </span>
           <button
             type="button"
             data-testid="demo-blue"
@@ -155,448 +237,576 @@ export function DraftPage({
             className="btn btn-amber btn-xs"
             onClick={() => onChangeDraft({ ...DEMO_DRAFTS.balanced })}
           >
-            Demo Equilibrado
+            Equilibrado
           </button>
           <button
             type="button"
-            className="btn btn-xs"
+            className="btn btn-xs btn-ghost"
             onClick={() => onChangeDraft(createEmptyDraft())}
           >
-            <RotateCcw size={12} /> Limpar draft
+            <RotateCcw size={12} /> Limpar
           </button>
-        </div>
-
-        <div className="toolbar-group">
-          <label className="switch-row" title="Usado só em drafts equilibrados — nunca mascara um Rhaast claro">
+          <label
+            className="switch-row"
+            style={{ marginLeft: 4, fontSize: 12 }}
+            title="Usado apenas como desempate em drafts equilibrados — nunca mascara um Rhaast claro"
+          >
             <input
               type="checkbox"
               checked={preferBlueAsTiebreaker}
               onChange={(e) => onTogglePreferBlue(e.target.checked)}
             />
-            <span>Preferência Azul (só desempate)</span>
+            <span className="muted-text">Desempate Azul</span>
           </label>
+        </div>
+
+        <div className="toolbar-group">
+          {freezeNotice ? (
+            <span className="badge badge-green">{freezeNotice}</span>
+          ) : frozenCard ? (
+            <span className="badge badge-muted">
+              Plano salvo · {new Date(frozenCard.frozenAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+            </span>
+          ) : null}
 
           <button
             type="button"
             data-testid="freeze-card-btn"
-            className="btn btn-primary"
+            className="btn btn-primary btn-xs"
+            style={{ padding: '6px 12px', fontSize: 12.5 }}
             onClick={() => void handleFreeze()}
           >
-            <Pin size={14} /> Salvar plano pré-jogo ({pinnedMicroCards.length}/3 combos)
+            <Pin size={13} /> Salvar plano pré-jogo
           </button>
           <button
             type="button"
             data-testid="open-card-btn"
-            className="btn"
+            className="btn btn-xs"
+            style={{ padding: '6px 11px', fontSize: 12.5 }}
             onClick={() => void onOpenCardWindow()}
           >
-            <ExternalLink size={14} /> Abrir cartão
+            <ExternalLink size={13} /> Cartão
           </button>
         </div>
       </div>
 
-      {/* Status de patch e notificações */}
-      {catalogStatus.validation.patchMismatch || catalogStatus.lastError ? (
-        <div className="banner banner-warning">
-          <span>
-            <strong>Aviso de versão:</strong> Catálogo ativo Data Dragon{' '}
-            <span className="mono">{catalog.patch}</span> | Recomendações validadas em{' '}
-            <span className="mono">{analysis.meta.buildVersion}</span> (patch{' '}
-            <span className="mono">{analysis.build.validatedPatch}</span>).
-            {catalogStatus.lastError ? ` ${catalogStatus.lastError}` : ''}
-          </span>
-        </div>
-      ) : (
-        <div className="banner">
-          <span className="small-text muted-text">
-            Catálogo <span className="mono">Data Dragon {catalog.patch} (pt_BR, Summoner&apos;s Rift)</span> —{' '}
-            {catalogStatus.sourceMode === 'bundled_offline'
-              ? 'Snapshot offline embutido'
-              : catalogStatus.sourceMode === 'local_cache'
-                ? 'Cache local validado'
-                : 'Atualizado da rede'}
-            . Perfis táticos <span className="mono">{analysis.meta.tacticalVersion}</span>.
-          </span>
-          {frozenCard ? (
-            <span className="badge badge-green">
-              Cartão congelado ({new Date(frozenCard.frozenAt).toLocaleTimeString('pt-BR')})
-            </span>
-          ) : (
-            <span className="badge badge-muted">Nenhum cartão congelado ainda</span>
-          )}
-        </div>
-      )}
+      {/* ÁREA PRINCIPAL 2 COLUNAS (CABE EM 1200×780 SEM ROLAGEM) */}
+      <div className="draft-main-grid">
+        {/* COLUNA ESQUERDA: COMPOSIÇÕES + FORMA RECOMENDADA */}
+        <section className="draft-left-col" aria-label="Composições e forma recomendada">
+          {/* Aliados */}
+          <div className="champ-team-strip">
+            <div className="team-bar team-bar-ally" aria-hidden="true" />
+            <div className="champ-slots-grid">
+              {ROLES.map((item, idx) => (
+                <ChampionPortraitSlot
+                  key={`ally-${item.role}`}
+                  value={draft.allies[item.role]}
+                  roleLabel={item.short}
+                  side="ally"
+                  catalog={catalog}
+                  disabled={item.role === 'jungle'}
+                  ariaLabel={`Aliado ${item.label}`}
+                  onChange={(id) => updateSlot('allies', item.role, id)}
+                  onSwapNext={
+                    item.role === 'jungle' ? undefined : () => swapWithNextRole('allies', idx)
+                  }
+                />
+              ))}
+            </div>
+          </div>
 
-      {freezeNotice ? (
-        <div className="banner banner-success">
-          <span>{freezeNotice}</span>
-          <button
-            type="button"
-            className="btn btn-xs"
-            onClick={() => void onOpenCardWindow()}
-          >
-            Ver cartão agora
-          </button>
-        </div>
-      ) : null}
+          {/* Inimigos */}
+          <div className="champ-team-strip">
+            <div className="team-bar team-bar-enemy" aria-hidden="true" />
+            <div className="champ-slots-grid">
+              {ROLES.map((item, idx) => (
+                <ChampionPortraitSlot
+                  key={`enemy-${item.role}`}
+                  value={draft.enemies[item.role]}
+                  roleLabel={item.short}
+                  side="enemy"
+                  catalog={catalog}
+                  ariaLabel={`Inimigo ${item.label}`}
+                  onChange={(id) => updateSlot('enemies', item.role, id)}
+                  onSwapNext={() => swapWithNextRole('enemies', idx)}
+                />
+              ))}
+            </div>
+          </div>
 
-      {/* 4 RESPOSTAS NO TOPO PARA LEITURA RÁPIDA */}
-      <div className="grid-4">
-        {/* 1. FORMA */}
-        <section className="panel" aria-label="Forma recomendada">
-          <div className="panel-header">
-            <h2 className="panel-title">1. Forma</h2>
-            <ConfidenceBadge level={analysis.confidence.level} />
-          </div>
-          <div data-testid="recommended-form-label">
-            <FormBadge
-              form={analysis.recommendedForm}
-              label={analysis.recommendedFormLabel}
-            />
-          </div>
-          <div className="small-text">
-            <strong>Alternativa:</strong> {analysis.alternativeFormLabel}
-          </div>
-          {analysis.tiebreakerBlockedReason ? (
-            <div className="small-text" style={{ color: '#fca5a5' }}>
-              {analysis.tiebreakerBlockedReason}
+          {analysis.missingDraftGaps.length > 0 ? (
+            <div className="small-text muted-text" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <AlertTriangle size={13} color="var(--amber)" />
+              <span>{analysis.missingDraftGaps[0]}</span>
             </div>
           ) : null}
-          <div className="small-text muted-text">
-            <strong>O que inverte:</strong> {analysis.flipCondition}
-          </div>
-          <ul className="list-compact small-text">
-            {analysis.shortReasons.map((r, i) => (
-              <li key={i}>{r}</li>
-            ))}
-          </ul>
-          <div className="small-text muted-text" style={{ borderTop: '1px solid var(--border)', paddingTop: 6 }}>
-            <strong>Motivo da confiança:</strong> {analysis.confidence.reason}
+
+          {/* Hero Card da Forma Recomendada */}
+          <div className={`form-hero-card ${heroClass}`}>
+            {splashUrl && !splashFailed ? (
+              <img
+                src={splashUrl}
+                alt=""
+                aria-hidden="true"
+                className="form-hero-art"
+                onError={() => setSplashFailed(true)}
+              />
+            ) : null}
+
+            <div className="form-hero-body">
+              <div className="form-hero-kicker">
+                <span>Recomendação</span>
+                <ConfidenceBadge level={analysis.confidence.level} />
+              </div>
+
+              <div className="form-hero-title" data-testid="recommended-form-label">
+                {formTitle}
+              </div>
+
+              <div className="form-hero-sub">
+                <Swords size={14} />
+                <span>{shortReason}</span>
+              </div>
+
+              <div className="form-hero-actions">
+                <span className="small-text" style={{ color: 'rgba(226, 232, 240, 0.8)' }}>
+                  Alt: {analysis.alternativeForm === 'blue' ? 'Kayn Azul' : 'Rhaast'}
+                </span>
+                <button
+                  type="button"
+                  data-testid="why-form-btn"
+                  className="btn btn-xs"
+                  style={{ background: 'rgba(9, 14, 24, 0.72)' }}
+                  onClick={() => setShowWhy((v) => !v)}
+                >
+                  <HelpCircle size={12} /> Por quê? {showWhy ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                </button>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* 2. RUNAS */}
-        <section className="panel" aria-label="Runas recomendadas">
-          <div className="panel-header">
-            <h2 className="panel-title">2. Runas</h2>
-            <span className="badge badge-muted">Patch {analysis.runes.validatedPatch}</span>
-          </div>
-          <div style={{ fontWeight: 700, fontSize: 13 }}>{analysis.runes.formLabel}</div>
-          <div className="panel-subtle small-text">
-            <div>
-              <strong>{analysis.runes.primaryTreeName}:</strong>{' '}
-              {analysis.runes.primaryRunes.map((r) => r.name).join(' → ')}
-            </div>
-            <div style={{ marginTop: 4 }}>
-              <strong>{analysis.runes.secondaryTreeName}:</strong>{' '}
-              {analysis.runes.secondaryRunes.map((r) => r.name).join(' + ')}
-            </div>
-            <div style={{ marginTop: 4 }} className="muted-text">
-              <strong>Fragmentos:</strong> {analysis.runes.statShards.join(' / ')}
-            </div>
-          </div>
-          <div className="small-text muted-text">
-            <strong>Por que difere:</strong> {analysis.runes.whyFormDiffers}
-          </div>
-        </section>
-
-        {/* 3. BUILD */}
-        <section className="panel" aria-label="Build recomendada">
-          <div className="panel-header">
-            <h2 className="panel-title">3. Build (SR)</h2>
-            <span className="badge badge-muted">Patch {analysis.build.validatedPatch}</span>
-          </div>
-          <div className="small-text">
-            <strong>Pet:</strong> {analysis.build.junglePet.name}
-          </div>
-          <div className="small-text">
-            <strong>Bota:</strong> {analysis.build.boots.map((b) => b.name).join(' / ')}
-          </div>
-          <div className="panel-subtle small-text">
-            <strong>Núcleo (Core):</strong>
-            <ul className="list-compact" style={{ marginTop: 4 }}>
-              {analysis.build.core.map((c) => (
-                <li key={c.id}>
-                  <strong>{c.name}</strong> ({c.gold}g) — <span className="muted-text">{c.reason}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="small-text">
-            <label className="field-label">
-              <span>Situacionais por ameaça:</span>
-              <select
-                className="select"
-                value={activeSituationalKey}
-                onChange={(e) => setActiveSituationalKey(e.target.value)}
-              >
-                <option value="all_active">Ativos neste draft</option>
-                {analysis.build.situational.map((s) => (
-                  <option key={s.key} value={s.key}>
-                    {s.label} {s.activeInDraft ? '(Recomendado)' : ''}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <div style={{ marginTop: 6, display: 'flex', flexDirection: 'column', gap: 5 }}>
-              {shownSituational.length === 0 ? (
-                <span className="muted-text">Nenhum situacional crítico disparado; selecione uma categoria acima para ver opções.</span>
+        {/* COLUNA DIREITA: RUNAS VISUAIS + BUILD VISUAL */}
+        <section className="draft-right-col" aria-label="Runas e build recomendadas">
+          {/* RUNAS */}
+          <div className="rune-section-block" data-testid="draft-runes-section">
+            <div className="panel-header">
+              <h2 className="panel-title">Runa</h2>
+              {analysis.runes.hasInvalidRunes ? (
+                <span className="badge badge-amber">
+                  <AlertTriangle size={11} /> Revisão necessária
+                </span>
               ) : (
-                shownSituational.map((cat) => (
-                  <div key={cat.key} className="panel-subtle">
-                    <div style={{ fontWeight: 700 }}>{cat.label}</div>
-                    <div className="muted-text">{cat.triggerReason}</div>
-                    <div>
-                      <strong>Itens:</strong> {cat.items.map((i) => i.name).join(' • ')}
-                    </div>
-                  </div>
-                ))
+                <span className="small-text muted-text">
+                  {analysis.runes.primaryTreeName} + {analysis.runes.secondaryTreeName}
+                </span>
               )}
             </div>
-          </div>
-        </section>
 
-        {/* 4. LANES */}
-        <section className="panel" aria-label="Comparação das Lanes">
-          <div className="panel-header">
-            <h2 className="panel-title">4. Lanes &amp; Farm</h2>
-            <span className="badge badge-muted">Potencial do draft</span>
-          </div>
-          <div className="panel-subtle small-text" style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-            <div>
-              <strong>1ª janela de gank:</strong>{' '}
-              <span className="badge badge-blue">
-                {analysis.lanes.firstGankWindow === 'farm_first'
-                  ? 'Farm primeiro (sem janela segura)'
-                  : analysis.lanes.firstGankWindow.toUpperCase()}
-              </span>
-            </div>
-            <div className="muted-text">{analysis.lanes.firstGankWindowReason}</div>
-            <div style={{ marginTop: 4 }}>
-              <strong>Melhor lane para jogar em torno:</strong>{' '}
-              <span className="badge badge-green">
-                {analysis.lanes.bestPlayAroundLane.toUpperCase()}
-              </span>
-            </div>
-            <div className="muted-text">{analysis.lanes.bestPlayAroundReason}</div>
-          </div>
-          <div className="small-text">
-            <strong>Rota de farm se não houver janela:</strong>{' '}
-            <span className="muted-text">{analysis.lanes.fallbackFarmPath}</span>
-          </div>
-        </section>
-      </div>
-
-      {/* COMPARAÇÃO DETALHADA TOP / MID / BOT (2 FRASES CURTAS POR LANE) */}
-      <div className="grid-3">
-        {(['top', 'mid', 'bot'] as TargetLane[]).map((lane) => {
-          const info = analysis.lanes.perLane[lane];
-          return (
-            <div key={lane} className="panel">
-              <div className="panel-header">
-                <strong>Rota {info.label}</strong>
-                <span className="badge badge-muted">
-                  Contragank: {info.countergankRisk} | Conversão: {info.conversionPotential}
+            <div className="rune-visual-board">
+              {/* Runa principal grande + nome sempre visível */}
+              <div className="rune-keystone-col">
+                <RuneIconTile
+                  patch={catalog.patch}
+                  iconPath={keystone.icon}
+                  name={keystone.name}
+                  subLabel={analysis.runes.primaryTreeName}
+                  size={68}
+                  variant="keystone"
+                  accent={keystoneAccent}
+                  invalid={!keystone.validInCatalog}
+                />
+                <div className="rune-keystone-name" data-testid="keystone-name">
+                  {keystone.validInCatalog ? keystone.name : 'Revisão necessária'}
+                </div>
+                <span className="rune-tree-caption">
+                  {analysis.runes.primaryTreeName}
                 </span>
               </div>
-              <div className="small-text">
-                <strong>Quando entrar:</strong> {info.favorableConditionSentence}
-              </div>
-              <div className="small-text muted-text">
-                <strong>Quando seguir farm:</strong> {info.fallbackConditionSentence}
+
+              <div className="rune-divider" aria-hidden="true" />
+
+              {/* Árvore principal (menores), secundária e fragmentos na ordem do cliente */}
+              <div className="rune-rows-col">
+                <div className="rune-row-line" aria-label="Runas da árvore principal">
+                  <span className="rune-row-tag">Principal</span>
+                  {primaryMinors.map((rune) => (
+                    <RuneIconTile
+                      key={rune.id}
+                      patch={catalog.patch}
+                      iconPath={rune.icon}
+                      name={rune.name}
+                      subLabel={analysis.runes.primaryTreeName}
+                      size={40}
+                      variant="minor"
+                      invalid={!rune.validInCatalog}
+                    />
+                  ))}
+                </div>
+
+                <div className="rune-row-line" aria-label="Runas da árvore secundária">
+                  <span className="rune-row-tag">Secundária</span>
+                  {analysis.runes.secondaryTreeIcon ? (
+                    <RuneIconTile
+                      patch={catalog.patch}
+                      iconPath={analysis.runes.secondaryTreeIcon}
+                      name={analysis.runes.secondaryTreeName}
+                      subLabel="Árvore secundária"
+                      size={26}
+                      variant="tree"
+                    />
+                  ) : null}
+                  {analysis.runes.secondaryRunes.map((rune) => (
+                    <RuneIconTile
+                      key={rune.id}
+                      patch={catalog.patch}
+                      iconPath={rune.icon}
+                      name={rune.name}
+                      subLabel={analysis.runes.secondaryTreeName}
+                      size={36}
+                      variant="secondary"
+                      invalid={!rune.validInCatalog}
+                    />
+                  ))}
+                </div>
+
+                <div className="rune-row-line" aria-label="Fragmentos de atributos">
+                  <span className="rune-row-tag">Fragmentos</span>
+                  {analysis.runes.statShardRefs.map((shard, idx) => (
+                    <RuneIconTile
+                      key={`${shard.id}-${idx}`}
+                      patch={catalog.patch}
+                      iconPath={shard.icon}
+                      name={shard.name}
+                      subLabel={shard.shortLabel}
+                      size={28}
+                      variant="shard"
+                      invalid={!shard.validInCatalog}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
-          );
-        })}
+          </div>
+
+          {/* BUILD */}
+          <div className="build-section-block" data-testid="draft-build-section">
+            <div className="panel-header">
+              <h2 className="panel-title">Build</h2>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                {analysis.build.hasInvalidItems ? (
+                  <span className="badge badge-amber">
+                    <AlertTriangle size={11} /> Revisão necessária
+                  </span>
+                ) : null}
+                <button
+                  type="button"
+                  data-testid="toggle-situational-btn"
+                  className="btn btn-xs btn-ghost"
+                  onClick={() => setShowSituational((v) => !v)}
+                >
+                  Situacionais ({activeSituationals.length})
+                  {showSituational ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                </button>
+              </div>
+            </div>
+
+            {/* Núcleo em ordem visual */}
+            <div className="build-core-row" aria-label="Núcleo da build em ordem">
+              {analysis.build.core.map((item, idx) => (
+                <div key={`${item.id}-${idx}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                  <ItemIconTile
+                    patch={catalog.patch}
+                    iconFile={item.icon}
+                    name={item.name}
+                    gold={item.gold}
+                    reason={item.reason}
+                    size={54}
+                    invalid={!item.availableInCatalog}
+                  />
+                  {idx < analysis.build.core.length - 1 ? (
+                    <span className="build-arrow" aria-hidden="true">
+                      <ChevronRight size={16} />
+                    </span>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+
+            {/* Linha compacta: Pet + Botas */}
+            <div className="build-support-strip">
+              <div className="build-mini-group">
+                <span className="build-mini-label">Pet</span>
+                <ItemIconTile
+                  patch={catalog.patch}
+                  iconFile={analysis.build.junglePet.icon}
+                  name={analysis.build.junglePet.name}
+                  gold={analysis.build.junglePet.gold}
+                  reason={analysis.build.junglePet.reason}
+                  size={34}
+                  invalid={!analysis.build.junglePet.availableInCatalog}
+                />
+                <span className="small-text" style={{ fontWeight: 600 }}>
+                  {analysis.build.junglePet.availableInCatalog
+                    ? analysis.build.junglePet.name.replace(/^Filhote de |^Cria de |^Broto de /, '')
+                    : 'Revisão necessária'}
+                </span>
+              </div>
+
+              <div className="build-mini-group">
+                <span className="build-mini-label">Botas</span>
+                {analysis.build.boots.map((b) => (
+                  <ItemIconTile
+                    key={b.id}
+                    patch={catalog.patch}
+                    iconFile={b.icon}
+                    name={b.name}
+                    gold={b.gold}
+                    reason={b.reason}
+                    size={34}
+                    invalid={!b.availableInCatalog}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Situacionais compactos sob demanda */}
+            {showSituational ? (
+              <div className="situational-pills-row" data-testid="situational-panel">
+                {analysis.build.situational.map((cat) => {
+                  const primaryItem = cat.items[0];
+                  if (!primaryItem) return null;
+                  return (
+                    <div
+                      key={cat.key}
+                      className="situational-chip"
+                      style={{
+                        borderColor: cat.activeInDraft ? 'var(--blue-border)' : undefined,
+                      }}
+                    >
+                      <ItemIconTile
+                        patch={catalog.patch}
+                        iconFile={primaryItem.icon}
+                        name={primaryItem.name}
+                        gold={primaryItem.gold}
+                        reason={primaryItem.reason}
+                        size={30}
+                        invalid={!primaryItem.availableInCatalog}
+                      />
+                      <div>
+                        <div style={{ fontWeight: 700, fontSize: 11.5 }}>
+                          {cat.shortCondition ?? cat.label}
+                        </div>
+                        <div className="muted-text" style={{ fontSize: 10.5 }}>
+                          {primaryItem.availableInCatalog ? primaryItem.name : 'Revisão necessária'}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : null}
+          </div>
+        </section>
       </div>
 
-      {/* SELEÇÃO RÁPIDA 5v5 (COM TROCA DE POSIÇÃO FLEX E BUSCA POR TECLADO) */}
-      <div className="grid-2">
-        <div className="panel">
+      {/* PAINEL "POR QUÊ?" SOB DEMANDA */}
+      {showWhy ? (
+        <section className="panel" data-testid="why-form-details">
           <div className="panel-header">
-            <h2 className="panel-title">Seu Time (Aliados)</h2>
-            <span className="small-text muted-text">Kayn preenchido na Jungle</span>
-          </div>
-          {ROLES.map((item, idx) => (
-            <div key={item.role} className="draft-slot-row">
-              <span style={{ fontWeight: 700, fontSize: 12.5 }}>{item.label}</span>
-              <ChampionPicker
-                value={draft.allies[item.role]}
-                catalog={catalog}
-                disabled={item.role === 'jungle'}
-                ariaLabel={`Aliado ${item.label}`}
-                placeholder={item.role === 'jungle' ? 'Kayn' : 'Espaço vazio (opcional)'}
-                onChange={(id) => updateSlot('allies', item.role, id)}
-              />
-              <button
-                type="button"
-                className="btn btn-xs btn-ghost"
-                title="Trocar posição (flex pick)"
-                disabled={item.role === 'jungle'}
-                onClick={() => swapWithNextRole('allies', idx)}
-              >
-                <ArrowLeftRight size={12} />
-              </button>
-            </div>
-          ))}
-        </div>
-
-        <div className="panel">
-          <div className="panel-header">
-            <h2 className="panel-title">Time Adversário (Inimigos)</h2>
-            <span className="small-text muted-text">Use setas/Enter ou troque se houver flex</span>
-          </div>
-          {ROLES.map((item, idx) => (
-            <div key={item.role} className="draft-slot-row">
-              <span style={{ fontWeight: 700, fontSize: 12.5 }}>{item.label}</span>
-              <ChampionPicker
-                value={draft.enemies[item.role]}
-                catalog={catalog}
-                ariaLabel={`Inimigo ${item.label}`}
-                placeholder="Digite o campeão inimigo..."
-                onChange={(id) => updateSlot('enemies', item.role, id)}
-              />
-              <button
-                type="button"
-                className="btn btn-xs btn-ghost"
-                title="Trocar posição com a linha abaixo (flex pick)"
-                onClick={() => swapWithNextRole('enemies', idx)}
-              >
-                <ArrowLeftRight size={12} />
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* NOTAS PRÉ-JOGO E EXPANSÕES TÉCNICAS */}
-      <div className="grid-2">
-        <div className="panel">
-          <div className="panel-header">
-            <h2 className="panel-title">Notas do Plano Pré-Jogo &amp; Rascunhos</h2>
-            <button
-              type="button"
-              className="btn btn-xs"
-              onClick={() => onSaveDraft(draft)}
-            >
-              <BookmarkPlus size={12} /> Salvar draft na lista
+            <strong className="small-text">
+              Por que {formTitle}? (Alternativa: {analysis.alternativeFormLabel})
+            </strong>
+            <button type="button" className="btn btn-xs btn-ghost" onClick={() => setShowWhy(false)}>
+              Fechar
             </button>
           </div>
-          <label className="field-label">
-            <span>Nome do plano / draft</span>
-            <input
-              type="text"
-              className="input"
-              value={draft.name}
-              onChange={(e) =>
-                onChangeDraft({ ...draft, name: e.target.value, updatedAt: new Date().toISOString() })
-              }
-            />
-          </label>
-          <label className="field-label">
-            <span>Lembretes estáticos para congelar no cartão</span>
-            <textarea
-              className="textarea"
-              placeholder="Ex.: Não forçar Bot contra Ezreal + Lulu sem Flash do suporte; respeitar invade nível 3."
-              value={draft.staticNotes}
-              onChange={(e) =>
-                onChangeDraft({
-                  ...draft,
-                  staticNotes: e.target.value,
-                  updatedAt: new Date().toISOString(),
-                })
-              }
-            />
-          </label>
-          <div className="small-text muted-text">
-            <strong>Rascunhos locais ({savedDrafts.length}):</strong>
-          </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-            {savedDrafts.map((sd) => (
-              <div key={sd.id} style={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}>
-                <button
-                  type="button"
-                  className="btn btn-xs"
-                  onClick={() => onChangeDraft({ ...sd })}
-                >
-                  <Layers size={11} /> {sd.name}
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-xs btn-ghost"
-                  aria-label={`Excluir draft ${sd.name}`}
-                  onClick={() => onDeleteDraft(sd.id)}
-                >
-                  <Trash2 size={11} />
-                </button>
+          <div className="grid-2 small-text">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+              <ul className="list-compact">
+                {analysis.shortReasons.map((r, i) => (
+                  <li key={i}>{r}</li>
+                ))}
+              </ul>
+              <div className="muted-text">
+                <strong>O que inverte a escolha:</strong> {analysis.flipCondition}
               </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="panel">
-          <h2 className="panel-title">Mapa Esquemático Estático (Pré-Jogo)</h2>
-          <TacticalMapSvg
-            focusSide={analysis.lanes.bestPlayAroundLane}
-            suggestedStart={
-              analysis.lanes.bestPlayAroundLane === 'top'
-                ? 'Full clear Bot -> Top'
-                : analysis.lanes.bestPlayAroundLane === 'bot'
-                  ? 'Full clear Top -> Bot (só entrar Bot se houver setup)'
-                  : 'Full clear avaliando Mid na travessia'
-            }
-          />
-        </div>
-      </div>
-
-      {/* DETALHES E PESOS EM EXPANSÃO */}
-      <ExpandableSection
-        title="Ver pesos internos, mecânica de orbes e lacunas do draft"
-        badge={`Azul ${analysis.scores.blueScore} vs Rhaast ${analysis.scores.redScore}`}
-      >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <div className="small-text">
-            <strong>Forma mais forte na comp:</strong>{' '}
-            {analysis.strongestForm === 'blue'
-              ? 'Kayn Azul'
-              : analysis.strongestForm === 'red'
-                ? 'Rhaast'
-                : 'Equilibrada'}{' '}
-            | <strong>Forma mais fácil de desbloquear primeiro:</strong>{' '}
-            {analysis.easiestUnlockForm === 'blue'
-              ? 'Kayn Azul'
-              : analysis.easiestUnlockForm === 'red'
-                ? 'Rhaast'
-                : 'Equilibrada'}
-          </div>
-          <div className="small-text muted-text">
-            <strong>Mecânica oficial A Foice Darkin:</strong> {analysis.orbSummary.earlyAccessNote}
-          </div>
-          {analysis.missingDraftGaps.length > 0 ? (
-            <div className="small-text">
-              <strong>Falta no draft:</strong> {analysis.missingDraftGaps.join(' ')}
+              {analysis.tiebreakerBlockedReason ? (
+                <div style={{ color: '#fca5a5' }}>{analysis.tiebreakerBlockedReason}</div>
+              ) : null}
             </div>
-          ) : null}
-          {analysis.flexAmbiguityNotes.length > 0 ? (
-            <div className="small-text">
-              <strong>Possíveis flex picks:</strong> {analysis.flexAmbiguityNotes.join(' ')}
-            </div>
-          ) : null}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-            {analysis.detailedWeights.map((w) => (
-              <div key={w.label} className="panel-subtle small-text">
-                <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
-                  <strong>{w.label}</strong>
-                  <span className="mono">
-                    Azul +{w.blueImpact} / Rhaast +{w.redImpact}
-                  </span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+              <div>
+                <strong>Runas ({analysis.runes.primaryTreeName}):</strong>{' '}
+                <span className="muted-text">{analysis.runes.whyFormDiffers}</span>
+              </div>
+              <div className="muted-text">
+                <strong>Orbes:</strong> {analysis.orbSummary.earlyAccessNote}
+              </div>
+              {analysis.flexAmbiguityNotes.length > 0 ? (
+                <div className="muted-text">
+                  <strong>Flex picks:</strong> {analysis.flexAmbiguityNotes.join(' ')}
                 </div>
-                <div className="muted-text">{w.explanation}</div>
-              </div>
-            ))}
+              ) : null}
+            </div>
           </div>
-          <div className="small-text muted-text">
-            Nota: essas pontuações servem exclusivamente para ordenar alternativas de forma determinística e transparente — não representam probabilidade de vitória.
+        </section>
+      ) : null}
+
+      {/* FAIXA CURTA ABAIXO: LANE PARA OBSERVAR + FARM + LEMBRETE TÁTICO */}
+      <section className="draft-lanes-strip" aria-label="Plano curto de lanes e lembrete">
+        <div className="strip-card">
+          <div className="strip-kicker">
+            <span>1ª janela para observar</span>
+            <span className="badge badge-blue" style={{ padding: '1px 6px', fontSize: 10 }}>
+              Jogar em torno: {LANE_SHORT[analysis.lanes.bestPlayAroundLane]}
+            </span>
+          </div>
+          <div className="strip-headline">{firstWindowLabel}</div>
+          <div className="strip-sub">{firstWindowShortNote}</div>
+        </div>
+
+        <div className="strip-card">
+          <div className="strip-kicker">
+            <span>Alternativa de farm</span>
+          </div>
+          <div className="strip-headline">Sem janela limpa? Volte pros campos.</div>
+          <div className="strip-sub">{shortFarmAlt}</div>
+        </div>
+
+        <div className="strip-card">
+          <div className="strip-kicker">
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+              <Sparkles size={11} color="var(--blue)" /> Observar na partida
+            </span>
+            {preGameReminders[0]?.ruleId ? (
+              <button
+                type="button"
+                className="btn btn-xs btn-ghost"
+                style={{ padding: '1px 5px', fontSize: 10.5 }}
+                onClick={() => void onTogglePinnedReminder(preGameReminders[0].ruleId!)}
+              >
+                {pinnedReminderIds.includes(preGameReminders[0].ruleId) ? 'Fixado' : 'Fixar'}
+              </button>
+            ) : null}
+          </div>
+          <div className="strip-headline">
+            {preGameReminders[0]?.text ?? 'Sem janela na Bot? Volte pros campos.'}
+          </div>
+          <div className="strip-sub">
+            {preGameReminders[1]?.text ?? 'O app não vê a wave — confirme espaço e visão antes de entrar.'}
+          </div>
+        </div>
+      </section>
+
+      {/* DETALHES EXPANSÍVEIS (ABAIXO DA DOBRA — PRESERVA TODAS AS FUNCIONALIDADES) */}
+      <ExpandableSection title="Detalhes das 3 lanes (Top / Mid / Bot) e mapa pré-jogo">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div className="grid-3">
+            {(['top', 'mid', 'bot'] as TargetLane[]).map((lane) => {
+              const info = analysis.lanes.perLane[lane];
+              return (
+                <div key={lane} className="panel-subtle small-text" style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <strong>{info.label}</strong>
+                    <span className="muted-text" style={{ fontSize: 11 }}>
+                      Contragank: {info.countergankRisk}
+                    </span>
+                  </div>
+                  <div>
+                    <strong>Entrar se:</strong> {info.favorableConditionSentence}
+                  </div>
+                  <div className="muted-text">
+                    <strong>Farmar se:</strong> {info.fallbackConditionSentence}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+            <div style={{ width: 260 }}>
+              <TacticalMapSvg
+                compact
+                focusSide={analysis.lanes.bestPlayAroundLane}
+                suggestedStart={shortFarmAlt}
+              />
+            </div>
+            <div className="small-text muted-text" style={{ flex: 1, minWidth: 220 }}>
+              <strong>Plano de farm completo:</strong> {analysis.lanes.fallbackFarmPath}
+            </div>
+          </div>
+        </div>
+      </ExpandableSection>
+
+      <ExpandableSection title={`Notas do plano, lembretes e rascunhos locais (${savedDrafts.length})`}>
+        <div className="grid-2">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <label className="field-label">
+              <span>Nome do draft</span>
+              <input
+                type="text"
+                className="input"
+                value={draft.name}
+                onChange={(e) =>
+                  onChangeDraft({ ...draft, name: e.target.value, updatedAt: new Date().toISOString() })
+                }
+              />
+            </label>
+            <label className="field-label">
+              <span>Nota pessoal para congelar no cartão</span>
+              <textarea
+                className="textarea"
+                placeholder="Ex.: Não forçar Bot contra Ezreal + Lulu sem Flash do suporte."
+                value={draft.staticNotes}
+                onChange={(e) =>
+                  onChangeDraft({
+                    ...draft,
+                    staticNotes: e.target.value,
+                    updatedAt: new Date().toISOString(),
+                  })
+                }
+              />
+            </label>
+            <div>
+              <button type="button" className="btn btn-xs" onClick={() => onSaveDraft(draft)}>
+                <BookmarkPlus size={12} /> Salvar draft na lista
+              </button>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div className="small-text muted-text">
+              <strong>Rascunhos salvos:</strong>
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              {savedDrafts.map((sd) => (
+                <div key={sd.id} style={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+                  <button
+                    type="button"
+                    className="btn btn-xs"
+                    onClick={() => onChangeDraft({ ...sd })}
+                  >
+                    <Layers size={11} /> {sd.name}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-xs btn-ghost"
+                    aria-label={`Excluir draft ${sd.name}`}
+                    onClick={() => onDeleteDraft(sd.id)}
+                  >
+                    <Trash2 size={11} />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <div className="small-text muted-text" style={{ marginTop: 4 }}>
+              <strong>Combos fixados da aba Aprender ({pinnedMicroCards.length}/3):</strong>{' '}
+              {pinnedMicroCards.length === 0
+                ? 'Nenhum ainda (fixe em Aprender).'
+                : pinnedMicroCards.map((c) => c.title).join(' · ')}
+            </div>
           </div>
         </div>
       </ExpandableSection>

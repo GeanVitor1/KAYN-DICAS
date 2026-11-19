@@ -16,8 +16,14 @@ describe('Simulador de Treino de Decisões', () => {
     const c1 = analyzeTrainingScenario(DEMO_TRAINING_SCENARIOS[0]);
     expect(c1.preferredOption.optionId).not.toBe('start_objective');
     expect(c1.trapWarning).toBeTruthy();
-    expect(c1.farmTempoNote).toContain('Selva: 28');
+    expect(c1.farmTempoNote).toContain('Selva: 11 campos');
     expect(c1.farmTempoNote).toContain('CS de lane: 4');
+    expect(JSON.stringify(c1).toLowerCase()).not.toContain('100% garantido');
+
+    // Cenário 8 (Karasmai HUD): tem 89 CS total sem separação de campos -> NÃO inventa "89 campos"
+    const c8 = analyzeTrainingScenario(DEMO_TRAINING_SCENARIOS[7]);
+    expect(c8.farmTempoNote).toContain('89');
+    expect(c8.farmTempoNote).not.toContain('89 campos');
 
     // 2. JG inimigo confirmado no Top + Mid e Bot livres -> Dragão aberto
     const c2 = analyzeTrainingScenario(DEMO_TRAINING_SCENARIOS[1]);

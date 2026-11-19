@@ -633,10 +633,36 @@ export function analyzeDraft(
   };
 }
 
+export function getShortFormReason(analysis: DraftAnalysis): string {
+  if (analysis.recommendedForm === 'red') {
+    const frontlineFactor = analysis.detailedWeights.find((w) =>
+      w.label.toLowerCase().includes('frontline'),
+    );
+    if (analysis.shortReasons.some((r) => r.toLowerCase().includes('sem frontline'))) {
+      return 'Lutas longas · time precisa de frontline';
+    }
+    if (frontlineFactor && frontlineFactor.redImpact >= 3) {
+      return 'Lutas longas · muita frontline inimiga';
+    }
+    return 'Lutas longas e sustentação';
+  }
+  if (analysis.recommendedForm === 'blue') {
+    if (analysis.tiebreakerApplied) {
+      return 'Draft equilibrado · desempate Azul';
+    }
+    return 'Alvos frágeis · burst e ritmo';
+  }
+  if (analysis.missingDraftGaps.length > 0) {
+    return 'Draft incompleto · aguarde mais picks';
+  }
+  return 'Equilibrado · defina no lobby';
+}
+
 export function createFrozenCardFromAnalysis(
   draft: DraftState,
   analysis: DraftAnalysis,
   pinnedMicroCards: FrozenMicroComboCard[] = [],
+  selectedTacticalReminders: Array<{ ruleId?: string; text: string; watchCondition?: string }> = [],
 ): FrozenPreGameCard {
   const activeSituational = analysis.build.situational
     .filter((s) => s.activeInDraft)
@@ -650,30 +676,36 @@ export function createFrozenCardFromAnalysis(
     .map((l) => l.trim())
     .filter(Boolean);
 
-  const defaultReminders = [
-    'Lembrete pré-jogo: orbe early vale pouco (3x) — nunca troque clear limpo ou vida por hit forçado antes dos 8 min.',
-    'Não repita gank na mesma rota sem Flash/setup ou sem noção do jungler inimigo.',
-    ...userNotes,
-  ];
+  const defaultReminders =
+    selectedTacticalReminders.length > 0
+      ? selectedTacticalReminders.map((r) => r.text)
+      : [
+          'Sem janela limpa na Bot? Volte pros campos.',
+          'Orbe early vale pouco — nunca troque clear ou vida antes dos 8 min.',
+          ...userNotes,
+        ];
 
   const primaryFocusSide: FrozenPreGameCard['schematicPlan']['primaryFocusSide'] =
     analysis.lanes.bestPlayAroundLane;
 
   const suggestedStart =
     primaryFocusSide === 'top'
-      ? 'Full clear Bot -> Top (chegando perto do Top ~3:20-3:30)'
+      ? 'Full clear Bot → Top (avaliar Top ~3:25)'
       : primaryFocusSide === 'bot'
-        ? 'Full clear Top -> Bot (avaliando Bot só se houver setup limpo)'
-        : 'Full clear Top -> Bot ou Bot -> Top avaliando Mid na travessia';
+        ? 'Full clear Top → Bot (só entrar Bot com setup)'
+        : 'Full clear avaliando Mid na travessia';
+
+  const keystone = analysis.runes.primaryRunes[0];
 
   return {
     id: `card-${Date.now()}`,
     frozenAt: new Date().toISOString(),
-    draftName: draft.name || 'Plano pré-jogo sem nome',
+    draftName: draft.name || 'Plano pré-jogo',
     patch: analysis.meta.catalogPatch,
     patchMismatch: analysis.meta.patchMismatch,
     recommendedForm: analysis.recommendedForm,
     recommendedFormLabel: analysis.recommendedFormLabel,
+    shortFormReason: getShortFormReason(analysis),
     alternativeFormLabel: analysis.alternativeFormLabel,
     flipCondition: analysis.flipCondition,
     confidenceLabel: `${analysis.confidence.level.toUpperCase()} — ${analysis.confidence.reason}`,
@@ -685,16 +717,31 @@ export function createFrozenCardFromAnalysis(
       secondaryRunes: analysis.runes.secondaryRunes.map((r) => r.name),
       statShards: [...analysis.runes.statShards],
     },
+    runesVisual: {
+      keystone,
+      primaryTreeIcon: analysis.runes.primaryTreeIcon,
+      primaryMinors: analysis.runes.primaryRunes.slice(1),
+      secondaryTreeIcon: analysis.runes.secondaryTreeIcon,
+      secondaryRunes: analysis.runes.secondaryRunes,
+      statShards: analysis.runes.statShardRefs,
+      hasInvalidRunes: analysis.runes.hasInvalidRunes,
+    },
     buildSummary: {
       junglePet: analysis.build.junglePet.name,
       boots: analysis.build.boots.map((b) => b.name).join(' / '),
       coreItems: analysis.build.core.map((c) => c.name),
       activeSituational,
     },
+    buildVisual: {
+      junglePet: analysis.build.junglePet,
+      boots: analysis.build.boots,
+      core: analysis.build.core,
+      hasInvalidItems: analysis.build.hasInvalidItems,
+    },
     lanesToWatch: {
       firstGankWindow:
         analysis.lanes.firstGankWindow === 'farm_first'
-          ? 'Farm primeiro (sem janela garantida)'
+          ? 'Farm primeiro'
           : LANE_LABELS[analysis.lanes.firstGankWindow],
       bestPlayAroundLane: LANE_LABELS[analysis.lanes.bestPlayAroundLane],
       perLaneNotes: (['top', 'mid', 'bot'] as TargetLane[]).map((lane) => ({
@@ -705,6 +752,10 @@ export function createFrozenCardFromAnalysis(
     },
     farmPlan: analysis.lanes.fallbackFarmPath,
     staticReminders: defaultReminders,
+    selectedTacticalReminders:
+      selectedTacticalReminders.length > 0
+        ? selectedTacticalReminders.slice(0, 2)
+        : defaultReminders.slice(0, 2).map((text) => ({ text })),
     schematicPlan: {
       primaryFocusSide,
       suggestedStart,

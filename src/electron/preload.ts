@@ -20,6 +20,8 @@ const CHANNELS = {
   SAVE_CUSTOM_LESSON: 'kayn:save-custom-lesson',
   DELETE_CUSTOM_LESSON: 'kayn:delete-custom-lesson',
   SET_FAVORITE_MICRO_IDS: 'kayn:set-favorite-micro-ids',
+  SET_PINNED_REMINDER_IDS: 'kayn:set-pinned-reminder-ids',
+  SAVE_TACTICAL_RULE_NOTE: 'kayn:save-tactical-rule-note',
   OPEN_EXTERNAL_URL: 'kayn:open-external-url',
   RESET_DEMO_DATA: 'kayn:reset-demo-data',
   REFRESH_DDRAGON: 'kayn:refresh-ddragon',
@@ -48,6 +50,9 @@ const api: KaynDesktopApi = {
   saveCustomLesson: (lesson) => ipcRenderer.invoke(CHANNELS.SAVE_CUSTOM_LESSON, lesson),
   deleteCustomLesson: (lessonId) => ipcRenderer.invoke(CHANNELS.DELETE_CUSTOM_LESSON, lessonId),
   setFavoriteMicroIds: (ids) => ipcRenderer.invoke(CHANNELS.SET_FAVORITE_MICRO_IDS, ids),
+  setPinnedReminderIds: (ids) => ipcRenderer.invoke(CHANNELS.SET_PINNED_REMINDER_IDS, ids),
+  saveTacticalRuleNote: (ruleId, note) =>
+    ipcRenderer.invoke(CHANNELS.SAVE_TACTICAL_RULE_NOTE, { ruleId, note }),
   openExternalUrl: (url) => ipcRenderer.invoke(CHANNELS.OPEN_EXTERNAL_URL, url),
   resetDemoData: () => ipcRenderer.invoke(CHANNELS.RESET_DEMO_DATA),
   refreshDdragon: () => ipcRenderer.invoke(CHANNELS.REFRESH_DDRAGON),

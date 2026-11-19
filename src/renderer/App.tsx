@@ -1,16 +1,17 @@
 import {
+  BarChart3,
   BookOpen,
-  ClipboardCheck,
-  Compass,
-  GraduationCap,
   Settings,
+  Shield,
   Swords,
+  Target,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   buildFrozenMicroCards,
   getAllStudyLessons,
 } from '../engine/studyLibrary';
+import { buildTacticalRulesFromLessons } from '../engine/tacticalMemory';
 import type { InitialHydrationPayload } from '../shared/ipc';
 import type {
   AppSettings,
@@ -80,6 +81,16 @@ export function App() {
     };
   }, [api]);
 
+  const customLessons = hydration?.state.customLessons;
+  const allLessons = useMemo(
+    () => getAllStudyLessons(customLessons ?? []),
+    [customLessons],
+  );
+  const tacticalRules = useMemo(
+    () => buildTacticalRulesFromLessons(allLessons),
+    [allLessons],
+  );
+
   if (loadError) {
     return (
       <div className="page-content">
@@ -102,7 +113,7 @@ export function App() {
 
   const pinnedMicroCards = buildFrozenMicroCards(
     state.favoriteMicroIds ?? [],
-    getAllStudyLessons(state.customLessons ?? []),
+    allLessons,
   );
 
   const updateState = (nextState: PersistedAppState) => {
@@ -113,8 +124,8 @@ export function App() {
     return (
       <CardWindowPage
         frozenCard={state.frozenCard}
+        catalog={catalog}
         options={state.settings.cardWindow}
-        exclusiveFullscreenNote={hydration.isExclusiveFullscreenCaveat}
         onUpdateOptions={async (partial) => {
           const res = await api.updateCardOptions(partial);
           setHydration((prev) =>
@@ -137,18 +148,20 @@ export function App() {
     );
   }
 
+  const hasPatchAlert =
+    catalogStatus.validation.patchMismatch ||
+    !catalogStatus.validation.validRecommendations ||
+    Boolean(catalogStatus.lastError);
+  const isOfflineSource = catalogStatus.sourceMode === 'bundled_offline';
+
   return (
     <div className="app-shell">
       <header className="topbar">
         <div className="brand">
-          <Swords size={20} color="#38bdf8" />
-          <div>
-            <div className="brand-title">KAYN-DICAS</div>
-            <div className="brand-sub">
-              Kayn Jungle • BR Solo/Duo • Patch {catalog.patch}
-              {!isRunningInElectron() ? ' • Modo navegador' : ''}
-            </div>
-          </div>
+          <span className="brand-mark" aria-hidden="true">
+            <Swords size={16} />
+          </span>
+          <span className="brand-title">KAYN-DICAS</span>
         </div>
 
         <nav className="nav-tabs" aria-label="Navegação principal">
@@ -158,7 +171,7 @@ export function App() {
             className={`nav-tab ${activeTab === 'draft' ? 'active' : ''}`}
             onClick={() => setActiveTab('draft')}
           >
-            <Compass size={15} /> Draft
+            <Shield size={15} /> Draft
           </button>
           <button
             type="button"
@@ -166,7 +179,7 @@ export function App() {
             className={`nav-tab ${activeTab === 'learn' ? 'active' : ''}`}
             onClick={() => setActiveTab('learn')}
           >
-            <GraduationCap size={15} /> Aprender
+            <BookOpen size={15} /> Aprender
           </button>
           <button
             type="button"
@@ -174,7 +187,7 @@ export function App() {
             className={`nav-tab ${activeTab === 'training' ? 'active' : ''}`}
             onClick={() => setActiveTab('training')}
           >
-            <BookOpen size={15} /> Treino
+            <Target size={15} /> Treino
           </button>
           <button
             type="button"
@@ -182,17 +195,43 @@ export function App() {
             className={`nav-tab ${activeTab === 'review' ? 'active' : ''}`}
             onClick={() => setActiveTab('review')}
           >
-            <ClipboardCheck size={15} /> Revisão
+            <BarChart3 size={15} /> Revisão
           </button>
+        </nav>
+
+        <div className="topbar-right">
+          <button
+            type="button"
+            data-testid="patch-indicator"
+            className={`patch-pill ${hasPatchAlert ? 'patch-pill-warn' : ''}`}
+            title={
+              hasPatchAlert
+                ? 'Catálogo ou recomendações precisam de revisão — clique para ver detalhes em Configurações'
+                : `Catálogo BR pt_BR ${catalog.patch} (${isOfflineSource ? 'offline' : 'cache local'})`
+            }
+            onClick={() => setActiveTab('settings')}
+          >
+            <span className="patch-dot" />
+            <span className="mono">{catalog.patch}</span>
+            {hasPatchAlert ? (
+              <span>· revisar</span>
+            ) : isOfflineSource ? (
+              <span>· offline</span>
+            ) : null}
+            {!isRunningInElectron() ? <span>· web</span> : null}
+          </button>
+
           <button
             type="button"
             data-testid="nav-settings"
-            className={`nav-tab ${activeTab === 'settings' ? 'active' : ''}`}
+            aria-label="Configurações"
+            title="Configurações"
+            className={`nav-tab icon-nav-btn ${activeTab === 'settings' ? 'active' : ''}`}
             onClick={() => setActiveTab('settings')}
           >
-            <Settings size={15} /> Configurações
+            <Settings size={16} />
           </button>
-        </nav>
+        </div>
       </header>
 
       <main className="page-content">
@@ -202,11 +241,12 @@ export function App() {
             savedDrafts={state.savedDrafts}
             frozenCard={state.frozenCard}
             pinnedMicroCards={pinnedMicroCards}
+            tacticalRules={tacticalRules}
+            pinnedReminderIds={state.pinnedReminderIds ?? []}
+            tacticalRuleNotes={state.tacticalRuleNotes ?? {}}
             catalog={catalog}
-            catalogStatus={catalogStatus}
             preferBlueAsTiebreaker={state.settings.preferBlueAsTiebreaker}
             onChangeDraft={(next: DraftState) => {
-              // Atualização imediata na UI + persistência local
               updateState({ ...state, currentDraft: next });
               void api.updateCurrentDraft(next);
             }}
@@ -224,6 +264,14 @@ export function App() {
               updateState({ ...state, settings: nextSettings });
               void api.updateSettings({ preferBlueAsTiebreaker: val });
             }}
+            onTogglePinnedReminder={async (ruleId: string) => {
+              const current = state.pinnedReminderIds ?? [];
+              const nextIds = current.includes(ruleId)
+                ? current.filter((id) => id !== ruleId)
+                : [...current, ruleId].slice(0, 3);
+              const next = await api.setPinnedReminderIds(nextIds);
+              updateState(next);
+            }}
             onFreezeCard={async (card: FrozenPreGameCard) => {
               const next = await api.freezePreGameCard(card);
               updateState(next);
@@ -238,8 +286,22 @@ export function App() {
           <LearnPage
             customLessons={state.customLessons ?? []}
             favoriteMicroIds={state.favoriteMicroIds ?? []}
+            pinnedReminderIds={state.pinnedReminderIds ?? []}
+            tacticalRuleNotes={state.tacticalRuleNotes ?? {}}
             onToggleFavoriteMicro={async (ids: string[]) => {
               const next = await api.setFavoriteMicroIds(ids);
+              updateState(next);
+            }}
+            onTogglePinnedReminder={async (ruleId: string) => {
+              const current = state.pinnedReminderIds ?? [];
+              const nextIds = current.includes(ruleId)
+                ? current.filter((id) => id !== ruleId)
+                : [...current, ruleId].slice(0, 3);
+              const next = await api.setPinnedReminderIds(nextIds);
+              updateState(next);
+            }}
+            onSaveRuleNote={async (ruleId: string, note: string) => {
+              const next = await api.saveTacticalRuleNote(ruleId, note);
               updateState(next);
             }}
             onSaveCustomLesson={async (lesson: StudyLesson) => {
@@ -265,10 +327,14 @@ export function App() {
           <TrainingPage
             key={selectedTrainingScenarioId ?? 'training-default'}
             scenarios={state.trainingScenarios}
+            tacticalRules={tacticalRules}
             selectedScenarioId={selectedTrainingScenarioId}
             onSaveScenario={async (scenario: TrainingScenario) => {
               const next = await api.saveTrainingScenario(scenario);
               updateState(next);
+            }}
+            onOpenExternalUrl={async (url: string) => {
+              await api.openExternalUrl(url);
             }}
           />
         ) : null}
@@ -278,6 +344,7 @@ export function App() {
             reviews={state.reviews}
             activeReviewId={state.activeReviewId}
             customLessons={state.customLessons ?? []}
+            tacticalRules={tacticalRules}
             onSelectReview={async (id: string) => {
               const next = await api.setActiveReview(id);
               updateState(next);

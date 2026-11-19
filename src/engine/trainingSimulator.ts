@@ -23,20 +23,29 @@ export function analyzeTrainingScenario(scenario: TrainingScenario): TrainingAna
   const unknownFields: string[] = [];
   const conditionalDecisions: string[] = [];
 
-  // Separar CS de lane e campos da jungle explicitamente
+  // Separar CS de lane e campos da jungle explicitamente (1 campo = 4 CS)
+  // Só exibe os dois separadamente quando a fonte realmente distingue ambos.
   let farmTempoNote: string;
   if (scenario.laneCs !== null && scenario.jungleCampsCleared !== null) {
-    const expectedCamps = Math.max(4, Math.round(scenario.minute * 1.35));
+    const expectedCamps = Math.max(4, Math.round(scenario.minute * 1.4));
+    const jungleCsApprox = scenario.jungleCampsCleared * 4;
     const paceLabel =
       scenario.jungleCampsCleared >= expectedCamps
         ? 'ritmo de selva sólido'
         : 'ritmo de selva abaixo do ideal';
-    farmTempoNote = `Ritmo separado — Selva: ${scenario.jungleCampsCleared} campos (~${expectedCamps} esperado no min ${scenario.minute}, ${paceLabel}) | CS de lane: ${scenario.laneCs}. CS alto não autoriza objetivo sem pressão/visão, e CS baixo não manda ignorar uma jogada 100% livre.`;
-    observedFacts.push(`Campos na selva: ${scenario.jungleCampsCleared}; CS de lane: ${scenario.laneCs}.`);
+    farmTempoNote = `Ritmo separado — Selva: ${scenario.jungleCampsCleared} campos (~${jungleCsApprox} CS de selva; meta ~${expectedCamps} campos no min ${scenario.minute}, ${paceLabel}) | CS de lane: ${scenario.laneCs}. CS alto não autoriza objetivo sem pressão/visão, e CS baixo não obriga a ignorar uma oportunidade clara.`;
+    observedFacts.push(
+      `Campos na selva: ${scenario.jungleCampsCleared} (~${jungleCsApprox} CS de selva); CS de lane: ${scenario.laneCs}.`,
+    );
   } else if (scenario.jungleCampsCleared !== null) {
-    farmTempoNote = `Campos na selva: ${scenario.jungleCampsCleared} (CS de lane não separado nesta leitura). Ritmo contextualiza tempo, nunca substitui prioridade e visão.`;
+    const jungleCsApprox = scenario.jungleCampsCleared * 4;
+    farmTempoNote = `Campos na selva: ${scenario.jungleCampsCleared} (~${jungleCsApprox} CS de selva; CS de lane não separado nesta leitura). Ritmo contextualiza tempo, nunca substitui prioridade e visão.`;
     observedFacts.push(`Campos na selva informados: ${scenario.jungleCampsCleared}.`);
     unknownFields.push('CS de lane não informado separadamente.');
+  } else if (scenario.totalCs !== null && scenario.totalCs !== undefined) {
+    farmTempoNote = `CS total no HUD: ${scenario.totalCs} (a fonte não separa CS de lane e quantidade exata de campos abatidos).`;
+    observedFacts.push(`CS total visível no HUD: ${scenario.totalCs} (sem separação entre lane e campos).`);
+    unknownFields.push('Separação exata entre CS de lane e campos da jungle não disponível nesta fonte.');
   } else if (scenario.laneCs !== null) {
     farmTempoNote = `CS de lane informado (${scenario.laneCs}), mas contagem de campos da selva desconhecida — evite usar CS bruto sozinho para justificar dragão ou farm cego.`;
     unknownFields.push('Contagem separada de campos da jungle desconhecida.');
@@ -258,7 +267,7 @@ export function analyzeTrainingScenario(scenario: TrainingScenario): TrainingAna
     reasons.farm_route.push('Limpar mais campos agora pode atrasar o seu reset e fazer você chegar no objetivo sem gastar ouro ou sem tempo de setup.');
   }
   winConds.farm_route.push('Mantenha sequência limpa sem voltar para a mesma espera e acompanhe o minimapa caso um inimigo erre perto.');
-  abortConds.farm_route.push('Só interrompa o campo se houver abate 100% garantido a 3 segundos de distância sem risco de morrer.');
+  abortConds.farm_route.push('Só interrompa o campo se houver abertura muito clara a poucos segundos de distância, com aliados prontos e risco baixo.');
 
   // === 5. RESET PARA GASTAR OURO ===
   const canBuySpike = scenario.unspentGold >= scenario.keyComponentCost;

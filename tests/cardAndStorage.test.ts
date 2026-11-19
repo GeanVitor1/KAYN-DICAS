@@ -44,7 +44,7 @@ describe('Persistência Tolerante e Desacoplamento do Cartão', () => {
       },
     });
 
-    expect(sanitized.schemaVersion).toBe(2);
+    expect(sanitized.schemaVersion).toBe(3);
     expect(sanitized.settings.preferBlueAsTiebreaker).toBe(false);
     expect(sanitized.settings.cardWindow.opacity).toBe(1);
     expect(sanitized.settings.cardWindow.bounds).toBeUndefined();
@@ -53,6 +53,7 @@ describe('Persistência Tolerante e Desacoplamento do Cartão', () => {
     expect(sanitized.currentDraft.enemies.mid).toBe('Syndra');
     expect(sanitized.trainingScenarios.length).toBe(8);
     expect(sanitized.favoriteMicroIds.length).toBeLessThanOrEqual(3);
+    expect(Array.isArray(sanitized.pinnedReminderIds)).toBe(true);
   });
 
   it('preserva favoritos (máximo 3) e lições customizadas ao gravar e recarregar estado', () => {
@@ -61,8 +62,10 @@ describe('Persistência Tolerante e Desacoplamento do Cartão', () => {
 
     try {
       const sanitized = sanitizePersistedState({
-        schemaVersion: 1,
+        schemaVersion: 2,
         favoriteMicroIds: ['a', 'b', 'a', 'c', 'd'],
+        pinnedReminderIds: ['rule-1', 'rule-2'],
+        tacticalRuleNotes: { 'rule-1': 'Minha correção local' },
         customLessons: [
           {
             id: 'custom-1',
@@ -93,6 +96,8 @@ describe('Persistência Tolerante e Desacoplamento do Cartão', () => {
       writeStateFileSafely(filePath, sanitized);
       const reloaded = readStateFileSafely(filePath).state;
       expect(reloaded.favoriteMicroIds).toEqual(['a', 'b', 'c']);
+      expect(reloaded.pinnedReminderIds).toEqual(['rule-1', 'rule-2']);
+      expect(reloaded.tacticalRuleNotes?.['rule-1']).toBe('Minha correção local');
       expect(reloaded.customLessons.length).toBe(1);
       expect(reloaded.customLessons[0].id).toBe('custom-1');
     } finally {

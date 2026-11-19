@@ -62,6 +62,8 @@ function getBrowserFallbackState(): PersistedAppState {
       'caiozera-micro-rhaast-e-wall-pivot',
       'drill-blue-w-motion',
     ],
+    pinnedReminderIds: ['rule-caiozera-macro-bot-abort-river'],
+    tacticalRuleNotes: {},
   };
 }
 
@@ -185,6 +187,17 @@ const browserFallbackApi: KaynDesktopApi = {
   async setFavoriteMicroIds(ids: string[]) {
     const s = getBrowserFallbackState();
     return saveBrowserFallbackState({ ...s, favoriteMicroIds: ids.slice(0, 3) });
+  },
+  async setPinnedReminderIds(ids: string[]) {
+    const s = getBrowserFallbackState();
+    return saveBrowserFallbackState({ ...s, pinnedReminderIds: ids.slice(0, 3) });
+  },
+  async saveTacticalRuleNote(ruleId: string, note: string) {
+    const s = getBrowserFallbackState();
+    const nextNotes = { ...(s.tacticalRuleNotes ?? {}) };
+    if (note.trim()) nextNotes[ruleId] = note.trim();
+    else delete nextNotes[ruleId];
+    return saveBrowserFallbackState({ ...s, tacticalRuleNotes: nextNotes });
   },
   async openExternalUrl(url: string) {
     window.open(url, '_blank', 'noopener,noreferrer');

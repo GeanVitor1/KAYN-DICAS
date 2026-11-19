@@ -1,5 +1,7 @@
 import {
   CheckCircle2,
+  ChevronDown,
+  ChevronUp,
   Download,
   Edit3,
   FileUp,
@@ -11,6 +13,7 @@ import {
 import { useMemo, useState } from 'react';
 import { analyzeReviewMatch } from '../../engine/reviewAnalyzer';
 import { filterStudyLessons, getAllStudyLessons } from '../../engine/studyLibrary';
+import { matchRulesForReviewEvent } from '../../engine/tacticalMemory';
 import type { RiotMatchListEntry } from '../../shared/ipc';
 import type {
   EnemyResponseCertainty,
@@ -21,6 +24,7 @@ import type {
   ReviewMatch,
   ReviewOutcome,
   StudyLesson,
+  TacticalRule,
 } from '../../shared/types';
 import { ExpandableSection } from '../components/ExpandableSection';
 
@@ -44,6 +48,22 @@ function createBlankEvent(minute = 5): ReviewEvent {
   };
 }
 
+const TYPE_PT: Record<ReviewEventType, string> = {
+  gank: 'Gank',
+  death: 'Morte',
+  reset: 'Reset',
+  farm: 'Farm',
+  objective: 'Objetivo',
+};
+
+const LANE_PT: Record<ReviewLaneFocus, string> = {
+  top: 'Top',
+  mid: 'Mid',
+  bot: 'Bot',
+  jungle: 'Selva',
+  river: 'Rio',
+};
+
 function decisionBadgeClass(q: string): string {
   if (q === 'boa') return 'badge-green';
   if (q === 'questionavel') return 'badge-amber';
@@ -51,10 +71,33 @@ function decisionBadgeClass(q: string): string {
   return 'badge-muted';
 }
 
+function shortTakeawayForEvent(
+  ev: ReviewEvent,
+  analysis: ReturnType<typeof analyzeReviewMatch>['perEvent'][number],
+): string {
+  if (analysis.productiveWithoutKill) {
+    return 'Sem abate, mas útil — forçou feitiços sem perder tempo de selva.';
+  }
+  if (analysis.decisionQuality === 'boa' && analysis.executionQuality === 'falha_execucao') {
+    return 'Boa leitura de mapa; o ajuste aqui é só na execução mecânica.';
+  }
+  if (analysis.decisionQuality === 'ruim') {
+    return analysis.plausibleAlternative;
+  }
+  if (analysis.decisionQuality === 'questionavel') {
+    return analysis.decisionReason;
+  }
+  if (ev.type === 'farm' || ev.type === 'reset') {
+    return analysis.decisionReason;
+  }
+  return analysis.decisionReason;
+}
+
 export function ReviewPage({
   reviews,
   activeReviewId,
   customLessons = [],
+  tacticalRules = [],
   onSelectReview,
   onSaveReview,
   onDeleteReview,
@@ -66,6 +109,7 @@ export function ReviewPage({
   reviews: ReviewMatch[];
   activeReviewId: string;
   customLessons?: StudyLesson[];
+  tacticalRules?: TacticalRule[];
   onSelectReview: (id: string) => Promise<void>;
   onSaveReview: (review: ReviewMatch) => Promise<void>;
   onDeleteReview: (id: string) => Promise<void>;
@@ -86,11 +130,12 @@ export function ReviewPage({
   const activeReview =
     reviews.find((r) => r.id === activeReviewId) ?? reviews[0];
 
+  const [expandedEventId, setExpandedEventId] = useState<string | null>(null);
   const [editingEventId, setEditingEventId] = useState<string | null>(null);
   const [draftEvent, setDraftEvent] = useState<ReviewEvent | null>(null);
   const [statusMsg, setStatusMsg] = useState<string | null>(null);
 
-  // Estado para Match-V5 opcional
+  // Match-V5 opcional
   const [riotKey, setRiotKey] = useState('');
   const [riotName, setRiotName] = useState('');
   const [riotTag, setRiotTag] = useState('BR1');
@@ -129,7 +174,7 @@ export function ReviewPage({
       id: `review-manual-${Date.now()}`,
       title: 'Nova Revisão Manual (Solo/Duo BR)',
       isExampleDemo: false,
-      sourceLabel: 'Preenchimento manual pelo jogador',
+      sourceLabel: 'Preenchimento manual',
       patch: '16.23.1',
       rankContext: 'Diamante Solo/Duo BR',
       plannedForm: 'blue',
@@ -139,6 +184,7 @@ export function ReviewPage({
       playerSummaryNote: '',
     };
     await onSaveReview(created);
+    setExpandedEventId(created.events[0].id);
     setEditingEventId(created.events[0].id);
     setDraftEvent(created.events[0]);
     setStatusMsg('Nova revisão manual criada.');
@@ -155,6 +201,7 @@ export function ReviewPage({
       events: [...activeReview.events, ev],
     };
     await onSaveReview(next);
+    setExpandedEventId(ev.id);
     setEditingEventId(ev.id);
     setDraftEvent(ev);
   };
@@ -185,13 +232,13 @@ export function ReviewPage({
 
   const handleExport = async () => {
     const res = await onExportJson(activeReview);
-    if (res.saved) setStatusMsg(`Exportado com sucesso em: ${res.filePath}`);
+    if (res.saved) setStatusMsg(`Exportado em: ${res.filePath}`);
     else if (res.error) setStatusMsg(`Erro ao exportar: ${res.error}`);
   };
 
   const handleImport = async () => {
     const res = await onImportJson();
-    if (res.imported) setStatusMsg('Revisão JSON importada e selecionada!');
+    if (res.imported) setStatusMsg('Revisão JSON importada.');
     else if (res.error) setStatusMsg(`Erro ao importar JSON: ${res.error}`);
   };
 
@@ -227,7 +274,7 @@ export function ReviewPage({
         puuid: riotPuuid,
       });
       if (!res.ok) setRiotError(res.error ?? 'Falha ao importar timeline.');
-      else setStatusMsg(`Partida ${matchId} importada como revisão parcial (complete hipóteses manualmente).`);
+      else setStatusMsg(`Partida ${matchId} importada (complete hipóteses manualmente).`);
     } finally {
       setRiotLoading(false);
     }
@@ -236,14 +283,14 @@ export function ReviewPage({
   const sortedEvents = [...activeReview.events].sort((a, b) => a.minute - b.minute);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-      {/* Barra superior */}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
+      {/* Barra superior compacta */}
       <div className="toolbar">
-        <div className="toolbar-group">
+        <div className="toolbar-group" style={{ flex: 1, minWidth: 0 }}>
           <select
             className="select"
             aria-label="Selecionar revisão"
-            style={{ minWidth: 320 }}
+            style={{ width: 'auto', minWidth: 260, maxWidth: 440 }}
             value={activeReview.id}
             onChange={(e) => void onSelectReview(e.target.value)}
           >
@@ -254,7 +301,7 @@ export function ReviewPage({
             ))}
           </select>
           <button type="button" className="btn btn-primary btn-xs" onClick={() => void startNewReview()}>
-            <Plus size={12} /> Nova revisão manual
+            <Plus size={12} /> Nova revisão
           </button>
           {reviews.length > 1 ? (
             <button
@@ -269,136 +316,105 @@ export function ReviewPage({
         </div>
 
         <div className="toolbar-group">
+          {activeReview.isExampleDemo ? (
+            <span className="badge badge-amber">Exemplo fictício</span>
+          ) : null}
           <button type="button" className="btn btn-xs" onClick={() => void handleImport()}>
-            <FileUp size={12} /> Importar JSON
+            <FileUp size={12} /> Importar
           </button>
           <button type="button" className="btn btn-xs" onClick={() => void handleExport()}>
-            <Download size={12} /> Exportar JSON
+            <Download size={12} /> Exportar
           </button>
         </div>
       </div>
 
       {statusMsg ? <div className="banner banner-success">{statusMsg}</div> : null}
 
-      <div className="banner">
-        <span>
-          <strong>{activeReview.title}</strong> —{' '}
-          <span className="muted-text">{activeReview.sourceLabel}</span> ({activeReview.rankContext})
-        </span>
-        {activeReview.isExampleDemo ? (
-          <span className="badge badge-amber">DADO FICTÍCIO DE DEMONSTRAÇÃO</span>
-        ) : null}
-      </div>
-
-      {/* Resumo Bot + Padrões Recorrentes + Foco */}
+      {/* Resumo enxuto no topo */}
       <div className="grid-3">
         <section className="panel" data-testid="review-bot-summary">
-          <h2 className="panel-title">Tentativas na Bot Lane</h2>
-          <div style={{ fontSize: 15, fontWeight: 700 }}>
-            {analysis.botAttemptsSummary.totalAttempts} tentativa(s) registrada(s)
+          <h2 className="panel-title">Tentativas na Bot</h2>
+          <div style={{ fontSize: 16, fontWeight: 800, color: '#ffffff' }}>
+            {analysis.botAttemptsSummary.totalAttempts} tentativa(s)
           </div>
-          <div className="small-text">
-            • Abates/Assists: <strong>{analysis.botAttemptsSummary.killsOrAssists}</strong>
-            <br />• Sem kill, porém produtivos (feitiço/recall):{' '}
-            <strong>{analysis.botAttemptsSummary.productiveSpellOrRecall}</strong>
-            <br />• Desperdício de tempo ou morte:{' '}
+          <div className="small-text muted-text">
+            {analysis.botAttemptsSummary.killsOrAssists} abate/assist ·{' '}
+            <strong style={{ color: 'var(--blue)' }}>
+              {analysis.botAttemptsSummary.productiveSpellOrRecall} útil sem kill
+            </strong>{' '}
+            ·{' '}
             <strong style={{ color: 'var(--red)' }}>
-              {analysis.botAttemptsSummary.wastedTempoOrDeaths}
+              {analysis.botAttemptsSummary.wastedTempoOrDeaths} custo alto
             </strong>
-            <br />• Tempo médio investido:{' '}
-            <strong>
-              {analysis.botAttemptsSummary.averageTimeSpentSeconds !== null
-                ? `${analysis.botAttemptsSummary.averageTimeSpentSeconds}s`
-                : 'Não informado'}
-            </strong>
+            {analysis.botAttemptsSummary.averageTimeSpentSeconds !== null
+              ? ` · média ${analysis.botAttemptsSummary.averageTimeSpentSeconds}s`
+              : ''}
           </div>
-          {analysis.botAttemptsSummary.attemptsDetail.map((d, i) => (
-            <div key={i} className="panel-subtle small-text">
-              <strong>Min {d.minute}</strong> — {d.outcomeLabel} (Decisão: {d.decisionQuality})
-              <div className="muted-text">Custo potencial: {d.potentialCost}</div>
-            </div>
-          ))}
         </section>
 
         <section className="panel">
-          <h2 className="panel-title">Padrões Recorrentes (até 3)</h2>
+          <h2 className="panel-title">Padrões recorrentes</h2>
           {analysis.recurringPatterns.length === 0 ? (
-            <div className="small-text muted-text">
-              Nenhum padrão recorrente negativo detectado com os eventos atuais.
-            </div>
+            <div className="small-text muted-text">Nenhum padrão negativo repetido.</div>
           ) : (
-            analysis.recurringPatterns.map((pat) => (
-              <div key={pat.id} className="panel-subtle small-text">
-                <strong>{pat.title}</strong>{' '}
-                <span className="badge badge-muted">
-                  Min {pat.exampleMinutes.join(', ')}
-                </span>
-                <div className="muted-text" style={{ marginTop: 3 }}>
-                  {pat.description}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+              {analysis.recurringPatterns.map((pat) => (
+                <div key={pat.id} className="small-text" style={{ display: 'flex', justifyContent: 'space-between', gap: 6 }}>
+                  <span style={{ fontWeight: 600 }}>{pat.title}</span>
+                  <span className="badge badge-muted mono" style={{ flexShrink: 0 }}>
+                    Min {pat.exampleMinutes.join(', ')}
+                  </span>
                 </div>
-              </div>
-            ))
+              ))}
+            </div>
           )}
         </section>
 
         <section className="panel">
-          <h2 className="panel-title">Foco para as Próximas Partidas</h2>
-          <div className="panel-subtle small-text" style={{ borderColor: 'var(--blue-border)' }}>
+          <h2 className="panel-title">Foco próximo jogo</h2>
+          <div className="small-text" style={{ color: '#dbe6f7', fontWeight: 600 }}>
             {analysis.nextGamesFocus}
           </div>
-          {activeReview.playerSummaryNote ? (
-            <div className="small-text muted-text">
-              <strong>Nota da partida:</strong> {activeReview.playerSummaryNote}
-            </div>
-          ) : null}
         </section>
       </div>
 
-      {/* Timeline interativa */}
-      <div className="panel">
+      {/* TIMELINE LIMPA: Evento + Minuto + Aprendizado curto de primeira; contexto sob expansão */}
+      <section className="panel">
         <div className="panel-header">
-          <h2 className="panel-title">Timeline da Partida ({sortedEvents.length} eventos)</h2>
+          <h2 className="panel-title">Timeline ({sortedEvents.length} lances)</h2>
           <button type="button" className="btn btn-xs btn-blue" onClick={() => void addNewEvent()}>
-            <Plus size={12} /> Adicionar evento na timeline
+            <Plus size={12} /> Adicionar lance
           </button>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {sortedEvents.map((ev) => {
             const evAnalysis = analysis.perEvent.find((a) => a.eventId === ev.id);
+            const isExpanded = expandedEventId === ev.id;
             const isEditing = editingEventId === ev.id && draftEvent;
+            const matchedRule = evAnalysis
+              ? matchRulesForReviewEvent(ev, evAnalysis, tacticalRules)
+              : null;
             const linkedLesson = ev.linkedLessonId
               ? linkableLessons.find((l) => l.id === ev.linkedLessonId)
               : undefined;
 
             return (
-              <div key={ev.id} className="panel-subtle">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+              <div key={ev.id} className="panel-subtle" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {/* Linha principal enxuta */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', flex: 1, minWidth: 260 }}>
                     <span className="badge badge-muted mono">Min {ev.minute}</span>
-                    <strong>
-                      {ev.type.toUpperCase()} — {ev.lane.toUpperCase()}
+                    <strong style={{ fontSize: 13.5, color: '#ffffff' }}>
+                      {TYPE_PT[ev.type]} {LANE_PT[ev.lane]}
                     </strong>
                     {evAnalysis ? (
-                      <>
-                        <span className={`badge ${decisionBadgeClass(evAnalysis.decisionQuality)}`}>
-                          Decisão: {evAnalysis.decisionQuality}
-                        </span>
-                        <span
-                          className={`badge ${
-                            evAnalysis.executionQuality === 'falha_execucao'
-                              ? 'badge-red'
-                              : evAnalysis.executionQuality === 'limpa'
-                                ? 'badge-green'
-                                : 'badge-muted'
-                          }`}
-                        >
-                          Execução: {evAnalysis.executionQuality}
-                        </span>
-                      </>
+                      <span className={`badge ${decisionBadgeClass(evAnalysis.decisionQuality)}`}>
+                        Decisão {evAnalysis.decisionQuality}
+                      </span>
                     ) : null}
-                    {evAnalysis?.productiveWithoutKill ? (
-                      <span className="badge badge-blue">Útil sem kill</span>
+                    {evAnalysis?.executionQuality === 'falha_execucao' ? (
+                      <span className="badge badge-red">Falha mecânica</span>
                     ) : null}
                     <span
                       className={`badge ${
@@ -406,24 +422,34 @@ export function ReviewPage({
                       }`}
                     >
                       {ev.enemyResponseCertainty === 'confirmed' ? (
-                        <CheckCircle2 size={11} />
+                        <CheckCircle2 size={10} />
                       ) : (
-                        <HelpCircle size={11} />
+                        <HelpCircle size={10} />
                       )}
-                      {ev.enemyResponseCertainty === 'confirmed' ? 'CONFIRMADO' : 'HIPÓTESE'}
+                      {ev.enemyResponseCertainty === 'confirmed' ? 'Confirmado' : 'Hipótese'}
                     </span>
                   </div>
 
-                  <div style={{ display: 'flex', gap: 4 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                     <button
                       type="button"
-                      className="btn btn-xs"
+                      className="btn btn-xs btn-ghost"
+                      onClick={() => setExpandedEventId(isExpanded ? null : ev.id)}
+                    >
+                      {isExpanded ? 'Fechar' : 'Detalhes'}
+                      {isExpanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-xs btn-ghost"
+                      title="Editar evento"
                       onClick={() => {
+                        setExpandedEventId(ev.id);
                         setEditingEventId(ev.id);
                         setDraftEvent({ ...ev });
                       }}
                     >
-                      <Edit3 size={11} /> Editar / Corrigir
+                      <Edit3 size={12} />
                     </button>
                     <button
                       type="button"
@@ -436,42 +462,58 @@ export function ReviewPage({
                   </div>
                 </div>
 
+                {/* Aprendizado curto visível de primeira */}
                 {evAnalysis ? (
-                  <div className="small-text" style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 4 }}>
-                    <div>{evAnalysis.tempoAndCostNote}</div>
+                  <div className="small-text" style={{ color: '#dbe6f7' }}>
+                    {shortTakeawayForEvent(ev, evAnalysis)}
+                  </div>
+                ) : null}
+
+                {/* Contexto completo sob expansão */}
+                {isExpanded && evAnalysis ? (
+                  <div
+                    className="small-text"
+                    style={{
+                      borderTop: '1px solid var(--border)',
+                      paddingTop: 8,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 5,
+                    }}
+                  >
+                    <div className="muted-text">{evAnalysis.tempoAndCostNote}</div>
                     <div>
-                      <strong>Análise da decisão (info do momento):</strong> {evAnalysis.decisionReason}
+                      <strong>Decisão na hora:</strong> {evAnalysis.decisionReason}
                     </div>
                     <div className="muted-text">
-                      <strong>Análise da execução:</strong> {evAnalysis.executionReason}
+                      <strong>Execução:</strong> {evAnalysis.executionReason}
                     </div>
                     <div>
                       <strong>Resposta adversária:</strong> {evAnalysis.enemyPunishCertaintyLabel}
                     </div>
                     <div style={{ color: '#bae6fd' }}>
-                      <strong>Alternativa plausível:</strong> {evAnalysis.plausibleAlternative}{' '}
-                      <span className="muted-text">(Trade-off: {evAnalysis.alternativeTradeoff})</span>
+                      <strong>Alternativa:</strong> {evAnalysis.plausibleAlternative}{' '}
+                      <span className="muted-text">({evAnalysis.alternativeTradeoff})</span>
                     </div>
-                    {linkedLesson ? (
-                      <div className="panel" style={{ marginTop: 6, padding: 8, borderColor: 'var(--blue-border)' }}>
-                        <div style={{ fontWeight: 700, color: 'var(--blue)' }}>
-                          Comparação com lição vinculada: {linkedLesson.title} ({linkedLesson.creatorDisplayName})
-                        </div>
-                        <div>
-                          <strong>O que o streamer observou antes da jogada:</strong>{' '}
-                          {linkedLesson.macro?.beforePlayContext ?? linkedLesson.shortSummaryPt}
-                        </div>
-                        <div className="muted-text">
-                          <strong>O que você sabia na sua partida (Min {ev.minute}):</strong> Prio {ev.allyPrio}, JG inimigo estimado: {ev.estimatedEnemyJungler}, vida {ev.kaynHpPercent ?? 'N/D'}%, tempo gasto {ev.timeSpentSeconds ?? 'N/D'}s.
-                        </div>
+
+                    {matchedRule ? (
+                      <div className="panel" style={{ padding: 8, borderColor: 'var(--blue-border)' }}>
+                        <strong style={{ color: 'var(--blue)' }}>
+                          Memória tática ({matchedRule.creatorDisplayName}): {matchedRule.actionTitle}
+                        </strong>
+                        <div>{matchedRule.oneLineTip}</div>
+                        {linkedLesson?.macro?.beforePlayContext ? (
+                          <div className="muted-text">{linkedLesson.macro.beforePlayContext}</div>
+                        ) : null}
                       </div>
                     ) : null}
                   </div>
                 ) : null}
 
+                {/* Formulário de edição */}
                 {isEditing ? (
-                  <div className="panel" style={{ marginTop: 10 }}>
-                    <strong>Editar evento (Min {draftEvent.minute})</strong>
+                  <div className="panel" style={{ marginTop: 4 }}>
+                    <strong className="small-text">Editar lance (Min {draftEvent.minute})</strong>
                     <div className="grid-3">
                       <label className="field-label">
                         <span>Minuto</span>
@@ -512,12 +554,12 @@ export function ReviewPage({
                           <option value="bot">Bot</option>
                           <option value="mid">Mid</option>
                           <option value="top">Top</option>
-                          <option value="river">Rio / Objetivo</option>
+                          <option value="river">Rio</option>
                           <option value="jungle">Selva</option>
                         </select>
                       </label>
                       <label className="field-label">
-                        <span>Pressão aliada na hora</span>
+                        <span>Pressão aliada</span>
                         <select
                           className="select"
                           value={draftEvent.allyPrio}
@@ -570,7 +612,7 @@ export function ReviewPage({
                         </select>
                       </label>
                       <label className="field-label">
-                        <span>Tempo gasto (segundos)</span>
+                        <span>Tempo gasto (s)</span>
                         <input
                           type="number"
                           className="input"
@@ -585,7 +627,7 @@ export function ReviewPage({
                         />
                       </label>
                       <label className="field-label">
-                        <span>Certeza da resposta inimiga</span>
+                        <span>Resposta inimiga</span>
                         <select
                           className="select"
                           value={draftEvent.enemyResponseCertainty}
@@ -596,24 +638,28 @@ export function ReviewPage({
                             })
                           }
                         >
-                          <option value="hypothesis">Hipótese (não verificado)</option>
-                          <option value="confirmed">Confirmado no replay/fonte</option>
+                          <option value="hypothesis">Hipótese</option>
+                          <option value="confirmed">Confirmado</option>
                         </select>
                       </label>
                       <label className="field-label">
-                        <span>Origem do contexto</span>
+                        <span>Lição vinculada</span>
                         <select
                           className="select"
-                          value={draftEvent.decisionContextSource}
+                          value={draftEvent.linkedLessonId ?? ''}
                           onChange={(e) =>
                             setDraftEvent({
                               ...draftEvent,
-                              decisionContextSource: e.target.value as ReviewEvent['decisionContextSource'],
+                              linkedLessonId: e.target.value ? e.target.value : null,
                             })
                           }
                         >
-                          <option value="manual_observed">Observado / Corrigido manualmente</option>
-                          <option value="api_partial_hypothesis">Importado parcial (hipótese)</option>
+                          <option value="">Automática / Nenhuma</option>
+                          {linkableLessons.map((l) => (
+                            <option key={l.id} value={l.id}>
+                              {l.creatorDisplayName}: {l.title}
+                            </option>
+                          ))}
                         </select>
                       </label>
                     </div>
@@ -629,7 +675,7 @@ export function ReviewPage({
                       />
                     </label>
                     <label className="field-label">
-                      <span>Resposta adversária (objetivo / campos)</span>
+                      <span>Resposta adversária</span>
                       <input
                         type="text"
                         className="input"
@@ -650,33 +696,13 @@ export function ReviewPage({
                         }
                       />
                     </label>
-                    <label className="field-label">
-                      <span>Vincular lição da aba Aprender (comparar antes da jogada)</span>
-                      <select
-                        className="select"
-                        value={draftEvent.linkedLessonId ?? ''}
-                        onChange={(e) =>
-                          setDraftEvent({
-                            ...draftEvent,
-                            linkedLessonId: e.target.value ? e.target.value : null,
-                          })
-                        }
-                      >
-                        <option value="">Nenhuma lição vinculada</option>
-                        {linkableLessons.map((l) => (
-                          <option key={l.id} value={l.id}>
-                            [{l.creatorDisplayName} · {l.topic.toUpperCase()}] {l.title}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
                     <div style={{ display: 'flex', gap: 8 }}>
                       <button
                         type="button"
                         className="btn btn-primary btn-xs"
                         onClick={() => void saveEditedEvent()}
                       >
-                        Salvar evento
+                        Salvar
                       </button>
                       <button
                         type="button"
@@ -695,20 +721,20 @@ export function ReviewPage({
             );
           })}
         </div>
-      </div>
+      </section>
 
       {/* Integração OPCIONAL Match-V5 */}
       <ExpandableSection
-        title="Importação opcional via Riot Match-V5 (fora de partida ativa, requer chave própria)"
-        badge="Opcional — app funciona 100% sem chave"
+        title="Importar partida via Riot Match-V5 (opcional)"
+        badge="Requer chave própria"
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           <div className="small-text muted-text">
-            Usa o roteamento oficial <strong>americas.api.riotgames.com</strong> (BR1) apenas para buscar abates, mortes e objetivos épicos da Match-V5. Ganks sem abate, tempo no mato e pressão de wave continuam sendo preenchidos manualmente.
+            Busca abates, mortes e objetivos épicos na Match-V5 (BR1). Ganks sem abate, wave e tempo parado seguem manuais.
           </div>
           <div className="grid-3">
             <label className="field-label">
-              <span>Riot API Key (não vai para o Git)</span>
+              <span>Riot API Key</span>
               <input
                 type="password"
                 className="input"
@@ -722,13 +748,13 @@ export function ReviewPage({
               <input
                 type="text"
                 className="input"
-                placeholder="Ex.: MeuNick"
+                placeholder="MeuNick"
                 value={riotName}
                 onChange={(e) => setRiotName(e.target.value)}
               />
             </label>
             <label className="field-label">
-              <span>TAG (sem #)</span>
+              <span>TAG</span>
               <input
                 type="text"
                 className="input"
@@ -745,7 +771,7 @@ export function ReviewPage({
                 checked={saveKeyEnc}
                 onChange={(e) => setSaveKeyEnc(e.target.checked)}
               />
-              <span>Guardar chave criptografada localmente (safeStorage do Windows)</span>
+              <span>Salvar chave criptografada (safeStorage)</span>
             </label>
             <button
               type="button"
@@ -753,7 +779,7 @@ export function ReviewPage({
               disabled={riotLoading}
               onClick={() => void handleRiotSearch()}
             >
-              <Search size={12} /> {riotLoading ? 'Buscando...' : 'Buscar últimas Solo/Duo'}
+              <Search size={12} /> {riotLoading ? 'Buscando...' : 'Buscar partidas'}
             </button>
           </div>
           {riotError ? <div className="banner banner-warning">{riotError}</div> : null}
@@ -762,7 +788,7 @@ export function ReviewPage({
               {riotMatches.map((m) => (
                 <div key={m.matchId} className="panel-subtle" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
                   <span className="small-text">
-                    <strong>{m.championName}</strong> — {m.kills}/{m.deaths}/{m.assists} ({m.win ? 'Vitória' : 'Derrota'}, {Math.round(m.gameDurationSeconds / 60)} min) • <span className="mono">{m.matchId}</span>
+                    <strong>{m.championName}</strong> {m.kills}/{m.deaths}/{m.assists} ({m.win ? 'Vitória' : 'Derrota'}, {Math.round(m.gameDurationSeconds / 60)}m)
                   </span>
                   <button
                     type="button"
@@ -770,7 +796,7 @@ export function ReviewPage({
                     disabled={riotLoading}
                     onClick={() => void handleImportRiot(m.matchId)}
                   >
-                    Importar esqueleto
+                    Importar
                   </button>
                 </div>
               ))}

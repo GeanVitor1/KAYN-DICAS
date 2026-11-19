@@ -49,52 +49,41 @@ npm install
 
 ---
 
-## O que o app entrega (4 fluxos completos)
+## O que o app entrega (revisão visual, ícones oficiais e memória tática)
 
-### 1. Antes da partida — Draft rápido (`Draft`)
-- Seleção rápida 5v5 com busca por teclado (normaliza acentos, setas ↑/↓, Enter, Esc), espaços vazios permitidos e troca rápida de posição para *flex picks*. Kayn já vem na Jungle aliada.
-- **4 respostas no topo:**
-  - **Forma:** Kayn Azul, Rhaast ou Decisão em aberto, sempre mostrando alternativa, o que inverte a escolha, confiança (`alta`/`media`/`baixa` com motivo, sem "% de vitória" inventado) e pesos explicáveis em expansão.
-  - **Runas:** página completa em `pt_BR` e explicação do motivo de diferir entre Azul e Rhaast.
-  - **Build (SR):** pet jungle, bota, núcleo e situacionais separados (*alvo frágil*, *frontline inimiga*, *sobrevivência*, *armadura adversária*, *excesso de cura* e *excesso de escudos*) usando apenas itens válidos no mapa 11.
-  - **Lanes & Farm:** separa a **1ª janela de gank**, a **melhor lane para jogar em torno** e um **plano de farm** alternativo, com duas frases curtas determinísticas para Top, Mid e Bot (a Bot nunca ganha prioridade automática sem setup e condições).
+### 1. Antes da partida — Draft visual (`Draft`)
+- Layout em duas áreas principais pensado para `1200 × 780` sem rolagem: composições 5v5 com retratos oficiais + cartão hero da forma recomendada (`Kayn Azul`, `Rhaast` ou `Indefinido`) à esquerda; página de runas visual (runa principal grande com nome em PT-BR sempre visível, árvore principal, secundária e fragmentos oficiais) + núcleo da build em ordem visual com pet/botas compactos à direita.
+- Faixa curta abaixo com **1ª janela para observar**, **alternativa de farm** e **lembrete tático** pré-jogo; justificativa completa, alternativa, condição de inversão e pesos internos abrem sob demanda em **Por quê?**.
 - **Regra de desempate pelo Azul:** só decide drafts na faixa equilibrada — nunca mascara uma composição claramente favorável ao Rhaast.
-- **Mecânica de orbes da Foice Darkin:** considera a diferença entre forma mais forte na comp e forma mais fácil de desbloquear primeiro, além do bloqueio de 4 minutos (-5s por orbe do tipo desejado).
 
-### 2. Aba **Aprender** — Macro e Micro (CaiozeraLoL & Karasmai)
-- **Como abrir:** clique na aba **Aprender** na barra superior do app.
-- **Filtros e organização:** filtre por **Criador** (`CaiozeraLoL`, `Karasmai` ou `Exercícios de Modo Treino`), **Assunto** (`Macro` ou `Micro`) e **Forma** (`Kayn Base`, `Kayn Azul`, `Rhaast` ou `Ambas`). O CaiozeraLoL aparece no topo por padrão.
-- **Transparência de evidência:** o app separa explicitamente trechos **`Verificado (legenda + visual)`**, **`Análise visual (fala não verificada)`**, **`Exercício de treino`** e **`Referência histórica`** (ex.: vídeos da Season 13 marcados para não misturar itens antigos). Termos em inglês do Karasmai (`shove`, `skip camp`, `hover`, `flank`) são resumidos e explicados em português.
-- **Fixar combos no Cartão Pré-Jogo (até 3):** em qualquer cartão de **Micro** pronto, clique em **Fixar no cartão**; depois, na aba **Draft**, clique em **Salvar plano pré-jogo** para congelar esses combos (forma, sequência de teclas, condição de uso e habilidade a guardar) na janela compacta offline.
-- **Cadastrar vídeo e timestamp manualmente:** abra a seção expansível **Fontes pendentes de curadoria & Cadastro manual de vídeo** no final da aba **Aprender**, preencha título, URL `https://...`, timestamp (`MM:SS` ou segundos), criador, assunto e forma e clique em **Cadastrar como fonte pendente** (tudo é salvo localmente e fica isolado das lições prontas).
+### 2. Aba **Aprender** — Memória Tática (CaiozeraLoL & Karasmai)
+- Cartões curtos e acionáveis no lugar de transcrições longas: título direto (*"Quando desistir da Bot"*), dica de 1 linha, até 3 sinais visuais, botão **Praticar**, fixação de combos/lembretes e **Ver exemplo** sob demanda com fonte, timestamp, estado de evidência e personalização local.
+- CaiozeraLoL no topo por padrão e ensinamentos do Karasmai resumidos em português, sem inventar falas, combos ou timestamps.
 
-### 3. Durante a partida — Cartão Pré-Jogo Estático (`Abrir cartão`)
-- Janela compacta separada, sem som, com opção **Sempre no topo**, **Opacidade regulável**, **Clique atravessado** (destravável com `Ctrl+Shift+L`), atalho global configurável (`Ctrl+Shift+K` por padrão) para mostrar/esconder e posição/tamanho persistidos longe do minimapa.
-- Congela uma cópia estática ao clicar em **Salvar plano pré-jogo**, incluindo runas, núcleo, condições das lanes, até 3 combos fixados da aba Aprender, lembretes e um mapa esquemático estático original.
+### 3. Durante a partida — Cartão Flutuante Estático (`Cartão`)
+- Janela estreita sem parágrafos com forma, ícone da runa principal + secundárias, ícones da build em ordem, 1–2 lembretes pré-jogo e combos fixados em teclas grandes (apenas sequências verificadas ou exercícios de treino rotulados).
+- Congela uma cópia estática ao clicar em **Salvar plano pré-jogo**, com opções **Sempre no topo**, **Opacidade**, **Clique atravessado** (`Ctrl+Shift+L`) e atalho global (`Ctrl+Shift+K`).
 
-### 4. Treino de decisões (`Treino`)
-- Simulador offline independente da interface e do cartão para comparar **Objetivo**, **Gank Bot**, **Outra Lane**, **Rota de Farm** e **Reset**, incluindo cenários derivados das lições verificadas do CaiozeraLoL e Karasmai e modo de testar sua escolha antes de revelar a análise.
-- Separa explicitamente **CS de lane** e **campos da jungle**, distingue **Estado Observado**, **Hipóteses** e **Dados Desconhecidos** (com decisões condicionais quando faltam dados), e traz cenários Diamante prontos.
-
-### 5. Revisão pós-jogo (`Revisão`)
-- Fluxo manual completo + importação/exportação em JSON local ([formato documentado](docs/REVIEW_JSON_FORMAT.md)) + integração opcional com **Riot Match-V5** (`americas.api.riotgames.com` para BR1).
-- Analisa tentativas na Bot, não trata gank sem kill (como forçar Flash/recall rápido) como falha automática, separa **qualidade da decisão (pelas informações da hora)** de **falha de execução mecânica**, distingue resposta adversária **`[CONFIRMADO]`** vs **`[HIPÓTESE]`** (editável), permite vincular lições da aba **Aprender** para comparar o que o streamer viu antes da jogada, aponta até **3 padrões recorrentes** citando os minutos reais da timeline e define **1 foco** para as próximas partidas.
+### 4. Treino de decisões (`Treino`) e Revisão pós-jogo (`Revisão`)
+- **Treino:** um cenário por vez com mapa esquemático, sinais curtos e botões de decisão (*Gankar Bot*, *Farmar*, *Resetar*, *Objetivo*). A resposta só aparece depois da sua escolha, com análise completa e regra tática vinculada em **Ver análise**. Separa CS de lane e campos da selva apenas quando a fonte permite distinguir.
+- **Revisão:** timeline limpa mostrando minuto, evento e aprendizado curto de primeira, com contexto completo, `[CONFIRMADO]` vs `[HIPÓTESE]`, comparação com a memória tática, JSON local ([formato documentado](docs/REVIEW_JSON_FORMAT.md)) e importação opcional via **Riot Match-V5**.
 
 ---
 
-## Dados usados e Atualizações por Patch
+## Dados usados, Ícones Oficiais e Atualizações por Patch
 
-- **Catálogo oficial:** Riot Data Dragon (`pt_BR`, Summoner's Rift `mapId: 11`), validado no patch **`16.23.1`** (`173` campeões, `215` itens compráveis no Summoner's Rift, `5` árvores de runas).
+- **Catálogo oficial BR:** verificado via `realms/br.json` (`pt_BR`, Summoner's Rift `mapId: 11`), validado no patch **`16.23.1`** (`173` campeões, `215` itens compráveis no Summoner's Rift, `5` árvores de runas e `7` fragmentos com ícones oficiais em cache offline).
+- **Gerações isoladas & proteção contra itens/runas removidos:** catálogo e ícones são versionados por patch; em caso de runa removida ou item inválido para Summoner's Rift, o app exibe **Revisão necessária** sem substituição silenciosa nem reaproveitamento de imagem antiga. Em falha de rede/validação, preserva a última versão válida offline.
 - **Perfis versionados separadamente:**
   - `src/engine/championTactics.ts` (`TACTICAL_DATA_META`)
   - `src/engine/buildProfiles.ts` (`BUILD_DATA_META`)
-- Na tela **Configurações**, você pode clicar em **Atualizar Data Dragon (pt_BR)**. Antes de substituir o cache local, o validador (`src/engine/catalogValidator.ts`) confere esquema, idioma, mapa 11 e todos os IDs recomendados. Se falhar, mantém a última versão válida offline e avisa caso o patch do catálogo divirja do patch em que as builds foram validadas.
-- Para atualizar o snapshot embutido em novos patches:
+  - `src/engine/tacticalMemory.ts` (`TACTICAL_MEMORY_META`)
+- Em **Configurações → Dados**, você vê o patch do catálogo BR, o patch em que builds/runas foram revisadas, a contagem de ícones em cache offline e o botão **Atualizar Data Dragon (pt_BR)**.
+- Para atualizar o snapshot e o cache embutido em novos patches:
   ```bash
   npm run sync:ddragon
   npm test
   ```
-  (Se algum item recomendado for removido em um patch futuro, o script falhará indicando exatamente qual ID precisa ser atualizado em `src/engine/buildProfiles.ts`.)
 
 ---
 

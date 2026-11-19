@@ -14,7 +14,7 @@ import type {
 export const REVIEW_JSON_SCHEMA_VERSION = 1;
 
 const OUTCOME_LABELS: Record<ReviewOutcome, string> = {
-  kill: 'Abate garantido',
+  kill: 'Abate',
   assist: 'Assistência',
   forced_spell_or_recall: 'Feitiço forçado / Recall inimigo',
   nothing_lost_tempo: 'Sem retorno (perda de tempo)',
@@ -304,7 +304,12 @@ export function analyzeReviewMatch(match: ReviewMatch): ReviewAnalysis {
   }
 
   const longWaitEvents = sortedEvents.filter(
-    (e) => e.timeSpentSeconds !== null && e.timeSpentSeconds >= 16 && e.outcome !== 'kill' && e.outcome !== 'completed_objective',
+    (e) =>
+      (e.type === 'gank' || e.type === 'death') &&
+      e.timeSpentSeconds !== null &&
+      e.timeSpentSeconds >= 16 &&
+      e.outcome !== 'kill' &&
+      e.outcome !== 'completed_objective',
   );
   if (longWaitEvents.length >= 1) {
     recurringPatterns.push({

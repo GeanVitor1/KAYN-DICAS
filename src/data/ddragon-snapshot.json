@@ -1,9 +1,11 @@
 {
   "patch": "16.23.1",
+  "realm": "br",
+  "cdnBase": "https://ddragon.leagueoflegends.com/cdn",
   "locale": "pt_BR",
   "mapId": 11,
-  "fetchedAt": "2026-11-19T02:02:45.964Z",
-  "source": "Riot Data Dragon",
+  "fetchedAt": "2026-11-19T10:45:03.114Z",
+  "source": "Riot Data Dragon (BR)",
   "championCount": 173,
   "itemCount": 215,
   "runeTreeCount": 5,
@@ -16,7 +18,8 @@
       "tags": [
         "Fighter"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "Aatrox.png"
     },
     "Ahri": {
       "id": "Ahri",
@@ -27,7 +30,8 @@
         "Mage",
         "Assassin"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Ahri.png"
     },
     "Akali": {
       "id": "Akali",
@@ -37,7 +41,8 @@
       "tags": [
         "Assassin"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Akali.png"
     },
     "Akshan": {
       "id": "Akshan",
@@ -48,7 +53,8 @@
         "Marksman",
         "Assassin"
       ],
-      "attackrange": 500
+      "attackrange": 500,
+      "imageFull": "Akshan.png"
     },
     "Alistar": {
       "id": "Alistar",
@@ -59,7 +65,8 @@
         "Tank",
         "Support"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Alistar.png"
     },
     "Ambessa": {
       "id": "Ambessa",
@@ -70,7 +77,8 @@
         "Fighter",
         "Assassin"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Ambessa.png"
     },
     "Amumu": {
       "id": "Amumu",
@@ -81,7 +89,8 @@
         "Tank",
         "Support"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Amumu.png"
     },
     "Anivia": {
       "id": "Anivia",
@@ -91,7 +100,8 @@
       "tags": [
         "Mage"
       ],
-      "attackrange": 600
+      "attackrange": 600,
+      "imageFull": "Anivia.png"
     },
     "Annie": {
       "id": "Annie",
@@ -102,7 +112,8 @@
         "Mage",
         "Support"
       ],
-      "attackrange": 625
+      "attackrange": 625,
+      "imageFull": "Annie.png"
     },
     "Aphelios": {
       "id": "Aphelios",
@@ -112,7 +123,8 @@
       "tags": [
         "Marksman"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Aphelios.png"
     },
     "Ashe": {
       "id": "Ashe",
@@ -123,7 +135,8 @@
         "Marksman",
         "Support"
       ],
-      "attackrange": 600
+      "attackrange": 600,
+      "imageFull": "Ashe.png"
     },
     "AurelionSol": {
       "id": "AurelionSol",
@@ -133,7 +146,8 @@
       "tags": [
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "AurelionSol.png"
     },
     "Aurora": {
       "id": "Aurora",
@@ -144,7 +158,8 @@
         "Mage",
         "Assassin"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Aurora.png"
     },
     "Azir": {
       "id": "Azir",
@@ -155,7 +170,8 @@
         "Mage",
         "Marksman"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Azir.png"
     },
     "Bard": {
       "id": "Bard",
@@ -166,7 +182,8 @@
         "Support",
         "Mage"
       ],
-      "attackrange": 500
+      "attackrange": 500,
+      "imageFull": "Bard.png"
     },
     "Belveth": {
       "id": "Belveth",
@@ -176,7 +193,8 @@
       "tags": [
         "Fighter"
       ],
-      "attackrange": 150
+      "attackrange": 150,
+      "imageFull": "Belveth.png"
     },
     "Blitzcrank": {
       "id": "Blitzcrank",
@@ -187,7 +205,8 @@
         "Tank",
         "Support"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Blitzcrank.png"
     },
     "Brand": {
       "id": "Brand",
@@ -198,7 +217,8 @@
         "Mage",
         "Support"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Brand.png"
     },
     "Braum": {
       "id": "Braum",
@@ -209,7 +229,8 @@
         "Tank",
         "Support"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Braum.png"
     },
     "Briar": {
       "id": "Briar",
@@ -220,7 +241,8 @@
         "Fighter",
         "Assassin"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Briar.png"
     },
     "Caitlyn": {
       "id": "Caitlyn",
@@ -230,7 +252,8 @@
       "tags": [
         "Marksman"
       ],
-      "attackrange": 650
+      "attackrange": 650,
+      "imageFull": "Caitlyn.png"
     },
     "Camille": {
       "id": "Camille",
@@ -241,7 +264,8 @@
         "Fighter",
         "Assassin"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Camille.png"
     },
     "Cassiopeia": {
       "id": "Cassiopeia",
@@ -251,7 +275,8 @@
       "tags": [
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Cassiopeia.png"
     },
     "Chogath": {
       "id": "Chogath",
@@ -262,7 +287,8 @@
         "Tank",
         "Mage"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Chogath.png"
     },
     "Corki": {
       "id": "Corki",
@@ -273,7 +299,8 @@
         "Marksman",
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Corki.png"
     },
     "Darius": {
       "id": "Darius",
@@ -284,7 +311,8 @@
         "Fighter",
         "Tank"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "Darius.png"
     },
     "Diana": {
       "id": "Diana",
@@ -295,7 +323,8 @@
         "Fighter",
         "Assassin"
       ],
-      "attackrange": 150
+      "attackrange": 150,
+      "imageFull": "Diana.png"
     },
     "Draven": {
       "id": "Draven",
@@ -305,7 +334,8 @@
       "tags": [
         "Marksman"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Draven.png"
     },
     "DrMundo": {
       "id": "DrMundo",
@@ -316,7 +346,8 @@
         "Tank",
         "Fighter"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "DrMundo.png"
     },
     "Ekko": {
       "id": "Ekko",
@@ -327,7 +358,8 @@
         "Assassin",
         "Mage"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Ekko.png"
     },
     "Elise": {
       "id": "Elise",
@@ -338,7 +370,8 @@
         "Assassin",
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Elise.png"
     },
     "Evelynn": {
       "id": "Evelynn",
@@ -349,7 +382,8 @@
         "Assassin",
         "Mage"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Evelynn.png"
     },
     "Ezreal": {
       "id": "Ezreal",
@@ -360,7 +394,8 @@
         "Marksman",
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Ezreal.png"
     },
     "Fiddlesticks": {
       "id": "Fiddlesticks",
@@ -371,7 +406,8 @@
         "Mage",
         "Support"
       ],
-      "attackrange": 480
+      "attackrange": 480,
+      "imageFull": "Fiddlesticks.png"
     },
     "Fiora": {
       "id": "Fiora",
@@ -382,7 +418,8 @@
         "Fighter",
         "Assassin"
       ],
-      "attackrange": 150
+      "attackrange": 150,
+      "imageFull": "Fiora.png"
     },
     "Fizz": {
       "id": "Fizz",
@@ -393,7 +430,8 @@
         "Assassin",
         "Fighter"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "Fizz.png"
     },
     "Galio": {
       "id": "Galio",
@@ -404,7 +442,8 @@
         "Tank",
         "Mage"
       ],
-      "attackrange": 150
+      "attackrange": 150,
+      "imageFull": "Galio.png"
     },
     "Gangplank": {
       "id": "Gangplank",
@@ -414,7 +453,8 @@
       "tags": [
         "Fighter"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Gangplank.png"
     },
     "Garen": {
       "id": "Garen",
@@ -425,7 +465,8 @@
         "Fighter",
         "Tank"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "Garen.png"
     },
     "Gnar": {
       "id": "Gnar",
@@ -436,7 +477,8 @@
         "Fighter",
         "Tank"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "Gnar.png"
     },
     "Gragas": {
       "id": "Gragas",
@@ -447,7 +489,8 @@
         "Fighter",
         "Mage"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Gragas.png"
     },
     "Graves": {
       "id": "Graves",
@@ -457,7 +500,8 @@
       "tags": [
         "Marksman"
       ],
-      "attackrange": 425
+      "attackrange": 425,
+      "imageFull": "Graves.png"
     },
     "Gwen": {
       "id": "Gwen",
@@ -467,7 +511,8 @@
       "tags": [
         "Fighter"
       ],
-      "attackrange": 150
+      "attackrange": 150,
+      "imageFull": "Gwen.png"
     },
     "Hecarim": {
       "id": "Hecarim",
@@ -478,7 +523,8 @@
         "Fighter",
         "Tank"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "Hecarim.png"
     },
     "Heimerdinger": {
       "id": "Heimerdinger",
@@ -489,7 +535,8 @@
         "Mage",
         "Support"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Heimerdinger.png"
     },
     "Hwei": {
       "id": "Hwei",
@@ -500,7 +547,8 @@
         "Mage",
         "Support"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Hwei.png"
     },
     "Illaoi": {
       "id": "Illaoi",
@@ -511,7 +559,8 @@
         "Fighter",
         "Tank"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Illaoi.png"
     },
     "Irelia": {
       "id": "Irelia",
@@ -522,7 +571,8 @@
         "Fighter",
         "Assassin"
       ],
-      "attackrange": 200
+      "attackrange": 200,
+      "imageFull": "Irelia.png"
     },
     "Ivern": {
       "id": "Ivern",
@@ -533,7 +583,8 @@
         "Support",
         "Mage"
       ],
-      "attackrange": 475
+      "attackrange": 475,
+      "imageFull": "Ivern.png"
     },
     "Janna": {
       "id": "Janna",
@@ -544,7 +595,8 @@
         "Support",
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Janna.png"
     },
     "JarvanIV": {
       "id": "JarvanIV",
@@ -555,7 +607,8 @@
         "Fighter",
         "Tank"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "JarvanIV.png"
     },
     "Jax": {
       "id": "Jax",
@@ -565,7 +618,8 @@
       "tags": [
         "Fighter"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Jax.png"
     },
     "Jayce": {
       "id": "Jayce",
@@ -576,7 +630,8 @@
         "Fighter",
         "Marksman"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Jayce.png"
     },
     "Jhin": {
       "id": "Jhin",
@@ -587,7 +642,8 @@
         "Marksman",
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Jhin.png"
     },
     "Jinx": {
       "id": "Jinx",
@@ -597,7 +653,8 @@
       "tags": [
         "Marksman"
       ],
-      "attackrange": 525
+      "attackrange": 525,
+      "imageFull": "Jinx.png"
     },
     "Kaisa": {
       "id": "Kaisa",
@@ -608,7 +665,8 @@
         "Marksman",
         "Mage"
       ],
-      "attackrange": 525
+      "attackrange": 525,
+      "imageFull": "Kaisa.png"
     },
     "Kalista": {
       "id": "Kalista",
@@ -618,7 +676,8 @@
       "tags": [
         "Marksman"
       ],
-      "attackrange": 525
+      "attackrange": 525,
+      "imageFull": "Kalista.png"
     },
     "Karma": {
       "id": "Karma",
@@ -629,7 +688,8 @@
         "Mage",
         "Support"
       ],
-      "attackrange": 525
+      "attackrange": 525,
+      "imageFull": "Karma.png"
     },
     "Karthus": {
       "id": "Karthus",
@@ -639,7 +699,8 @@
       "tags": [
         "Mage"
       ],
-      "attackrange": 450
+      "attackrange": 450,
+      "imageFull": "Karthus.png"
     },
     "Kassadin": {
       "id": "Kassadin",
@@ -650,7 +711,8 @@
         "Assassin",
         "Mage"
       ],
-      "attackrange": 150
+      "attackrange": 150,
+      "imageFull": "Kassadin.png"
     },
     "Katarina": {
       "id": "Katarina",
@@ -661,7 +723,8 @@
         "Assassin",
         "Mage"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Katarina.png"
     },
     "Kayle": {
       "id": "Kayle",
@@ -672,7 +735,8 @@
         "Marksman",
         "Mage"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "Kayle.png"
     },
     "Kayn": {
       "id": "Kayn",
@@ -683,7 +747,8 @@
         "Fighter",
         "Assassin"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "Kayn.png"
     },
     "Kennen": {
       "id": "Kennen",
@@ -693,7 +758,8 @@
       "tags": [
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Kennen.png"
     },
     "Khazix": {
       "id": "Khazix",
@@ -703,7 +769,8 @@
       "tags": [
         "Assassin"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Khazix.png"
     },
     "Kindred": {
       "id": "Kindred",
@@ -713,7 +780,8 @@
       "tags": [
         "Marksman"
       ],
-      "attackrange": 500
+      "attackrange": 500,
+      "imageFull": "Kindred.png"
     },
     "Kled": {
       "id": "Kled",
@@ -723,7 +791,8 @@
       "tags": [
         "Fighter"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Kled.png"
     },
     "KogMaw": {
       "id": "KogMaw",
@@ -734,7 +803,8 @@
         "Marksman",
         "Mage"
       ],
-      "attackrange": 500
+      "attackrange": 500,
+      "imageFull": "KogMaw.png"
     },
     "KSante": {
       "id": "KSante",
@@ -745,7 +815,8 @@
         "Tank",
         "Fighter"
       ],
-      "attackrange": 150
+      "attackrange": 150,
+      "imageFull": "KSante.png"
     },
     "Leblanc": {
       "id": "Leblanc",
@@ -756,7 +827,8 @@
         "Assassin",
         "Mage"
       ],
-      "attackrange": 525
+      "attackrange": 525,
+      "imageFull": "Leblanc.png"
     },
     "LeeSin": {
       "id": "LeeSin",
@@ -767,7 +839,8 @@
         "Fighter",
         "Assassin"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "LeeSin.png"
     },
     "Leona": {
       "id": "Leona",
@@ -778,7 +851,8 @@
         "Tank",
         "Support"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Leona.png"
     },
     "Lillia": {
       "id": "Lillia",
@@ -789,7 +863,8 @@
         "Fighter",
         "Mage"
       ],
-      "attackrange": 325
+      "attackrange": 325,
+      "imageFull": "Lillia.png"
     },
     "Lissandra": {
       "id": "Lissandra",
@@ -799,7 +874,8 @@
       "tags": [
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Lissandra.png"
     },
     "Locke": {
       "id": "Locke",
@@ -810,7 +886,8 @@
         "Assassin",
         "Mage"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Locke.png"
     },
     "Lucian": {
       "id": "Lucian",
@@ -821,7 +898,8 @@
         "Marksman",
         "Assassin"
       ],
-      "attackrange": 500
+      "attackrange": 500,
+      "imageFull": "Lucian.png"
     },
     "Lulu": {
       "id": "Lulu",
@@ -832,7 +910,8 @@
         "Support",
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Lulu.png"
     },
     "Lux": {
       "id": "Lux",
@@ -843,7 +922,8 @@
         "Mage",
         "Support"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Lux.png"
     },
     "Malphite": {
       "id": "Malphite",
@@ -854,7 +934,8 @@
         "Tank",
         "Mage"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Malphite.png"
     },
     "Malzahar": {
       "id": "Malzahar",
@@ -864,7 +945,8 @@
       "tags": [
         "Mage"
       ],
-      "attackrange": 500
+      "attackrange": 500,
+      "imageFull": "Malzahar.png"
     },
     "Maokai": {
       "id": "Maokai",
@@ -875,7 +957,8 @@
         "Tank",
         "Support"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Maokai.png"
     },
     "MasterYi": {
       "id": "MasterYi",
@@ -886,7 +969,8 @@
         "Fighter",
         "Assassin"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "MasterYi.png"
     },
     "Mel": {
       "id": "Mel",
@@ -897,7 +981,8 @@
         "Mage",
         "Support"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Mel.png"
     },
     "Milio": {
       "id": "Milio",
@@ -908,7 +993,8 @@
         "Support",
         "Mage"
       ],
-      "attackrange": 525
+      "attackrange": 525,
+      "imageFull": "Milio.png"
     },
     "MissFortune": {
       "id": "MissFortune",
@@ -919,7 +1005,8 @@
         "Marksman",
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "MissFortune.png"
     },
     "MonkeyKing": {
       "id": "MonkeyKing",
@@ -930,7 +1017,8 @@
         "Fighter",
         "Tank"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "MonkeyKing.png"
     },
     "Mordekaiser": {
       "id": "Mordekaiser",
@@ -941,7 +1029,8 @@
         "Fighter",
         "Mage"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "Mordekaiser.png"
     },
     "Morgana": {
       "id": "Morgana",
@@ -952,7 +1041,8 @@
         "Support",
         "Mage"
       ],
-      "attackrange": 450
+      "attackrange": 450,
+      "imageFull": "Morgana.png"
     },
     "Naafiri": {
       "id": "Naafiri",
@@ -963,7 +1053,8 @@
         "Assassin",
         "Fighter"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Naafiri.png"
     },
     "Nami": {
       "id": "Nami",
@@ -974,7 +1065,8 @@
         "Support",
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Nami.png"
     },
     "Nasus": {
       "id": "Nasus",
@@ -985,7 +1077,8 @@
         "Fighter",
         "Tank"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Nasus.png"
     },
     "Nautilus": {
       "id": "Nautilus",
@@ -996,7 +1089,8 @@
         "Tank",
         "Support"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "Nautilus.png"
     },
     "Neeko": {
       "id": "Neeko",
@@ -1007,7 +1101,8 @@
         "Mage",
         "Support"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Neeko.png"
     },
     "Nidalee": {
       "id": "Nidalee",
@@ -1018,7 +1113,8 @@
         "Assassin",
         "Mage"
       ],
-      "attackrange": 525
+      "attackrange": 525,
+      "imageFull": "Nidalee.png"
     },
     "Nilah": {
       "id": "Nilah",
@@ -1029,7 +1125,8 @@
         "Fighter",
         "Assassin"
       ],
-      "attackrange": 225
+      "attackrange": 225,
+      "imageFull": "Nilah.png"
     },
     "Nocturne": {
       "id": "Nocturne",
@@ -1040,7 +1137,8 @@
         "Fighter",
         "Assassin"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Nocturne.png"
     },
     "Nunu": {
       "id": "Nunu",
@@ -1051,7 +1149,8 @@
         "Tank",
         "Mage"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Nunu.png"
     },
     "Olaf": {
       "id": "Olaf",
@@ -1062,7 +1161,8 @@
         "Fighter",
         "Tank"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Olaf.png"
     },
     "Orianna": {
       "id": "Orianna",
@@ -1073,7 +1173,8 @@
         "Mage",
         "Support"
       ],
-      "attackrange": 525
+      "attackrange": 525,
+      "imageFull": "Orianna.png"
     },
     "Ornn": {
       "id": "Ornn",
@@ -1083,7 +1184,8 @@
       "tags": [
         "Tank"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "Ornn.png"
     },
     "Pantheon": {
       "id": "Pantheon",
@@ -1094,7 +1196,8 @@
         "Fighter",
         "Assassin"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "Pantheon.png"
     },
     "Poppy": {
       "id": "Poppy",
@@ -1105,7 +1208,8 @@
         "Tank",
         "Fighter"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Poppy.png"
     },
     "Pyke": {
       "id": "Pyke",
@@ -1116,7 +1220,8 @@
         "Support",
         "Assassin"
       ],
-      "attackrange": 150
+      "attackrange": 150,
+      "imageFull": "Pyke.png"
     },
     "Qiyana": {
       "id": "Qiyana",
@@ -1126,7 +1231,8 @@
       "tags": [
         "Assassin"
       ],
-      "attackrange": 150
+      "attackrange": 150,
+      "imageFull": "Qiyana.png"
     },
     "Quinn": {
       "id": "Quinn",
@@ -1137,7 +1243,8 @@
         "Marksman",
         "Assassin"
       ],
-      "attackrange": 525
+      "attackrange": 525,
+      "imageFull": "Quinn.png"
     },
     "Rakan": {
       "id": "Rakan",
@@ -1147,7 +1254,8 @@
       "tags": [
         "Support"
       ],
-      "attackrange": 300
+      "attackrange": 300,
+      "imageFull": "Rakan.png"
     },
     "Rammus": {
       "id": "Rammus",
@@ -1157,7 +1265,8 @@
       "tags": [
         "Tank"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Rammus.png"
     },
     "RekSai": {
       "id": "RekSai",
@@ -1168,7 +1277,8 @@
         "Fighter",
         "Tank"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "RekSai.png"
     },
     "Rell": {
       "id": "Rell",
@@ -1179,7 +1289,8 @@
         "Tank",
         "Support"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "Rell.png"
     },
     "Renata": {
       "id": "Renata",
@@ -1190,7 +1301,8 @@
         "Support",
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Renata.png"
     },
     "Renekton": {
       "id": "Renekton",
@@ -1201,7 +1313,8 @@
         "Fighter",
         "Tank"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Renekton.png"
     },
     "Rengar": {
       "id": "Rengar",
@@ -1212,7 +1325,8 @@
         "Assassin",
         "Fighter"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Rengar.png"
     },
     "Riven": {
       "id": "Riven",
@@ -1223,7 +1337,8 @@
         "Fighter",
         "Assassin"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Riven.png"
     },
     "Rumble": {
       "id": "Rumble",
@@ -1234,7 +1349,8 @@
         "Fighter",
         "Mage"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Rumble.png"
     },
     "Ryze": {
       "id": "Ryze",
@@ -1244,7 +1360,8 @@
       "tags": [
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Ryze.png"
     },
     "Samira": {
       "id": "Samira",
@@ -1255,7 +1372,8 @@
         "Marksman",
         "Assassin"
       ],
-      "attackrange": 500
+      "attackrange": 500,
+      "imageFull": "Samira.png"
     },
     "Sejuani": {
       "id": "Sejuani",
@@ -1265,7 +1383,8 @@
       "tags": [
         "Tank"
       ],
-      "attackrange": 150
+      "attackrange": 150,
+      "imageFull": "Sejuani.png"
     },
     "Senna": {
       "id": "Senna",
@@ -1276,7 +1395,8 @@
         "Support",
         "Marksman"
       ],
-      "attackrange": 600
+      "attackrange": 600,
+      "imageFull": "Senna.png"
     },
     "Seraphine": {
       "id": "Seraphine",
@@ -1287,7 +1407,8 @@
         "Support",
         "Mage"
       ],
-      "attackrange": 525
+      "attackrange": 525,
+      "imageFull": "Seraphine.png"
     },
     "Sett": {
       "id": "Sett",
@@ -1298,7 +1419,8 @@
         "Fighter",
         "Tank"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Sett.png"
     },
     "Shaco": {
       "id": "Shaco",
@@ -1308,7 +1430,8 @@
       "tags": [
         "Assassin"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Shaco.png"
     },
     "Shen": {
       "id": "Shen",
@@ -1318,7 +1441,8 @@
       "tags": [
         "Tank"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Shen.png"
     },
     "Shyvana": {
       "id": "Shyvana",
@@ -1329,7 +1453,8 @@
         "Fighter",
         "Tank"
       ],
-      "attackrange": 150
+      "attackrange": 150,
+      "imageFull": "Shyvana.png"
     },
     "Singed": {
       "id": "Singed",
@@ -1340,7 +1465,8 @@
         "Tank",
         "Mage"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Singed.png"
     },
     "Sion": {
       "id": "Sion",
@@ -1351,7 +1477,8 @@
         "Tank",
         "Fighter"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "Sion.png"
     },
     "Sivir": {
       "id": "Sivir",
@@ -1361,7 +1488,8 @@
       "tags": [
         "Marksman"
       ],
-      "attackrange": 500
+      "attackrange": 500,
+      "imageFull": "Sivir.png"
     },
     "Skarner": {
       "id": "Skarner",
@@ -1372,7 +1500,8 @@
         "Tank",
         "Fighter"
       ],
-      "attackrange": 150
+      "attackrange": 150,
+      "imageFull": "Skarner.png"
     },
     "Smolder": {
       "id": "Smolder",
@@ -1383,7 +1512,8 @@
         "Marksman",
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Smolder.png"
     },
     "Sona": {
       "id": "Sona",
@@ -1394,7 +1524,8 @@
         "Support",
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Sona.png"
     },
     "Soraka": {
       "id": "Soraka",
@@ -1405,7 +1536,8 @@
         "Support",
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Soraka.png"
     },
     "Swain": {
       "id": "Swain",
@@ -1416,7 +1548,8 @@
         "Mage",
         "Support"
       ],
-      "attackrange": 525
+      "attackrange": 525,
+      "imageFull": "Swain.png"
     },
     "Sylas": {
       "id": "Sylas",
@@ -1427,7 +1560,8 @@
         "Mage",
         "Assassin"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "Sylas.png"
     },
     "Syndra": {
       "id": "Syndra",
@@ -1437,7 +1571,8 @@
       "tags": [
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Syndra.png"
     },
     "TahmKench": {
       "id": "TahmKench",
@@ -1448,7 +1583,8 @@
         "Tank",
         "Support"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "TahmKench.png"
     },
     "Taliyah": {
       "id": "Taliyah",
@@ -1459,7 +1595,8 @@
         "Mage",
         "Support"
       ],
-      "attackrange": 525
+      "attackrange": 525,
+      "imageFull": "Taliyah.png"
     },
     "Talon": {
       "id": "Talon",
@@ -1469,7 +1606,8 @@
       "tags": [
         "Assassin"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Talon.png"
     },
     "Taric": {
       "id": "Taric",
@@ -1480,7 +1618,8 @@
         "Support",
         "Tank"
       ],
-      "attackrange": 150
+      "attackrange": 150,
+      "imageFull": "Taric.png"
     },
     "Teemo": {
       "id": "Teemo",
@@ -1491,7 +1630,8 @@
         "Marksman",
         "Mage"
       ],
-      "attackrange": 500
+      "attackrange": 500,
+      "imageFull": "Teemo.png"
     },
     "Thresh": {
       "id": "Thresh",
@@ -1502,7 +1642,8 @@
         "Support",
         "Tank"
       ],
-      "attackrange": 450
+      "attackrange": 450,
+      "imageFull": "Thresh.png"
     },
     "Tristana": {
       "id": "Tristana",
@@ -1513,7 +1654,8 @@
         "Marksman",
         "Assassin"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Tristana.png"
     },
     "Trundle": {
       "id": "Trundle",
@@ -1524,7 +1666,8 @@
         "Fighter",
         "Tank"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "Trundle.png"
     },
     "Tryndamere": {
       "id": "Tryndamere",
@@ -1535,7 +1678,8 @@
         "Fighter",
         "Assassin"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "Tryndamere.png"
     },
     "TwistedFate": {
       "id": "TwistedFate",
@@ -1546,7 +1690,8 @@
         "Mage",
         "Marksman"
       ],
-      "attackrange": 525
+      "attackrange": 525,
+      "imageFull": "TwistedFate.png"
     },
     "Twitch": {
       "id": "Twitch",
@@ -1557,7 +1702,8 @@
         "Marksman",
         "Assassin"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Twitch.png"
     },
     "Udyr": {
       "id": "Udyr",
@@ -1568,7 +1714,8 @@
         "Fighter",
         "Tank"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Udyr.png"
     },
     "Urgot": {
       "id": "Urgot",
@@ -1579,7 +1726,8 @@
         "Fighter",
         "Tank"
       ],
-      "attackrange": 350
+      "attackrange": 350,
+      "imageFull": "Urgot.png"
     },
     "Varus": {
       "id": "Varus",
@@ -1590,7 +1738,8 @@
         "Marksman",
         "Mage"
       ],
-      "attackrange": 575
+      "attackrange": 575,
+      "imageFull": "Varus.png"
     },
     "Vayne": {
       "id": "Vayne",
@@ -1601,7 +1750,8 @@
         "Marksman",
         "Assassin"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Vayne.png"
     },
     "Veigar": {
       "id": "Veigar",
@@ -1611,7 +1761,8 @@
       "tags": [
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Veigar.png"
     },
     "Velkoz": {
       "id": "Velkoz",
@@ -1622,7 +1773,8 @@
         "Mage",
         "Support"
       ],
-      "attackrange": 525
+      "attackrange": 525,
+      "imageFull": "Velkoz.png"
     },
     "Vex": {
       "id": "Vex",
@@ -1632,7 +1784,8 @@
       "tags": [
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Vex.png"
     },
     "Vi": {
       "id": "Vi",
@@ -1643,7 +1796,8 @@
         "Fighter",
         "Assassin"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Vi.png"
     },
     "Viego": {
       "id": "Viego",
@@ -1654,7 +1808,8 @@
         "Fighter",
         "Assassin"
       ],
-      "attackrange": 200
+      "attackrange": 200,
+      "imageFull": "Viego.png"
     },
     "Viktor": {
       "id": "Viktor",
@@ -1664,7 +1819,8 @@
       "tags": [
         "Mage"
       ],
-      "attackrange": 525
+      "attackrange": 525,
+      "imageFull": "Viktor.png"
     },
     "Vladimir": {
       "id": "Vladimir",
@@ -1675,7 +1831,8 @@
         "Mage",
         "Fighter"
       ],
-      "attackrange": 450
+      "attackrange": 450,
+      "imageFull": "Vladimir.png"
     },
     "Volibear": {
       "id": "Volibear",
@@ -1686,7 +1843,8 @@
         "Fighter",
         "Tank"
       ],
-      "attackrange": 150
+      "attackrange": 150,
+      "imageFull": "Volibear.png"
     },
     "Warwick": {
       "id": "Warwick",
@@ -1697,7 +1855,8 @@
         "Fighter",
         "Tank"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Warwick.png"
     },
     "Xayah": {
       "id": "Xayah",
@@ -1707,7 +1866,8 @@
       "tags": [
         "Marksman"
       ],
-      "attackrange": 525
+      "attackrange": 525,
+      "imageFull": "Xayah.png"
     },
     "Xerath": {
       "id": "Xerath",
@@ -1718,7 +1878,8 @@
         "Mage",
         "Support"
       ],
-      "attackrange": 525
+      "attackrange": 525,
+      "imageFull": "Xerath.png"
     },
     "XinZhao": {
       "id": "XinZhao",
@@ -1729,7 +1890,8 @@
         "Fighter",
         "Tank"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "XinZhao.png"
     },
     "Yasuo": {
       "id": "Yasuo",
@@ -1740,7 +1902,8 @@
         "Fighter",
         "Assassin"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "Yasuo.png"
     },
     "Yone": {
       "id": "Yone",
@@ -1751,7 +1914,8 @@
         "Fighter",
         "Assassin"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "Yone.png"
     },
     "Yorick": {
       "id": "Yorick",
@@ -1762,7 +1926,8 @@
         "Fighter",
         "Tank"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "Yorick.png"
     },
     "Yunara": {
       "id": "Yunara",
@@ -1772,7 +1937,8 @@
       "tags": [
         "Marksman"
       ],
-      "attackrange": 575
+      "attackrange": 575,
+      "imageFull": "Yunara.png"
     },
     "Yuumi": {
       "id": "Yuumi",
@@ -1783,7 +1949,8 @@
         "Support",
         "Mage"
       ],
-      "attackrange": 425
+      "attackrange": 425,
+      "imageFull": "Yuumi.png"
     },
     "Zaahen": {
       "id": "Zaahen",
@@ -1793,7 +1960,8 @@
       "tags": [
         "Fighter"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "Zaahen.png"
     },
     "Zac": {
       "id": "Zac",
@@ -1804,7 +1972,8 @@
         "Tank",
         "Fighter"
       ],
-      "attackrange": 175
+      "attackrange": 175,
+      "imageFull": "Zac.png"
     },
     "Zed": {
       "id": "Zed",
@@ -1814,7 +1983,8 @@
       "tags": [
         "Assassin"
       ],
-      "attackrange": 125
+      "attackrange": 125,
+      "imageFull": "Zed.png"
     },
     "Zeri": {
       "id": "Zeri",
@@ -1824,7 +1994,8 @@
       "tags": [
         "Marksman"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Zeri.png"
     },
     "Ziggs": {
       "id": "Ziggs",
@@ -1834,7 +2005,8 @@
       "tags": [
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Ziggs.png"
     },
     "Zilean": {
       "id": "Zilean",
@@ -1845,7 +2017,8 @@
         "Support",
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Zilean.png"
     },
     "Zoe": {
       "id": "Zoe",
@@ -1855,7 +2028,8 @@
       "tags": [
         "Mage"
       ],
-      "attackrange": 550
+      "attackrange": 550,
+      "imageFull": "Zoe.png"
     },
     "Zyra": {
       "id": "Zyra",
@@ -1866,7 +2040,8 @@
         "Mage",
         "Support"
       ],
-      "attackrange": 575
+      "attackrange": 575,
+      "imageFull": "Zyra.png"
     }
   },
   "items": {
@@ -1879,7 +2054,8 @@
         "Boots"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1001.png"
     },
     "1004": {
       "id": "1004",
@@ -1890,7 +2066,8 @@
         "ManaRegen"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1004.png"
     },
     "1006": {
       "id": "1006",
@@ -1901,7 +2078,8 @@
         "HealthRegen"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1006.png"
     },
     "1011": {
       "id": "1011",
@@ -1912,7 +2090,8 @@
         "Health"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1011.png"
     },
     "1018": {
       "id": "1018",
@@ -1923,7 +2102,8 @@
         "CriticalStrike"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1018.png"
     },
     "1026": {
       "id": "1026",
@@ -1934,7 +2114,8 @@
         "SpellDamage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1026.png"
     },
     "1027": {
       "id": "1027",
@@ -1945,7 +2126,8 @@
         "Mana"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1027.png"
     },
     "1028": {
       "id": "1028",
@@ -1956,7 +2138,8 @@
         "Health"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1028.png"
     },
     "1029": {
       "id": "1029",
@@ -1967,7 +2150,8 @@
         "Armor"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1029.png"
     },
     "1031": {
       "id": "1031",
@@ -1978,7 +2162,8 @@
         "Armor"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1031.png"
     },
     "1033": {
       "id": "1033",
@@ -1989,7 +2174,8 @@
         "SpellBlock"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1033.png"
     },
     "1036": {
       "id": "1036",
@@ -2001,7 +2187,8 @@
         "Lane"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1036.png"
     },
     "1037": {
       "id": "1037",
@@ -2012,7 +2199,8 @@
         "Damage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1037.png"
     },
     "1038": {
       "id": "1038",
@@ -2023,7 +2211,8 @@
         "Damage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1038.png"
     },
     "1042": {
       "id": "1042",
@@ -2034,7 +2223,8 @@
         "AttackSpeed"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1042.png"
     },
     "1043": {
       "id": "1043",
@@ -2046,7 +2236,8 @@
         "OnHit"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1043.png"
     },
     "1052": {
       "id": "1052",
@@ -2057,7 +2248,8 @@
         "SpellDamage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1052.png"
     },
     "1053": {
       "id": "1053",
@@ -2069,7 +2261,8 @@
         "LifeSteal"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1053.png"
     },
     "1054": {
       "id": "1054",
@@ -2082,7 +2275,8 @@
         "Lane"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1054.png"
     },
     "1055": {
       "id": "1055",
@@ -2097,7 +2291,8 @@
         "Lane"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1055.png"
     },
     "1056": {
       "id": "1056",
@@ -2111,7 +2306,8 @@
         "SpellDamage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1056.png"
     },
     "1057": {
       "id": "1057",
@@ -2122,7 +2318,8 @@
         "SpellBlock"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1057.png"
     },
     "1058": {
       "id": "1058",
@@ -2133,7 +2330,8 @@
         "SpellDamage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1058.png"
     },
     "1082": {
       "id": "1082",
@@ -2146,7 +2344,8 @@
         "Lane"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1082.png"
     },
     "1083": {
       "id": "1083",
@@ -2159,7 +2358,8 @@
         "Lane"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1083.png"
     },
     "1086": {
       "id": "1086",
@@ -2173,7 +2373,8 @@
         "Lane"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1086.png"
     },
     "1101": {
       "id": "1101",
@@ -2184,7 +2385,8 @@
         "Jungle"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1101.png"
     },
     "1102": {
       "id": "1102",
@@ -2195,7 +2397,8 @@
         "Jungle"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1102.png"
     },
     "1103": {
       "id": "1103",
@@ -2206,7 +2409,8 @@
         "Jungle"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1103.png"
     },
     "1105": {
       "id": "1105",
@@ -2217,7 +2421,8 @@
         "Jungle"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1105.png"
     },
     "1106": {
       "id": "1106",
@@ -2228,7 +2433,8 @@
         "Jungle"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1106.png"
     },
     "1107": {
       "id": "1107",
@@ -2239,7 +2445,8 @@
         "Jungle"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1107.png"
     },
     "1120": {
       "id": "1120",
@@ -2253,7 +2460,8 @@
         "Lane"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "1120.png"
     },
     "2003": {
       "id": "2003",
@@ -2267,7 +2475,8 @@
         "Jungle"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2003.png"
     },
     "2019": {
       "id": "2019",
@@ -2279,7 +2488,8 @@
         "Damage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2019.png"
     },
     "2020": {
       "id": "2020",
@@ -2292,7 +2502,8 @@
         "ArmorPenetration"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2020.png"
     },
     "2021": {
       "id": "2021",
@@ -2304,7 +2515,8 @@
         "Damage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2021.png"
     },
     "2022": {
       "id": "2022",
@@ -2315,7 +2527,8 @@
         "CooldownReduction"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2022.png"
     },
     "2031": {
       "id": "2031",
@@ -2330,7 +2543,8 @@
         "Jungle"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2031.png"
     },
     "2051": {
       "id": "2051",
@@ -2343,7 +2557,8 @@
         "Lane"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2051.png"
     },
     "2055": {
       "id": "2055",
@@ -2357,7 +2572,8 @@
         "Vision"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2055.png"
     },
     "2065": {
       "id": "2065",
@@ -2373,7 +2589,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2065.png"
     },
     "2138": {
       "id": "2138",
@@ -2387,7 +2604,8 @@
         "Tenacity"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2138.png"
     },
     "2139": {
       "id": "2139",
@@ -2400,7 +2618,8 @@
         "SpellDamage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2139.png"
     },
     "2140": {
       "id": "2140",
@@ -2414,7 +2633,8 @@
         "SpellVamp"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2140.png"
     },
     "2141": {
       "id": "2141",
@@ -2426,7 +2646,8 @@
         "Consumable"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2141.png"
     },
     "2420": {
       "id": "2420",
@@ -2439,7 +2660,8 @@
         "Active"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2420.png"
     },
     "2421": {
       "id": "2421",
@@ -2448,7 +2670,8 @@
       "gold": 1600,
       "tags": [],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2421.png"
     },
     "2501": {
       "id": "2501",
@@ -2460,7 +2683,8 @@
         "Damage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2501.png"
     },
     "2502": {
       "id": "2502",
@@ -2474,7 +2698,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2502.png"
     },
     "2503": {
       "id": "2503",
@@ -2488,7 +2713,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2503.png"
     },
     "2504": {
       "id": "2504",
@@ -2501,7 +2727,8 @@
         "HealthRegen"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2504.png"
     },
     "2508": {
       "id": "2508",
@@ -2512,7 +2739,8 @@
         "SpellDamage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2508.png"
     },
     "2510": {
       "id": "2510",
@@ -2527,7 +2755,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2510.png"
     },
     "2512": {
       "id": "2512",
@@ -2541,7 +2770,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2512.png"
     },
     "2517": {
       "id": "2517",
@@ -2556,7 +2786,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2517.png"
     },
     "2520": {
       "id": "2520",
@@ -2569,7 +2800,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2520.png"
     },
     "2522": {
       "id": "2522",
@@ -2582,7 +2814,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2522.png"
     },
     "2523": {
       "id": "2523",
@@ -2594,7 +2827,8 @@
         "CriticalStrike"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2523.png"
     },
     "2524": {
       "id": "2524",
@@ -2610,7 +2844,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2524.png"
     },
     "2525": {
       "id": "2525",
@@ -2624,7 +2859,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2525.png"
     },
     "2526": {
       "id": "2526",
@@ -2637,7 +2873,8 @@
         "ManaRegen"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "2526.png"
     },
     "3003": {
       "id": "3003",
@@ -2650,7 +2887,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3003.png"
     },
     "3004": {
       "id": "3004",
@@ -2665,7 +2903,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3004.png"
     },
     "3006": {
       "id": "3006",
@@ -2677,7 +2916,8 @@
         "Boots"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3006.png"
     },
     "3008": {
       "id": "3008",
@@ -2690,7 +2930,8 @@
         "Boots"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3008.png"
     },
     "3009": {
       "id": "3009",
@@ -2701,7 +2942,8 @@
         "Boots"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3009.png"
     },
     "3020": {
       "id": "3020",
@@ -2713,7 +2955,8 @@
         "MagicPenetration"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3020.png"
     },
     "3024": {
       "id": "3024",
@@ -2727,7 +2970,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3024.png"
     },
     "3026": {
       "id": "3026",
@@ -2739,7 +2983,8 @@
         "Damage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3026.png"
     },
     "3031": {
       "id": "3031",
@@ -2751,7 +2996,8 @@
         "Damage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3031.png"
     },
     "3032": {
       "id": "3032",
@@ -2764,7 +3010,8 @@
         "AttackSpeed"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3032.png"
     },
     "3033": {
       "id": "3033",
@@ -2777,7 +3024,8 @@
         "ArmorPenetration"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3033.png"
     },
     "3035": {
       "id": "3035",
@@ -2789,7 +3037,8 @@
         "Damage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3035.png"
     },
     "3036": {
       "id": "3036",
@@ -2802,7 +3051,8 @@
         "ArmorPenetration"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3036.png"
     },
     "3041": {
       "id": "3041",
@@ -2815,7 +3065,8 @@
         "NonbootsMovement"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3041.png"
     },
     "3044": {
       "id": "3044",
@@ -2828,7 +3079,8 @@
         "NonbootsMovement"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3044.png"
     },
     "3046": {
       "id": "3046",
@@ -2841,7 +3093,8 @@
         "NonbootsMovement"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3046.png"
     },
     "3047": {
       "id": "3047",
@@ -2853,7 +3106,8 @@
         "Boots"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3047.png"
     },
     "3050": {
       "id": "3050",
@@ -2867,7 +3121,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3050.png"
     },
     "3051": {
       "id": "3051",
@@ -2879,7 +3134,8 @@
         "AttackSpeed"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3051.png"
     },
     "3053": {
       "id": "3053",
@@ -2892,7 +3148,8 @@
         "Tenacity"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3053.png"
     },
     "3057": {
       "id": "3057",
@@ -2904,7 +3161,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3057.png"
     },
     "3065": {
       "id": "3065",
@@ -2919,7 +3177,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3065.png"
     },
     "3066": {
       "id": "3066",
@@ -2931,7 +3190,8 @@
         "NonbootsMovement"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3066.png"
     },
     "3067": {
       "id": "3067",
@@ -2944,7 +3204,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3067.png"
     },
     "3068": {
       "id": "3068",
@@ -2958,7 +3219,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3068.png"
     },
     "3070": {
       "id": "3070",
@@ -2970,7 +3232,8 @@
         "ManaRegen"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3070.png"
     },
     "3071": {
       "id": "3071",
@@ -2987,7 +3250,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3071.png"
     },
     "3072": {
       "id": "3072",
@@ -2999,7 +3263,8 @@
         "LifeSteal"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3072.png"
     },
     "3073": {
       "id": "3073",
@@ -3015,7 +3280,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3073.png"
     },
     "3074": {
       "id": "3074",
@@ -3030,7 +3296,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3074.png"
     },
     "3075": {
       "id": "3075",
@@ -3042,7 +3309,8 @@
         "Armor"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3075.png"
     },
     "3076": {
       "id": "3076",
@@ -3053,7 +3321,8 @@
         "Armor"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3076.png"
     },
     "3077": {
       "id": "3077",
@@ -3065,7 +3334,8 @@
         "OnHit"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3077.png"
     },
     "3078": {
       "id": "3078",
@@ -3082,7 +3352,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3078.png"
     },
     "3082": {
       "id": "3082",
@@ -3093,7 +3364,8 @@
         "Armor"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3082.png"
     },
     "3083": {
       "id": "3083",
@@ -3105,7 +3377,8 @@
         "HealthRegen"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3083.png"
     },
     "3084": {
       "id": "3084",
@@ -3117,7 +3390,8 @@
         "HealthRegen"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3084.png"
     },
     "3085": {
       "id": "3085",
@@ -3131,7 +3405,8 @@
         "NonbootsMovement"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3085.png"
     },
     "3086": {
       "id": "3086",
@@ -3144,7 +3419,8 @@
         "NonbootsMovement"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3086.png"
     },
     "3087": {
       "id": "3087",
@@ -3159,7 +3435,8 @@
         "NonbootsMovement"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3087.png"
     },
     "3089": {
       "id": "3089",
@@ -3170,7 +3447,8 @@
         "SpellDamage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3089.png"
     },
     "3091": {
       "id": "3091",
@@ -3184,7 +3462,8 @@
         "Tenacity"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3091.png"
     },
     "3094": {
       "id": "3094",
@@ -3197,7 +3476,8 @@
         "NonbootsMovement"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3094.png"
     },
     "3095": {
       "id": "3095",
@@ -3211,7 +3491,8 @@
         "NonbootsMovement"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3095.png"
     },
     "3100": {
       "id": "3100",
@@ -3225,7 +3506,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3100.png"
     },
     "3102": {
       "id": "3102",
@@ -3237,7 +3519,8 @@
         "SpellDamage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3102.png"
     },
     "3107": {
       "id": "3107",
@@ -3251,7 +3534,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3107.png"
     },
     "3108": {
       "id": "3108",
@@ -3264,7 +3548,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3108.png"
     },
     "3109": {
       "id": "3109",
@@ -3281,7 +3566,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3109.png"
     },
     "3110": {
       "id": "3110",
@@ -3296,7 +3582,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3110.png"
     },
     "3111": {
       "id": "3111",
@@ -3309,7 +3596,8 @@
         "Tenacity"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3111.png"
     },
     "3112": {
       "id": "3112",
@@ -3323,7 +3611,8 @@
         "Lane"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3112.png"
     },
     "3113": {
       "id": "3113",
@@ -3335,7 +3624,8 @@
         "SpellDamage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3113.png"
     },
     "3114": {
       "id": "3114",
@@ -3346,7 +3636,8 @@
         "ManaRegen"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3114.png"
     },
     "3115": {
       "id": "3115",
@@ -3360,7 +3651,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3115.png"
     },
     "3116": {
       "id": "3116",
@@ -3373,7 +3665,8 @@
         "Slow"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3116.png"
     },
     "3118": {
       "id": "3118",
@@ -3386,7 +3679,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3118.png"
     },
     "3119": {
       "id": "3119",
@@ -3399,7 +3693,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3119.png"
     },
     "3123": {
       "id": "3123",
@@ -3410,7 +3705,8 @@
         "Damage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3123.png"
     },
     "3124": {
       "id": "3124",
@@ -3424,7 +3720,8 @@
         "OnHit"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3124.png"
     },
     "3133": {
       "id": "3133",
@@ -3437,7 +3734,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3133.png"
     },
     "3134": {
       "id": "3134",
@@ -3449,7 +3747,8 @@
         "ArmorPenetration"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3134.png"
     },
     "3135": {
       "id": "3135",
@@ -3461,7 +3760,8 @@
         "SpellDamage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3135.png"
     },
     "3137": {
       "id": "3137",
@@ -3474,7 +3774,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3137.png"
     },
     "3139": {
       "id": "3139",
@@ -3490,7 +3791,8 @@
         "Tenacity"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3139.png"
     },
     "3140": {
       "id": "3140",
@@ -3502,7 +3804,8 @@
         "SpellBlock"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3140.png"
     },
     "3142": {
       "id": "3142",
@@ -3516,7 +3819,8 @@
         "ArmorPenetration"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3142.png"
     },
     "3143": {
       "id": "3143",
@@ -3530,7 +3834,8 @@
         "Slow"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3143.png"
     },
     "3144": {
       "id": "3144",
@@ -3541,7 +3846,8 @@
         "AttackSpeed"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3144.png"
     },
     "3145": {
       "id": "3145",
@@ -3552,7 +3858,8 @@
         "SpellDamage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3145.png"
     },
     "3146": {
       "id": "3146",
@@ -3567,7 +3874,8 @@
         "SpellVamp"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3146.png"
     },
     "3147": {
       "id": "3147",
@@ -3579,7 +3887,8 @@
         "SpellDamage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3147.png"
     },
     "3152": {
       "id": "3152",
@@ -3595,7 +3904,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3152.png"
     },
     "3153": {
       "id": "3153",
@@ -3610,7 +3920,8 @@
         "OnHit"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3153.png"
     },
     "3155": {
       "id": "3155",
@@ -3622,7 +3933,8 @@
         "SpellBlock"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3155.png"
     },
     "3156": {
       "id": "3156",
@@ -3637,7 +3949,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3156.png"
     },
     "3157": {
       "id": "3157",
@@ -3650,7 +3963,8 @@
         "Active"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3157.png"
     },
     "3158": {
       "id": "3158",
@@ -3662,7 +3976,8 @@
         "CooldownReduction"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3158.png"
     },
     "3161": {
       "id": "3161",
@@ -3675,7 +3990,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3161.png"
     },
     "3165": {
       "id": "3165",
@@ -3689,7 +4005,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3165.png"
     },
     "3168": {
       "id": "3168",
@@ -3702,7 +4019,8 @@
         "Boots"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3168.png"
     },
     "3170": {
       "id": "3170",
@@ -3713,7 +4031,8 @@
         "Boots"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3170.png"
     },
     "3171": {
       "id": "3171",
@@ -3725,7 +4044,8 @@
         "Boots"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3171.png"
     },
     "3172": {
       "id": "3172",
@@ -3738,7 +4058,8 @@
         "NonbootsMovement"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3172.png"
     },
     "3173": {
       "id": "3173",
@@ -3752,7 +4073,8 @@
         "MagicResist"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3173.png"
     },
     "3174": {
       "id": "3174",
@@ -3764,7 +4086,8 @@
         "Boots"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3174.png"
     },
     "3175": {
       "id": "3175",
@@ -3776,7 +4099,8 @@
         "MagicPenetration"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3175.png"
     },
     "3177": {
       "id": "3177",
@@ -3790,7 +4114,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3177.png"
     },
     "3179": {
       "id": "3179",
@@ -3805,7 +4130,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3179.png"
     },
     "3181": {
       "id": "3181",
@@ -3818,7 +4144,8 @@
         "NonbootsMovement"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3181.png"
     },
     "3184": {
       "id": "3184",
@@ -3832,7 +4159,8 @@
         "Lane"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3184.png"
     },
     "3190": {
       "id": "3190",
@@ -3849,7 +4177,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3190.png"
     },
     "3211": {
       "id": "3211",
@@ -3862,7 +4191,8 @@
         "SpellBlock"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3211.png"
     },
     "3222": {
       "id": "3222",
@@ -3878,7 +4208,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3222.png"
     },
     "3302": {
       "id": "3302",
@@ -3893,7 +4224,8 @@
         "ArmorPenetration"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3302.png"
     },
     "3340": {
       "id": "3340",
@@ -3908,7 +4240,8 @@
         "Vision"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3340.png"
     },
     "3363": {
       "id": "3363",
@@ -3921,7 +4254,8 @@
         "Vision"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3363.png"
     },
     "3364": {
       "id": "3364",
@@ -3934,7 +4268,8 @@
         "Vision"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3364.png"
     },
     "3504": {
       "id": "3504",
@@ -3948,7 +4283,8 @@
         "NonbootsMovement"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3504.png"
     },
     "3508": {
       "id": "3508",
@@ -3964,7 +4300,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3508.png"
     },
     "3742": {
       "id": "3742",
@@ -3978,7 +4315,8 @@
         "NonbootsMovement"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3742.png"
     },
     "3748": {
       "id": "3748",
@@ -3992,7 +4330,8 @@
         "OnHit"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3748.png"
     },
     "3801": {
       "id": "3801",
@@ -4004,7 +4343,8 @@
         "HealthRegen"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3801.png"
     },
     "3802": {
       "id": "3802",
@@ -4019,7 +4359,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3802.png"
     },
     "3803": {
       "id": "3803",
@@ -4033,7 +4374,8 @@
         "ManaRegen"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3803.png"
     },
     "3814": {
       "id": "3814",
@@ -4046,7 +4388,8 @@
         "ArmorPenetration"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3814.png"
     },
     "3865": {
       "id": "3865",
@@ -4061,7 +4404,8 @@
         "Lane"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3865.png"
     },
     "3869": {
       "id": "3869",
@@ -4077,7 +4421,8 @@
         "Lane"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3869.png"
     },
     "3870": {
       "id": "3870",
@@ -4093,7 +4438,8 @@
         "Lane"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3870.png"
     },
     "3871": {
       "id": "3871",
@@ -4109,7 +4455,8 @@
         "Lane"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3871.png"
     },
     "3876": {
       "id": "3876",
@@ -4125,7 +4472,8 @@
         "Lane"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3876.png"
     },
     "3877": {
       "id": "3877",
@@ -4141,7 +4489,8 @@
         "Lane"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3877.png"
     },
     "3916": {
       "id": "3916",
@@ -4152,7 +4501,8 @@
         "SpellDamage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "3916.png"
     },
     "4005": {
       "id": "4005",
@@ -4166,7 +4516,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "4005.png"
     },
     "4401": {
       "id": "4401",
@@ -4179,7 +4530,8 @@
         "NonbootsMovement"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "4401.png"
     },
     "4628": {
       "id": "4628",
@@ -4191,7 +4543,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "4628.png"
     },
     "4629": {
       "id": "4629",
@@ -4205,7 +4558,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "4629.png"
     },
     "4630": {
       "id": "4630",
@@ -4217,7 +4571,8 @@
         "SpellDamage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "4630.png"
     },
     "4632": {
       "id": "4632",
@@ -4229,7 +4584,8 @@
         "SpellDamage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "4632.png"
     },
     "4633": {
       "id": "4633",
@@ -4243,7 +4599,8 @@
         "SpellVamp"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "4633.png"
     },
     "4642": {
       "id": "4642",
@@ -4257,7 +4614,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "4642.png"
     },
     "4645": {
       "id": "4645",
@@ -4269,7 +4627,8 @@
         "MagicPenetration"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "4645.png"
     },
     "4646": {
       "id": "4646",
@@ -4283,7 +4642,8 @@
         "MagicPenetration"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "4646.png"
     },
     "6333": {
       "id": "6333",
@@ -4296,7 +4656,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6333.png"
     },
     "6609": {
       "id": "6609",
@@ -4310,7 +4671,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6609.png"
     },
     "6610": {
       "id": "6610",
@@ -4324,7 +4686,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6610.png"
     },
     "6616": {
       "id": "6616",
@@ -4338,7 +4701,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6616.png"
     },
     "6617": {
       "id": "6617",
@@ -4353,7 +4717,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6617.png"
     },
     "6620": {
       "id": "6620",
@@ -4368,7 +4733,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6620.png"
     },
     "6621": {
       "id": "6621",
@@ -4380,7 +4746,8 @@
         "ManaRegen"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6621.png"
     },
     "6631": {
       "id": "6631",
@@ -4394,7 +4761,8 @@
         "Slow"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6631.png"
     },
     "6653": {
       "id": "6653",
@@ -4406,7 +4774,8 @@
         "SpellDamage"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6653.png"
     },
     "6655": {
       "id": "6655",
@@ -4420,7 +4789,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6655.png"
     },
     "6657": {
       "id": "6657",
@@ -4435,7 +4805,8 @@
         "ManaRegen"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6657.png"
     },
     "6660": {
       "id": "6660",
@@ -4447,7 +4818,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6660.png"
     },
     "6662": {
       "id": "6662",
@@ -4463,7 +4835,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6662.png"
     },
     "6664": {
       "id": "6664",
@@ -4479,7 +4852,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6664.png"
     },
     "6665": {
       "id": "6665",
@@ -4493,7 +4867,8 @@
         "MagicResist"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6665.png"
     },
     "6670": {
       "id": "6670",
@@ -4505,7 +4880,8 @@
         "CriticalStrike"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6670.png"
     },
     "6672": {
       "id": "6672",
@@ -4519,7 +4895,8 @@
         "NonbootsMovement"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6672.png"
     },
     "6673": {
       "id": "6673",
@@ -4531,7 +4908,8 @@
         "CriticalStrike"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6673.png"
     },
     "6675": {
       "id": "6675",
@@ -4544,7 +4922,8 @@
         "NonbootsMovement"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6675.png"
     },
     "6676": {
       "id": "6676",
@@ -4557,7 +4936,8 @@
         "ArmorPenetration"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6676.png"
     },
     "6690": {
       "id": "6690",
@@ -4569,7 +4949,8 @@
         "NonbootsMovement"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6690.png"
     },
     "6692": {
       "id": "6692",
@@ -4582,7 +4963,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6692.png"
     },
     "6694": {
       "id": "6694",
@@ -4596,7 +4978,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6694.png"
     },
     "6695": {
       "id": "6695",
@@ -4608,7 +4991,8 @@
         "ArmorPenetration"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6695.png"
     },
     "6696": {
       "id": "6696",
@@ -4621,7 +5005,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6696.png"
     },
     "6697": {
       "id": "6697",
@@ -4636,7 +5021,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6697.png"
     },
     "6698": {
       "id": "6698",
@@ -4651,7 +5037,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6698.png"
     },
     "6699": {
       "id": "6699",
@@ -4666,7 +5053,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "6699.png"
     },
     "8010": {
       "id": "8010",
@@ -4680,7 +5068,8 @@
         "MagicPenetration"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "8010.png"
     },
     "8020": {
       "id": "8020",
@@ -4695,7 +5084,8 @@
         "AbilityHaste"
       ],
       "maps11": true,
-      "purchasable": true
+      "purchasable": true,
+      "imageFull": "8020.png"
     }
   },
   "runeTrees": [
@@ -4703,6 +5093,7 @@
       "id": 8100,
       "key": "Domination",
       "name": "Dominação",
+      "icon": "perk-images/Styles/7200_Domination.png",
       "slots": [
         {
           "runes": [
@@ -4710,19 +5101,28 @@
               "id": 8112,
               "key": "Electrocute",
               "name": "Eletrocutar",
-              "shortDesc": "Acertar um Campeão com 3 ataques ou habilidades <b>separadas</b> em 3s causa <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_AdaptiveDmg'>Dano Adaptativo</lol-uikit-tooltipped-keyword> adicional."
+              "shortDesc": "Acertar um Campeão com 3 ataques ou habilidades <b>separadas</b> em 3s causa <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_AdaptiveDmg'>Dano Adaptativo</lol-uikit-tooltipped-keyword> adicional.",
+              "icon": "perk-images/Styles/Domination/Electrocute/Electrocute.png",
+              "treeId": 8100,
+              "slotIndex": 0
             },
             {
               "id": 8128,
               "key": "DarkHarvest",
               "name": "Colheita Sombria",
-              "shortDesc": "Causar dano a um Campeão que está com pouca Vida inflige <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_AdaptiveDmg'>Dano Adaptativo</lol-uikit-tooltipped-keyword> e colhe a alma de sua vítima."
+              "shortDesc": "Causar dano a um Campeão que está com pouca Vida inflige <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_AdaptiveDmg'>Dano Adaptativo</lol-uikit-tooltipped-keyword> e colhe a alma de sua vítima.",
+              "icon": "perk-images/Styles/Domination/DarkHarvest/DarkHarvest.png",
+              "treeId": 8100,
+              "slotIndex": 0
             },
             {
               "id": 9923,
               "key": "HailOfBlades",
               "name": "Chuva de Lâminas",
-              "shortDesc": "Recebe uma grande quantidade de Velocidade de Ataque e <trueDamage>Dano Verdadeiro</trueDamage> adicional pelos primeiros 3 ataques contra Campeões inimigos."
+              "shortDesc": "Recebe uma grande quantidade de Velocidade de Ataque e <trueDamage>Dano Verdadeiro</trueDamage> adicional pelos primeiros 3 ataques contra Campeões inimigos.",
+              "icon": "perk-images/Styles/Domination/HailOfBlades/HailOfBlades.png",
+              "treeId": 8100,
+              "slotIndex": 0
             }
           ]
         },
@@ -4732,19 +5132,28 @@
               "id": 8126,
               "key": "CheapShot",
               "name": "Golpe Desleal",
-              "shortDesc": "Causa Dano Verdadeiro adicional a Campeões inimigos com <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_ImpairAct'>mobilidade ou ações debilitadas</lol-uikit-tooltipped-keyword>. "
+              "shortDesc": "Causa Dano Verdadeiro adicional a Campeões inimigos com <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_ImpairAct'>mobilidade ou ações debilitadas</lol-uikit-tooltipped-keyword>. ",
+              "icon": "perk-images/Styles/Domination/CheapShot/CheapShot.png",
+              "treeId": 8100,
+              "slotIndex": 1
             },
             {
               "id": 8139,
               "key": "TasteOfBlood",
               "name": "Gosto de Sangue",
-              "shortDesc": "Cura ao causar dano a um Campeão inimigo."
+              "shortDesc": "Cura ao causar dano a um Campeão inimigo.",
+              "icon": "perk-images/Styles/Domination/TasteOfBlood/GreenTerror_TasteOfBlood.png",
+              "treeId": 8100,
+              "slotIndex": 1
             },
             {
               "id": 8143,
               "key": "SuddenImpact",
               "name": "Impacto Repentino",
-              "shortDesc": "Depois de usar um avanço, salto, teleporte ou ao sair da furtividade, seus ataques básicos e habilidades de dano causam Dano Verdadeiro adicional a Campeões inimigos."
+              "shortDesc": "Depois de usar um avanço, salto, teleporte ou ao sair da furtividade, seus ataques básicos e habilidades de dano causam Dano Verdadeiro adicional a Campeões inimigos.",
+              "icon": "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png",
+              "treeId": 8100,
+              "slotIndex": 1
             }
           ]
         },
@@ -4754,19 +5163,28 @@
               "id": 8137,
               "key": "SixthSense",
               "name": "Sexto Sentido",
-              "shortDesc": "Com um longo Tempo de Recarga, detecta automaticamente uma sentinela oculta próxima, rastreando-a para a equipe. <br><br>Nível 11: também revela a sentinela por 10s."
+              "shortDesc": "Com um longo Tempo de Recarga, detecta automaticamente uma sentinela oculta próxima, rastreando-a para a equipe. <br><br>Nível 11: também revela a sentinela por 10s.",
+              "icon": "perk-images/Styles/Domination/SixthSense/SixthSense.png",
+              "treeId": 8100,
+              "slotIndex": 2
             },
             {
               "id": 8140,
               "key": "GrislyMementos",
               "name": "Lembranças Aterrorizantes",
-              "shortDesc": "Colete 1 Lembranças ao <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>eliminar</lol-uikit-tooltipped-keyword> Campeões, até um máximo de 18.<br><br>Recebe 6 de Aceleração de Amuleto para cada Lembrança coletada."
+              "shortDesc": "Colete 1 Lembranças ao <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>eliminar</lol-uikit-tooltipped-keyword> Campeões, até um máximo de 18.<br><br>Recebe 6 de Aceleração de Amuleto para cada Lembrança coletada.",
+              "icon": "perk-images/Styles/Domination/GrislyMementos/GrislyMementos.png",
+              "treeId": 8100,
+              "slotIndex": 2
             },
             {
               "id": 8141,
               "key": "DeepWard",
               "name": "Sentinela Profunda",
-              "shortDesc": "Suas sentinelas na selva inimiga são <keywordMajor>Profundas</keywordMajor>, recebendo Vida e Duração.<br><br>Nível 9: As sentinelas no rio também são <keywordMajor>Profundas</keywordMajor>."
+              "shortDesc": "Suas sentinelas na selva inimiga são <keywordMajor>Profundas</keywordMajor>, recebendo Vida e Duração.<br><br>Nível 9: As sentinelas no rio também são <keywordMajor>Profundas</keywordMajor>.",
+              "icon": "perk-images/Styles/Domination/DeepWard/DeepWard.png",
+              "treeId": 8100,
+              "slotIndex": 2
             }
           ]
         },
@@ -4776,19 +5194,28 @@
               "id": 8135,
               "key": "TreasureHunter",
               "name": "Caçador de Tesouros",
-              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>Eliminações</lol-uikit-tooltipped-keyword> <b>únicas</b> concedem ouro adicional na primeira vez que são coletadas. "
+              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>Eliminações</lol-uikit-tooltipped-keyword> <b>únicas</b> concedem ouro adicional na primeira vez que são coletadas. ",
+              "icon": "perk-images/Styles/Domination/TreasureHunter/TreasureHunter.png",
+              "treeId": 8100,
+              "slotIndex": 3
             },
             {
               "id": 8105,
               "key": "RelentlessHunter",
               "name": "Caça Incansável",
-              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>Eliminações</lol-uikit-tooltipped-keyword> <b>únicas</b> concedem <b><lol-uikit-tooltipped-keyword key='LinkTooltip_Description_MS'>VdM</lol-uikit-tooltipped-keyword></b> permanente fora de combate. "
+              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>Eliminações</lol-uikit-tooltipped-keyword> <b>únicas</b> concedem <b><lol-uikit-tooltipped-keyword key='LinkTooltip_Description_MS'>VdM</lol-uikit-tooltipped-keyword></b> permanente fora de combate. ",
+              "icon": "perk-images/Styles/Domination/RelentlessHunter/RelentlessHunter.png",
+              "treeId": 8100,
+              "slotIndex": 3
             },
             {
               "id": 8106,
               "key": "UltimateHunter",
               "name": "Caça Suprema",
-              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>Eliminações</lol-uikit-tooltipped-keyword> <b>únicas</b> concedem Redução de Tempo de Recarga permanente para a ultimate. "
+              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>Eliminações</lol-uikit-tooltipped-keyword> <b>únicas</b> concedem Redução de Tempo de Recarga permanente para a ultimate. ",
+              "icon": "perk-images/Styles/Domination/UltimateHunter/UltimateHunter.png",
+              "treeId": 8100,
+              "slotIndex": 3
             }
           ]
         }
@@ -4798,6 +5225,7 @@
       "id": 8300,
       "key": "Inspiration",
       "name": "Inspiração",
+      "icon": "perk-images/Styles/7203_Whimsy.png",
       "slots": [
         {
           "runes": [
@@ -4805,19 +5233,28 @@
               "id": 8351,
               "key": "GlacialAugment",
               "name": "Aprimoramento Glacial",
-              "shortDesc": "Imobilizar um Campeão inimigo invocará 3 raios glaciais que causam Lentidão a inimigos próximos e reduzem o dano deles contra seus aliados."
+              "shortDesc": "Imobilizar um Campeão inimigo invocará 3 raios glaciais que causam Lentidão a inimigos próximos e reduzem o dano deles contra seus aliados.",
+              "icon": "perk-images/Styles/Inspiration/GlacialAugment/GlacialAugment.png",
+              "treeId": 8300,
+              "slotIndex": 0
             },
             {
               "id": 8360,
               "key": "UnsealedSpellbook",
               "name": "Livro de Feitiços Deslacrado",
-              "shortDesc": "Troque Feitiços de Invocador enquanto estiver fora de combate. Trocar para Feitiços de Invocador únicos aumentará a frequência com que você poderá fazer trocas futuras."
+              "shortDesc": "Troque Feitiços de Invocador enquanto estiver fora de combate. Trocar para Feitiços de Invocador únicos aumentará a frequência com que você poderá fazer trocas futuras.",
+              "icon": "perk-images/Styles/Inspiration/UnsealedSpellbook/UnsealedSpellbook.png",
+              "treeId": 8300,
+              "slotIndex": 0
             },
             {
               "id": 8369,
               "key": "FirstStrike",
               "name": "Primeiro Ataque",
-              "shortDesc": "Ao iniciar um combate contra um Campeão, você causa 7% de dano adicional por 3s e recebe ouro com base no dano causado."
+              "shortDesc": "Ao iniciar um combate contra um Campeão, você causa 7% de dano adicional por 3s e recebe ouro com base no dano causado.",
+              "icon": "perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png",
+              "treeId": 8300,
+              "slotIndex": 0
             }
           ]
         },
@@ -4827,19 +5264,28 @@
               "id": 8306,
               "key": "HextechFlashtraption",
               "name": "Flashtração Hextec",
-              "shortDesc": "Enquanto o Flash estiver em Tempo de Recarga, ele é substituído pelo <i>Flash Hextec</i>.<br><br><i>Flash Hextec</i>: canalize e depois se teletransporte para um novo local."
+              "shortDesc": "Enquanto o Flash estiver em Tempo de Recarga, ele é substituído pelo <i>Flash Hextec</i>.<br><br><i>Flash Hextec</i>: canalize e depois se teletransporte para um novo local.",
+              "icon": "perk-images/Styles/Inspiration/HextechFlashtraption/HextechFlashtraption.png",
+              "treeId": 8300,
+              "slotIndex": 1
             },
             {
               "id": 8304,
               "key": "MagicalFootwear",
               "name": "Calçados Mágicos",
-              "shortDesc": "Concede botas gratuitamente aos 12 mins, mas não é possível comprar botas antes disso. Cada <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>eliminação</lol-uikit-tooltipped-keyword> bem-sucedida faz suas botas virem 45s mais cedo."
+              "shortDesc": "Concede botas gratuitamente aos 12 mins, mas não é possível comprar botas antes disso. Cada <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>eliminação</lol-uikit-tooltipped-keyword> bem-sucedida faz suas botas virem 45s mais cedo.",
+              "icon": "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png",
+              "treeId": 8300,
+              "slotIndex": 1
             },
             {
               "id": 8321,
               "key": "CashBack",
               "name": "Reembolso",
-              "shortDesc": "Recebe parte do ouro de volta ao comprar itens Lendários."
+              "shortDesc": "Recebe parte do ouro de volta ao comprar itens Lendários.",
+              "icon": "perk-images/Styles/Inspiration/CashBack/CashBack2.png",
+              "treeId": 8300,
+              "slotIndex": 1
             }
           ]
         },
@@ -4849,19 +5295,28 @@
               "id": 8313,
               "key": "PerfectTiming",
               "name": "Tônico Triplo",
-              "shortDesc": "Ao alcançar o nível 3, recebe um Elixir da Avareza.<br>Ao alcançar o nível 6, recebe um Elixir da Força.<br>Ao alcançar o nível 9, recebe um Elixir da Habilidade. "
+              "shortDesc": "Ao alcançar o nível 3, recebe um Elixir da Avareza.<br>Ao alcançar o nível 6, recebe um Elixir da Força.<br>Ao alcançar o nível 9, recebe um Elixir da Habilidade. ",
+              "icon": "perk-images/Styles/Inspiration/PerfectTiming/AlchemistCabinet.png",
+              "treeId": 8300,
+              "slotIndex": 2
             },
             {
               "id": 8352,
               "key": "TimeWarpTonic",
               "name": "Tônico de Distorção no Tempo",
-              "shortDesc": "Poções concedem um pouco de restauração imediatamente."
+              "shortDesc": "Poções concedem um pouco de restauração imediatamente.",
+              "icon": "perk-images/Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png",
+              "treeId": 8300,
+              "slotIndex": 2
             },
             {
               "id": 8345,
               "key": "BiscuitDelivery",
               "name": "Entrega de Biscoitos",
-              "shortDesc": "Ganha um Biscoito grátis a cada 2min, até o minuto 6. Consumir ou vender Biscoitos aumenta permanentemente sua Vida máxima e restaura Vida."
+              "shortDesc": "Ganha um Biscoito grátis a cada 2min, até o minuto 6. Consumir ou vender Biscoitos aumenta permanentemente sua Vida máxima e restaura Vida.",
+              "icon": "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png",
+              "treeId": 8300,
+              "slotIndex": 2
             }
           ]
         },
@@ -4871,19 +5326,28 @@
               "id": 8347,
               "key": "CosmicInsight",
               "name": "Perspicácia Cósmica",
-              "shortDesc": "+<attention>18</attention> de Aceleração de Feitiço de Invocador<br>+<attention>10</attention> de Aceleração de Item"
+              "shortDesc": "+<attention>18</attention> de Aceleração de Feitiço de Invocador<br>+<attention>10</attention> de Aceleração de Item",
+              "icon": "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png",
+              "treeId": 8300,
+              "slotIndex": 3
             },
             {
               "id": 8410,
               "key": "ApproachVelocity",
               "name": "Velocidade de Aproximação",
-              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_MS'>VdM</lol-uikit-tooltipped-keyword> adicional em direção a Campeões inimigos próximos com <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_ImpairMov'>movimento debilitado</lol-uikit-tooltipped-keyword>, aumentada em Campeões inimigos cujo movimento você debilitou."
+              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_MS'>VdM</lol-uikit-tooltipped-keyword> adicional em direção a Campeões inimigos próximos com <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_ImpairMov'>movimento debilitado</lol-uikit-tooltipped-keyword>, aumentada em Campeões inimigos cujo movimento você debilitou.",
+              "icon": "perk-images/Styles/Resolve/ApproachVelocity/ApproachVelocity.png",
+              "treeId": 8300,
+              "slotIndex": 3
             },
             {
               "id": 8316,
               "key": "JackOfAllTrades",
               "name": "Quebra-galho",
-              "shortDesc": "A cada atributo diferente recebido de itens, recebe um acúmulo de Quebra-galho. Cada acúmulo concede a você <speed>1 de Aceleração de Habilidade</speed>.<br><br>Recebe <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Adaptive'>Força Adaptativa</lol-uikit-tooltipped-keyword> adicional com 5 e 10 acúmulos."
+              "shortDesc": "A cada atributo diferente recebido de itens, recebe um acúmulo de Quebra-galho. Cada acúmulo concede a você <speed>1 de Aceleração de Habilidade</speed>.<br><br>Recebe <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Adaptive'>Força Adaptativa</lol-uikit-tooltipped-keyword> adicional com 5 e 10 acúmulos.",
+              "icon": "perk-images/Styles/Inspiration/JackOfAllTrades/JackofAllTrades2.png",
+              "treeId": 8300,
+              "slotIndex": 3
             }
           ]
         }
@@ -4893,6 +5357,7 @@
       "id": 8000,
       "key": "Precision",
       "name": "Precisão",
+      "icon": "perk-images/Styles/7201_Precision.png",
       "slots": [
         {
           "runes": [
@@ -4900,25 +5365,37 @@
               "id": 8005,
               "key": "PressTheAttack",
               "name": "Pressione o Ataque",
-              "shortDesc": "Atingir um Campeão inimigo 3 vezes consecutivas causa dano adicional e amplifica seu dano até sair de combate contra Campeões."
+              "shortDesc": "Atingir um Campeão inimigo 3 vezes consecutivas causa dano adicional e amplifica seu dano até sair de combate contra Campeões.",
+              "icon": "perk-images/Styles/Precision/PressTheAttack/PressTheAttack.png",
+              "treeId": 8000,
+              "slotIndex": 0
             },
             {
               "id": 8008,
               "key": "LethalTempo",
               "name": "Ritmo Fatal",
-              "shortDesc": "Atacar um Campeão inimigo concede a você Velocidade de Ataque, até 6 acúmulos. Com o máximo de acúmulos, causa <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_AdaptiveDmg'><font color='#48C4B7'>Dano Adaptativo adicional</font></lol-uikit-tooltipped-keyword> ao contato."
+              "shortDesc": "Atacar um Campeão inimigo concede a você Velocidade de Ataque, até 6 acúmulos. Com o máximo de acúmulos, causa <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_AdaptiveDmg'><font color='#48C4B7'>Dano Adaptativo adicional</font></lol-uikit-tooltipped-keyword> ao contato.",
+              "icon": "perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png",
+              "treeId": 8000,
+              "slotIndex": 0
             },
             {
               "id": 8021,
               "key": "FleetFootwork",
               "name": "Agilidade nos Pés",
-              "shortDesc": "Atacar e se movimentar geram acúmulos de Energia. Com 100 acúmulos, seu próximo ataque cura você e concede um aumento de <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_MS'>VdM</lol-uikit-tooltipped-keyword>."
+              "shortDesc": "Atacar e se movimentar geram acúmulos de Energia. Com 100 acúmulos, seu próximo ataque cura você e concede um aumento de <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_MS'>VdM</lol-uikit-tooltipped-keyword>.",
+              "icon": "perk-images/Styles/Precision/FleetFootwork/FleetFootwork.png",
+              "treeId": 8000,
+              "slotIndex": 0
             },
             {
               "id": 8010,
               "key": "Conqueror",
               "name": "Conquistador",
-              "shortDesc": "Ganha acúmulos de Força Adaptativa ao atacar Campeões inimigos. Após alcançar 12 acúmulos, cura uma parte do dano causado a Campeões."
+              "shortDesc": "Ganha acúmulos de Força Adaptativa ao atacar Campeões inimigos. Após alcançar 12 acúmulos, cura uma parte do dano causado a Campeões.",
+              "icon": "perk-images/Styles/Precision/Conqueror/Conqueror.png",
+              "treeId": 8000,
+              "slotIndex": 0
             }
           ]
         },
@@ -4928,19 +5405,28 @@
               "id": 9101,
               "key": "AbsorbLife",
               "name": "Absorção Vital",
-              "shortDesc": "Abater um alvo cura você."
+              "shortDesc": "Abater um alvo cura você.",
+              "icon": "perk-images/Styles/Precision/AbsorbLife/AbsorbLife.png",
+              "treeId": 8000,
+              "slotIndex": 1
             },
             {
               "id": 9111,
               "key": "Triumph",
               "name": "Triunfo",
-              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>Eliminações</lol-uikit-tooltipped-keyword> restauram 5% da sua Vida perdida e concedem 20 de ouro adicional. "
+              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>Eliminações</lol-uikit-tooltipped-keyword> restauram 5% da sua Vida perdida e concedem 20 de ouro adicional. ",
+              "icon": "perk-images/Styles/Precision/Triumph.png",
+              "treeId": 8000,
+              "slotIndex": 1
             },
             {
               "id": 8009,
               "key": "PresenceOfMind",
               "name": "Presença de Espírito",
-              "shortDesc": "Restaura uma pequena quantidade de Mana ou Energia ao causar dano a um Campeão inimigo. Eliminações restauram Mana ou Energia."
+              "shortDesc": "Restaura uma pequena quantidade de Mana ou Energia ao causar dano a um Campeão inimigo. Eliminações restauram Mana ou Energia.",
+              "icon": "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png",
+              "treeId": 8000,
+              "slotIndex": 1
             }
           ]
         },
@@ -4950,19 +5436,28 @@
               "id": 9104,
               "key": "LegendAlacrity",
               "name": "Lenda: Espontaneidade",
-              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>Eliminações</lol-uikit-tooltipped-keyword> de inimigos concedem <b>Velocidade de Ataque</b> permanente. "
+              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>Eliminações</lol-uikit-tooltipped-keyword> de inimigos concedem <b>Velocidade de Ataque</b> permanente. ",
+              "icon": "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png",
+              "treeId": 8000,
+              "slotIndex": 2
             },
             {
               "id": 9105,
               "key": "LegendHaste",
               "name": "Lenda: Aceleração",
-              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>Eliminar</lol-uikit-tooltipped-keyword> inimigos concede <b>Aceleração</b> permanente de habilidades básicas. "
+              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>Eliminar</lol-uikit-tooltipped-keyword> inimigos concede <b>Aceleração</b> permanente de habilidades básicas. ",
+              "icon": "perk-images/Styles/Precision/LegendHaste/LegendHaste.png",
+              "treeId": 8000,
+              "slotIndex": 2
             },
             {
               "id": 9103,
               "key": "LegendBloodline",
               "name": "Lenda: Linhagem",
-              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>Eliminações</lol-uikit-tooltipped-keyword> de inimigos concedem <b>Roubo de Vida</b> permanente até um limite. Quando o limite é atingido, aumentam sua Vida máxima. Fraco no começo mas fica mais forte do que as outras runas Lenda no fim de jogo."
+              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Takedown'>Eliminações</lol-uikit-tooltipped-keyword> de inimigos concedem <b>Roubo de Vida</b> permanente até um limite. Quando o limite é atingido, aumentam sua Vida máxima. Fraco no começo mas fica mais forte do que as outras runas Lenda no fim de jogo.",
+              "icon": "perk-images/Styles/Precision/LegendBloodline/LegendBloodline.png",
+              "treeId": 8000,
+              "slotIndex": 2
             }
           ]
         },
@@ -4972,19 +5467,28 @@
               "id": 8014,
               "key": "CoupDeGrace",
               "name": "Golpe de Misericórdia",
-              "shortDesc": "Causa mais dano a Campeões inimigos com pouca Vida."
+              "shortDesc": "Causa mais dano a Campeões inimigos com pouca Vida.",
+              "icon": "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png",
+              "treeId": 8000,
+              "slotIndex": 3
             },
             {
               "id": 8017,
               "key": "CutDown",
               "name": "Dilacerar",
-              "shortDesc": "Causa mais dano a Campeões inimigos com muita Vida."
+              "shortDesc": "Causa mais dano a Campeões inimigos com muita Vida.",
+              "icon": "perk-images/Styles/Precision/CutDown/CutDown.png",
+              "treeId": 8000,
+              "slotIndex": 3
             },
             {
               "id": 8299,
               "key": "LastStand",
               "name": "Até a Morte",
-              "shortDesc": "Cause mais dano a Campeões enquanto estiver com pouca Vida."
+              "shortDesc": "Cause mais dano a Campeões enquanto estiver com pouca Vida.",
+              "icon": "perk-images/Styles/Sorcery/LastStand/LastStand.png",
+              "treeId": 8000,
+              "slotIndex": 3
             }
           ]
         }
@@ -4994,6 +5498,7 @@
       "id": 8400,
       "key": "Resolve",
       "name": "Determinação",
+      "icon": "perk-images/Styles/7204_Resolve.png",
       "slots": [
         {
           "runes": [
@@ -5001,19 +5506,28 @@
               "id": 8437,
               "key": "GraspOfTheUndying",
               "name": "Aperto dos Mortos-Vivos",
-              "shortDesc": "A cada 4s, seu próximo ataque contra um Campeão causa Dano Mágico adicional, cura você e aumenta permanentemente sua Vida."
+              "shortDesc": "A cada 4s, seu próximo ataque contra um Campeão causa Dano Mágico adicional, cura você e aumenta permanentemente sua Vida.",
+              "icon": "perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png",
+              "treeId": 8400,
+              "slotIndex": 0
             },
             {
               "id": 8439,
               "key": "Aftershock",
               "name": "Pós-choque",
-              "shortDesc": "Após <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Immobilize'>imobilizar</lol-uikit-tooltipped-keyword> um Campeão inimigo, ganha defesas e depois causa um ataque de Dano Mágico explosivo ao seu redor."
+              "shortDesc": "Após <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Immobilize'>imobilizar</lol-uikit-tooltipped-keyword> um Campeão inimigo, ganha defesas e depois causa um ataque de Dano Mágico explosivo ao seu redor.",
+              "icon": "perk-images/Styles/Resolve/VeteranAftershock/VeteranAftershock.png",
+              "treeId": 8400,
+              "slotIndex": 0
             },
             {
               "id": 8465,
               "key": "Guardian",
               "name": "Guardião",
-              "shortDesc": "Protege aliados nos quais você conjurou habilidades e aliados muito próximos a você. Se você ou um Campeão aliado protegido sofrer dano com base no nível, ambos recebem um escudo."
+              "shortDesc": "Protege aliados nos quais você conjurou habilidades e aliados muito próximos a você. Se você ou um Campeão aliado protegido sofrer dano com base no nível, ambos recebem um escudo.",
+              "icon": "perk-images/Styles/Resolve/Guardian/Guardian.png",
+              "treeId": 8400,
+              "slotIndex": 0
             }
           ]
         },
@@ -5023,19 +5537,28 @@
               "id": 8446,
               "key": "Demolish",
               "name": "Demolir",
-              "shortDesc": "Seu terceiro ataque contra torres causa dano adicional."
+              "shortDesc": "Seu terceiro ataque contra torres causa dano adicional.",
+              "icon": "perk-images/Styles/Resolve/Demolish/Demolish.png",
+              "treeId": 8400,
+              "slotIndex": 1
             },
             {
               "id": 8463,
               "key": "FontOfLife",
               "name": "Fonte da Vida",
-              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_ImpairMov'>Debilitar</lol-uikit-tooltipped-keyword> o movimento de um Campeão inimigo cura Campeões aliados próximos. "
+              "shortDesc": "<lol-uikit-tooltipped-keyword key='LinkTooltip_Description_ImpairMov'>Debilitar</lol-uikit-tooltipped-keyword> o movimento de um Campeão inimigo cura Campeões aliados próximos. ",
+              "icon": "perk-images/Styles/Resolve/FontOfLife/FontOfLife.png",
+              "treeId": 8400,
+              "slotIndex": 1
             },
             {
               "id": 8401,
               "key": "ShieldBash",
               "name": "Golpe de Escudo",
-              "shortDesc": "Sempre que receber um escudo, seu próximo ataque básico contra um Campeão causará <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Adaptive'><font color='#48C4B7'>Dano Adaptativo</font></lol-uikit-tooltipped-keyword> adicional."
+              "shortDesc": "Sempre que receber um escudo, seu próximo ataque básico contra um Campeão causará <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Adaptive'><font color='#48C4B7'>Dano Adaptativo</font></lol-uikit-tooltipped-keyword> adicional.",
+              "icon": "perk-images/Styles/Resolve/MirrorShell/MirrorShell.png",
+              "treeId": 8400,
+              "slotIndex": 1
             }
           ]
         },
@@ -5045,19 +5568,28 @@
               "id": 8429,
               "key": "Conditioning",
               "name": "Condicionamento",
-              "shortDesc": "Depois de 12min, recebe +8 de Armadura, +8 de Resistência Mágica e aumenta sua Armadura e Resistência Mágica em 3%."
+              "shortDesc": "Depois de 12min, recebe +8 de Armadura, +8 de Resistência Mágica e aumenta sua Armadura e Resistência Mágica em 3%.",
+              "icon": "perk-images/Styles/Resolve/Conditioning/Conditioning.png",
+              "treeId": 8400,
+              "slotIndex": 2
             },
             {
               "id": 8444,
               "key": "SecondWind",
               "name": "Ventos Revigorantes",
-              "shortDesc": "Após receber dano de um Campeão inimigo, um pouco da Vida perdida é restaurada ao longo do tempo. "
+              "shortDesc": "Após receber dano de um Campeão inimigo, um pouco da Vida perdida é restaurada ao longo do tempo. ",
+              "icon": "perk-images/Styles/Resolve/SecondWind/SecondWind.png",
+              "treeId": 8400,
+              "slotIndex": 2
             },
             {
               "id": 8473,
               "key": "BonePlating",
               "name": "Osso Revestido",
-              "shortDesc": "Após sofrer dano de um Campeão inimigo, os próximos 3 Ataques ou Habilidades que você sofrer desse inimigo causarão 30 - 60 (com base no nível) a menos de dano.<br><br>Duração: 1.5s<br>Tempo de Recarga: 55s"
+              "shortDesc": "Após sofrer dano de um Campeão inimigo, os próximos 3 Ataques ou Habilidades que você sofrer desse inimigo causarão 30 - 60 (com base no nível) a menos de dano.<br><br>Duração: 1.5s<br>Tempo de Recarga: 55s",
+              "icon": "perk-images/Styles/Resolve/BonePlating/BonePlating.png",
+              "treeId": 8400,
+              "slotIndex": 2
             }
           ]
         },
@@ -5067,19 +5599,28 @@
               "id": 8451,
               "key": "Overgrowth",
               "name": "Crescimento Excessivo",
-              "shortDesc": "Recebe Vida máxima permanente quando tropas inimigas ou monstros são abatidos perto de você."
+              "shortDesc": "Recebe Vida máxima permanente quando tropas inimigas ou monstros são abatidos perto de você.",
+              "icon": "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png",
+              "treeId": 8400,
+              "slotIndex": 3
             },
             {
               "id": 8453,
               "key": "Revitalize",
               "name": "Revitalizar",
-              "shortDesc": "Recebe 5% de Cura e Resistência do Escudo.<br><br>Curas e Escudos conjurados ou recebidos são 10% mais fortes em alvos com menos de 40% de Vida."
+              "shortDesc": "Recebe 5% de Cura e Resistência do Escudo.<br><br>Curas e Escudos conjurados ou recebidos são 10% mais fortes em alvos com menos de 40% de Vida.",
+              "icon": "perk-images/Styles/Resolve/Revitalize/Revitalize.png",
+              "treeId": 8400,
+              "slotIndex": 3
             },
             {
               "id": 8242,
               "key": "Unflinching",
               "name": "Inabalável",
-              "shortDesc": "Recebe Armadura e Resistência Mágica ao sofrer Controle de Grupo."
+              "shortDesc": "Recebe Armadura e Resistência Mágica ao sofrer Controle de Grupo.",
+              "icon": "perk-images/Styles/Sorcery/Unflinching/Unflinching.png",
+              "treeId": 8400,
+              "slotIndex": 3
             }
           ]
         }
@@ -5089,6 +5630,7 @@
       "id": 8200,
       "key": "Sorcery",
       "name": "Feitiçaria",
+      "icon": "perk-images/Styles/7202_Sorcery.png",
       "slots": [
         {
           "runes": [
@@ -5096,25 +5638,37 @@
               "id": 8214,
               "key": "SummonAery",
               "name": "Invocar Aery",
-              "shortDesc": "Seus ataques e habilidades enviam Aery até um alvo, causando dano a inimigos ou protegendo aliados com um escudo."
+              "shortDesc": "Seus ataques e habilidades enviam Aery até um alvo, causando dano a inimigos ou protegendo aliados com um escudo.",
+              "icon": "perk-images/Styles/Sorcery/SummonAery/SummonAery.png",
+              "treeId": 8200,
+              "slotIndex": 0
             },
             {
               "id": 8229,
               "key": "ArcaneComet",
               "name": "Cometa Arcano",
-              "shortDesc": "Ao causar dano a um Campeão com uma habilidade, um cometa é lançado onde ele estiver."
+              "shortDesc": "Ao causar dano a um Campeão com uma habilidade, um cometa é lançado onde ele estiver.",
+              "icon": "perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png",
+              "treeId": 8200,
+              "slotIndex": 0
             },
             {
               "id": 8230,
               "key": "PhaseRush",
               "name": "Avanço da Tempestade",
-              "shortDesc": "Causar dano equivalente a 25% da Vida máxima de um Campeão concede um impulso de <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_MS'>VdM</lol-uikit-tooltipped-keyword> e Resistência a Lentidão. "
+              "shortDesc": "Causar dano equivalente a 25% da Vida máxima de um Campeão concede um impulso de <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_MS'>VdM</lol-uikit-tooltipped-keyword> e Resistência a Lentidão. ",
+              "icon": "perk-images/Styles/Sorcery/PhaseRush/StormraidersSurgeRuneIcon2.png",
+              "treeId": 8200,
+              "slotIndex": 0
             },
             {
               "id": 8992,
               "key": "DeathfireTouch",
               "name": "Toque Ígneo",
-              "shortDesc": "Causar dano a um Campeão com uma habilidade o queima ao longo do tempo."
+              "shortDesc": "Causar dano a um Campeão com uma habilidade o queima ao longo do tempo.",
+              "icon": "perk-images/Styles/Sorcery/DeathfireTouch/DEATHFIRE_TOUCH_KEYSTONE.png",
+              "treeId": 8200,
+              "slotIndex": 0
             }
           ]
         },
@@ -5124,19 +5678,28 @@
               "id": 8224,
               "key": "NullifyingOrb",
               "name": "Arcanista do Axioma",
-              "shortDesc": "Sua ultimate causa mais dano e recebe mais cura e Escudo. Eliminar um Campeão inimigo reduz o Tempo de Recarga atual da sua ultimate."
+              "shortDesc": "Sua ultimate causa mais dano e recebe mais cura e Escudo. Eliminar um Campeão inimigo reduz o Tempo de Recarga atual da sua ultimate.",
+              "icon": "perk-images/Styles/Sorcery/NullifyingOrb/Axiom_Arcanist.png",
+              "treeId": 8200,
+              "slotIndex": 1
             },
             {
               "id": 8226,
               "key": "ManaflowBand",
               "name": "Faixa de Fluxo de Mana",
-              "shortDesc": "Atingir um Campeão inimigo com uma habilidade aumenta permanentemente seu Mana máximo em 25, até o total de 250 de Mana.<br><br>Após atingir 250 de Mana adicional, 1% da seu Mana perdido é restaurado a cada 5s"
+              "shortDesc": "Atingir um Campeão inimigo com uma habilidade aumenta permanentemente seu Mana máximo em 25, até o total de 250 de Mana.<br><br>Após atingir 250 de Mana adicional, 1% da seu Mana perdido é restaurado a cada 5s",
+              "icon": "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png",
+              "treeId": 8200,
+              "slotIndex": 1
             },
             {
               "id": 8275,
               "key": "NimbusCloak",
               "name": "Manto de Nimbus",
-              "shortDesc": "Após conjurar um Feitiço de Invocador, concede um breve aumento de <speed>Velocidade de Movimento</speed> que permite atravessar unidades."
+              "shortDesc": "Após conjurar um Feitiço de Invocador, concede um breve aumento de <speed>Velocidade de Movimento</speed> que permite atravessar unidades.",
+              "icon": "perk-images/Styles/Sorcery/NimbusCloak/6361.png",
+              "treeId": 8200,
+              "slotIndex": 1
             }
           ]
         },
@@ -5146,19 +5709,28 @@
               "id": 8210,
               "key": "Transcendence",
               "name": "Transcendência",
-              "shortDesc": "Recebe efeitos adicionais ao atingir os seguintes níveis:<br>Nível 5: +5 <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_CDR'>de Aceleração de Habilidade</lol-uikit-tooltipped-keyword> <br>Nível 8: +5 <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_CDR'>de Aceleração de Habilidade</lol-uikit-tooltipped-keyword> <br>Nível 11: ao eliminar um Campeão inimigo, reduz o Tempo de Recarga restante das habilidades básicas em 20%."
+              "shortDesc": "Recebe efeitos adicionais ao atingir os seguintes níveis:<br>Nível 5: +5 <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_CDR'>de Aceleração de Habilidade</lol-uikit-tooltipped-keyword> <br>Nível 8: +5 <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_CDR'>de Aceleração de Habilidade</lol-uikit-tooltipped-keyword> <br>Nível 11: ao eliminar um Campeão inimigo, reduz o Tempo de Recarga restante das habilidades básicas em 20%.",
+              "icon": "perk-images/Styles/Sorcery/Transcendence/Transcendence.png",
+              "treeId": 8200,
+              "slotIndex": 2
             },
             {
               "id": 8234,
               "key": "Celerity",
               "name": "Celeridade",
-              "shortDesc": "Todos os efeitos de <speed>Velocidade de Movimento</speed> adicional são 7% mais eficazes em você, além de conceder <speed>1% de Velocidade de Movimento</speed>."
+              "shortDesc": "Todos os efeitos de <speed>Velocidade de Movimento</speed> adicional são 7% mais eficazes em você, além de conceder <speed>1% de Velocidade de Movimento</speed>.",
+              "icon": "perk-images/Styles/Sorcery/Celerity/CelerityTemp.png",
+              "treeId": 8200,
+              "slotIndex": 2
             },
             {
               "id": 8233,
               "key": "AbsoluteFocus",
               "name": "Foco Absoluto",
-              "shortDesc": "Acima de 70% de Vida, recebe <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_AdaptiveDmg'>Dano Adaptativo</lol-uikit-tooltipped-keyword> adicional."
+              "shortDesc": "Acima de 70% de Vida, recebe <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_AdaptiveDmg'>Dano Adaptativo</lol-uikit-tooltipped-keyword> adicional.",
+              "icon": "perk-images/Styles/Sorcery/AbsoluteFocus/AbsoluteFocus.png",
+              "treeId": 8200,
+              "slotIndex": 2
             }
           ]
         },
@@ -5168,23 +5740,90 @@
               "id": 8237,
               "key": "Scorch",
               "name": "Chamuscar",
-              "shortDesc": "Sua primeira habilidade de dano a atingir o alvo a cada 10s incinerará Campeões."
+              "shortDesc": "Sua primeira habilidade de dano a atingir o alvo a cada 10s incinerará Campeões.",
+              "icon": "perk-images/Styles/Sorcery/Scorch/Scorch.png",
+              "treeId": 8200,
+              "slotIndex": 3
             },
             {
               "id": 8232,
               "key": "Waterwalking",
               "name": "Caminhar Sobre as Águas",
-              "shortDesc": "Concede <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_MS'>VdM</lol-uikit-tooltipped-keyword> e PdH ou DdA <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Adaptive'>Adaptativos</lol-uikit-tooltipped-keyword> no rio."
+              "shortDesc": "Concede <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_MS'>VdM</lol-uikit-tooltipped-keyword> e PdH ou DdA <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Adaptive'>Adaptativos</lol-uikit-tooltipped-keyword> no rio.",
+              "icon": "perk-images/Styles/Sorcery/Waterwalking/Waterwalking.png",
+              "treeId": 8200,
+              "slotIndex": 3
             },
             {
               "id": 8236,
               "key": "GatheringStorm",
               "name": "Tempestade Crescente",
-              "shortDesc": "Recebe quantidades crescentes de DdA ou PdH <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Adaptive'>Adaptativo</lol-uikit-tooltipped-keyword> ao longo da partida."
+              "shortDesc": "Recebe quantidades crescentes de DdA ou PdH <lol-uikit-tooltipped-keyword key='LinkTooltip_Description_Adaptive'>Adaptativo</lol-uikit-tooltipped-keyword> ao longo da partida.",
+              "icon": "perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png",
+              "treeId": 8200,
+              "slotIndex": 3
             }
           ]
         }
       ]
+    }
+  ],
+  "statShards": [
+    {
+      "id": 5008,
+      "key": "AdaptiveForce",
+      "name": "+9 de Força Adaptativa",
+      "shortLabel": "Força Adaptativa",
+      "row": "offense",
+      "icon": "perk-images/StatMods/StatModsAdaptiveForceIcon.png"
+    },
+    {
+      "id": 5005,
+      "key": "AttackSpeed",
+      "name": "+10% de Velocidade de Ataque",
+      "shortLabel": "Vel. de Ataque",
+      "row": "offense",
+      "icon": "perk-images/StatMods/StatModsAttackSpeedIcon.png"
+    },
+    {
+      "id": 5007,
+      "key": "AbilityHaste",
+      "name": "+8 de Aceleração de Habilidade",
+      "shortLabel": "Aceleração",
+      "row": "offense",
+      "icon": "perk-images/StatMods/StatModsCDRScalingIcon.png"
+    },
+    {
+      "id": 5010,
+      "key": "MoveSpeed",
+      "name": "+2% de Velocidade de Movimento",
+      "shortLabel": "Vel. Movimento",
+      "row": "flex",
+      "icon": "perk-images/StatMods/StatModsMovementSpeedIcon.png"
+    },
+    {
+      "id": 5001,
+      "key": "HealthScaling",
+      "name": "+10–180 de Vida (por nível)",
+      "shortLabel": "Vida Escalável",
+      "row": "defense",
+      "icon": "perk-images/StatMods/StatModsHealthScalingIcon.png"
+    },
+    {
+      "id": 5011,
+      "key": "HealthFlat",
+      "name": "+65 de Vida Base",
+      "shortLabel": "Vida Base",
+      "row": "defense",
+      "icon": "perk-images/StatMods/StatModsHealthPlusIcon.png"
+    },
+    {
+      "id": 5013,
+      "key": "Tenacity",
+      "name": "+10% de Tenacidade e Resistência a Lentidão",
+      "shortLabel": "Tenacidade",
+      "row": "defense",
+      "icon": "perk-images/StatMods/StatModsTenacityIcon.png"
     }
   ]
 }

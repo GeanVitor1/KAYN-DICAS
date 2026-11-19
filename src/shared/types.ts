@@ -14,6 +14,7 @@ export interface CatalogChampion {
   title: string;
   tags: string[];
   attackrange: number;
+  imageFull?: string;
 }
 
 export interface CatalogItem {
@@ -24,6 +25,7 @@ export interface CatalogItem {
   tags: string[];
   maps11: boolean;
   purchasable: boolean;
+  imageFull?: string;
 }
 
 export interface CatalogRune {
@@ -31,6 +33,9 @@ export interface CatalogRune {
   key: string;
   name: string;
   shortDesc: string;
+  icon?: string;
+  treeId?: number;
+  slotIndex?: number;
 }
 
 export interface CatalogRuneSlot {
@@ -41,11 +46,23 @@ export interface CatalogRuneTree {
   id: number;
   key: string;
   name: string;
+  icon?: string;
   slots: CatalogRuneSlot[];
+}
+
+export interface CatalogStatShard {
+  id: number;
+  key: string;
+  name: string;
+  shortLabel: string;
+  row: 'offense' | 'flex' | 'defense';
+  icon?: string;
 }
 
 export interface CatalogSnapshot {
   patch: string;
+  realm?: string;
+  cdnBase?: string;
   locale: 'pt_BR';
   mapId: 11;
   fetchedAt: string;
@@ -56,6 +73,7 @@ export interface CatalogSnapshot {
   champions: Record<string, CatalogChampion>;
   items: Record<string, CatalogItem>;
   runeTrees: CatalogRuneTree[];
+  statShards?: CatalogStatShard[];
 }
 
 export interface CatalogValidationReport {
@@ -69,13 +87,17 @@ export interface CatalogValidationReport {
   patchMismatch: boolean;
   missingItemIds: string[];
   missingRuneIds: number[];
+  invalidSlotRuneIds?: number[];
+  missingShardIds?: number[];
   warnings: string[];
 }
 
 export interface CatalogStatus {
   sourceMode: 'bundled_offline' | 'local_cache' | 'live_updated';
   activePatch: string;
+  realm?: string;
   fetchedAt: string;
+  cachedAssetsCount?: number;
   lastError?: string;
   validation: CatalogValidationReport;
 }
@@ -116,21 +138,39 @@ export interface ChampionTacticalProfile {
 export interface RuneEntryRef {
   id: number;
   name: string;
+  icon: string | null;
+  slotIndex: number;
+  validInCatalog: boolean;
+  revisionStatus: 'valid' | 'needs_review';
+}
+
+export interface StatShardRef {
+  id: number;
+  name: string;
+  shortLabel: string;
+  row: 'offense' | 'flex' | 'defense';
+  icon: string | null;
+  validInCatalog: boolean;
 }
 
 export interface RuneRecommendation {
   formLabel: string;
   primaryTreeId: number;
   primaryTreeName: string;
+  primaryTreeIcon: string | null;
   primaryRunes: RuneEntryRef[];
   secondaryTreeId: number;
   secondaryTreeName: string;
+  secondaryTreeIcon: string | null;
   secondaryRunes: RuneEntryRef[];
   statShards: string[];
+  statShardRefs: StatShardRef[];
   statShardsNote: string;
   whyFormDiffers: string;
   alternativeNote: string;
   validatedPatch: string;
+  hasInvalidRunes: boolean;
+  revisionNotice?: string;
 }
 
 export interface BuildItemRef {
@@ -139,6 +179,8 @@ export interface BuildItemRef {
   gold: number;
   reason: string;
   availableInCatalog: boolean;
+  icon: string | null;
+  revisionStatus: 'valid' | 'needs_review';
 }
 
 export type SituationalCategoryKey =
@@ -152,6 +194,7 @@ export type SituationalCategoryKey =
 export interface SituationalBuildCategory {
   key: SituationalCategoryKey;
   label: string;
+  shortCondition?: string;
   activeInDraft: boolean;
   triggerReason: string;
   items: BuildItemRef[];
@@ -164,6 +207,7 @@ export interface BuildRecommendation {
   core: BuildItemRef[];
   situational: SituationalBuildCategory[];
   validatedPatch: string;
+  hasInvalidItems: boolean;
   patchWarning?: string;
 }
 
@@ -244,6 +288,7 @@ export interface FrozenPreGameCard {
   patchMismatch: boolean;
   recommendedForm: KaynFormChoice;
   recommendedFormLabel: string;
+  shortFormReason?: string;
   alternativeFormLabel: string;
   flipCondition: string;
   confidenceLabel: string;
@@ -255,11 +300,26 @@ export interface FrozenPreGameCard {
     secondaryRunes: string[];
     statShards: string[];
   };
+  runesVisual?: {
+    keystone: RuneEntryRef;
+    primaryTreeIcon: string | null;
+    primaryMinors: RuneEntryRef[];
+    secondaryTreeIcon: string | null;
+    secondaryRunes: RuneEntryRef[];
+    statShards: StatShardRef[];
+    hasInvalidRunes: boolean;
+  };
   buildSummary: {
     junglePet: string;
     boots: string;
     coreItems: string[];
     activeSituational: Array<{ label: string; items: string[] }>;
+  };
+  buildVisual?: {
+    junglePet: BuildItemRef;
+    boots: BuildItemRef[];
+    core: BuildItemRef[];
+    hasInvalidItems: boolean;
   };
   lanesToWatch: {
     firstGankWindow: string;
@@ -272,12 +332,72 @@ export interface FrozenPreGameCard {
   };
   farmPlan: string;
   staticReminders: string[];
+  selectedTacticalReminders?: Array<{
+    ruleId?: string;
+    text: string;
+    watchCondition?: string;
+  }>;
   schematicPlan: {
     primaryFocusSide: 'top' | 'mid' | 'bot' | 'balanced';
     suggestedStart: string;
     note: string;
   };
   pinnedMicroCards?: FrozenMicroComboCard[];
+}
+
+export type TacticalSignalIcon =
+  | 'wave'
+  | 'prio'
+  | 'vision'
+  | 'hp'
+  | 'objective'
+  | 'wall'
+  | 'timer'
+  | 'orbs'
+  | 'gold'
+  | 'dash';
+
+export interface TacticalRuleSignal {
+  icon: TacticalSignalIcon;
+  label: string;
+}
+
+export type TacticalRuleDraftTag =
+  | 'bot_risk'
+  | 'bot_push'
+  | 'blue'
+  | 'red'
+  | 'objective'
+  | 'orbs'
+  | 'wall_micro'
+  | 'farm_first';
+
+export interface TacticalRule {
+  id: string;
+  version: string;
+  lessonId: string;
+  creator: StudyCreator;
+  creatorDisplayName: string;
+  attributionLabel: StudyAttributionLabel;
+  topic: StudyTopic;
+  form: StudyKaynForm;
+  actionTitle: string;
+  oneLineTip: string;
+  preGameWatchReminder: string;
+  signals: TacticalRuleSignal[];
+  changePlanCondition: string;
+  uncertaintyNote?: string;
+  sourceLabel: string;
+  timestampDisplay: string;
+  gameClockDisplay: string;
+  videoUrl: string;
+  contextStartSeconds: number | null;
+  verificationStatus: StudyVerificationStatus;
+  speechVerified: boolean;
+  isHistoricalReference: boolean;
+  patchValidity: string;
+  draftTags: TacticalRuleDraftTag[];
+  linkedTrainingScenarioId?: string;
 }
 
 export type StudyCreator = 'caiozera' | 'karasmai' | 'training_drill';
@@ -407,9 +527,11 @@ export interface TrainingScenario {
   keyComponentCost: number;
   itemSpikeLabel: string;
   mapSide: MapSide;
+  /** CS total exibido no HUD quando a fonte não separa lane vs campos de selva. */
+  totalCs?: number | null;
   /** CS apenas de minions de lane (quando a fonte separa os dois valores). */
   laneCs: number | null;
-  /** Campos de selva abatidos (separado de CS de lane). */
+  /** Quantidade de campos de selva abatidos (1 campo = 4 CS; separado de CS de lane). */
   jungleCampsCleared: number | null;
   availableCampsCount: number;
   availableCampsLocation: 'top_side' | 'bot_side' | 'both' | 'none' | 'unknown';
@@ -566,4 +688,6 @@ export interface PersistedAppState {
   activeReviewId: string;
   customLessons: StudyLesson[];
   favoriteMicroIds: string[];
+  pinnedReminderIds?: string[];
+  tacticalRuleNotes?: Record<string, string>;
 }

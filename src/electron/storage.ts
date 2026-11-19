@@ -19,14 +19,14 @@ import type {
   TrainingScenario,
 } from '../shared/types';
 
-export const CURRENT_SCHEMA_VERSION = 2;
+export const CURRENT_SCHEMA_VERSION = 3;
 
 export const DEFAULT_CARD_OPTIONS: CardWindowOptions = {
   alwaysOnTop: true,
   opacity: 0.92,
   clickThrough: false,
   toggleShortcut: 'CommandOrControl+Shift+K',
-  showStaticMap: true,
+  showStaticMap: false,
 };
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -58,6 +58,8 @@ export function createDefaultPersistedState(): PersistedAppState {
       'caiozera-micro-rhaast-e-wall-pivot',
       'drill-blue-w-motion',
     ],
+    pinnedReminderIds: ['rule-caiozera-macro-bot-abort-river'],
+    tacticalRuleNotes: {},
   };
 }
 
@@ -106,7 +108,7 @@ function sanitizeCardOptions(raw: unknown): CardWindowOptions {
     if (
       typeof b.x === 'number' && Number.isFinite(b.x) &&
       typeof b.y === 'number' && Number.isFinite(b.y) &&
-      typeof b.width === 'number' && Number.isFinite(b.width) && b.width >= 300 &&
+      typeof b.width === 'number' && Number.isFinite(b.width) && b.width >= 260 &&
       typeof b.height === 'number' && Number.isFinite(b.height) && b.height >= 260
     ) {
       bounds = {
@@ -177,11 +179,26 @@ export function sanitizePersistedState(raw: unknown): PersistedAppState {
     .filter((d): d is DraftState => Boolean(d));
 
   const trainingScenariosRaw = Array.isArray(obj.trainingScenarios) ? obj.trainingScenarios : [];
-  const trainingScenariosUser = trainingScenariosRaw.filter(
-    (s): s is TrainingScenario =>
-      Boolean(s && typeof s === 'object' && typeof (s as TrainingScenario).id === 'string' && typeof (s as TrainingScenario).minute === 'number'),
-  );
-  // Garante que novos cenários de lições adicionados na Fase 2 estejam disponíveis ao migrar da v1
+  const demoScenarioById = new Map(DEMO_TRAINING_SCENARIOS.map((d) => [d.id, d]));
+  const trainingScenariosUser = trainingScenariosRaw
+    .filter(
+      (s): s is TrainingScenario =>
+        Boolean(
+          s &&
+            typeof s === 'object' &&
+            typeof (s as TrainingScenario).id === 'string' &&
+            typeof (s as TrainingScenario).minute === 'number',
+        ),
+    )
+    .map((s) => {
+      // Atualiza demos padrão não editados para refletir a correção de campos vs CS total
+      const freshDemo = demoScenarioById.get(s.id);
+      if (freshDemo && s.isExampleDemo) {
+        return { ...freshDemo };
+      }
+      return s;
+    });
+  // Garante que novos cenários de lições estejam disponíveis ao migrar de versões anteriores
   const existingScenarioIds = new Set(trainingScenariosUser.map((s) => s.id));
   const mergedTrainingScenarios =
     trainingScenariosUser.length > 0
@@ -223,6 +240,23 @@ export function sanitizePersistedState(raw: unknown): PersistedAppState {
       ).slice(0, MAX_FAVORITE_MICRO_CARDS)
     : defaults.favoriteMicroIds;
 
+  const pinnedReminderIds = Array.isArray(obj.pinnedReminderIds)
+    ? Array.from(
+        new Set(
+          obj.pinnedReminderIds.filter((id): id is string => typeof id === 'string' && id.trim().length > 0),
+        ),
+      ).slice(0, 3)
+    : (defaults.pinnedReminderIds ?? []);
+
+  const tacticalRuleNotes: Record<string, string> = {};
+  if (obj.tacticalRuleNotes && typeof obj.tacticalRuleNotes === 'object') {
+    for (const [k, v] of Object.entries(obj.tacticalRuleNotes as Record<string, unknown>)) {
+      if (typeof k === 'string' && k.trim() && typeof v === 'string' && v.trim()) {
+        tacticalRuleNotes[k.trim()] = v.trim().slice(0, 240);
+      }
+    }
+  }
+
   return {
     schemaVersion: CURRENT_SCHEMA_VERSION,
     settings,
@@ -234,6 +268,8 @@ export function sanitizePersistedState(raw: unknown): PersistedAppState {
     activeReviewId,
     customLessons,
     favoriteMicroIds,
+    pinnedReminderIds,
+    tacticalRuleNotes,
   };
 }
 
