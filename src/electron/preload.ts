@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import type { KaynDesktopApi } from '../shared/ipc';
+import type { AutoReviewCapturedNotice, KaynDesktopApi } from '../shared/ipc';
 import type { CardWindowOptions, LiveLolStatus, PersistedAppState } from '../shared/types';
 
 // Mantemos literais inline (sem require() relativo em runtime) para compatibilidade estrita com sandbox: true do Electron.
@@ -29,11 +29,15 @@ const CHANNELS = {
   IMPORT_REVIEW_JSON: 'kayn:import-review-json',
   FETCH_RIOT_MATCHES: 'kayn:fetch-riot-matches',
   IMPORT_RIOT_MATCH: 'kayn:import-riot-match',
+  FETCH_LCU_MATCHES: 'kayn:fetch-lcu-matches',
+  IMPORT_LCU_MATCH: 'kayn:import-lcu-match',
+  IMPORT_LATEST_LCU_MATCH: 'kayn:import-latest-lcu-match',
   GET_LIVE_LOL_STATUS: 'kayn:get-live-lol-status',
   POLL_LIVE_LOL_NOW: 'kayn:poll-live-lol-now',
   ON_STATE_SYNC: 'kayn:on-state-sync',
   ON_CARD_OPTIONS_SYNC: 'kayn:on-card-options-sync',
   ON_LIVE_LOL_SYNC: 'kayn:on-live-lol-sync',
+  ON_AUTO_REVIEW_CAPTURED: 'kayn:on-auto-review-captured',
 } as const;
 
 const api: KaynDesktopApi = {
@@ -63,6 +67,9 @@ const api: KaynDesktopApi = {
   importReviewJson: () => ipcRenderer.invoke(CHANNELS.IMPORT_REVIEW_JSON),
   fetchRiotMatches: (params) => ipcRenderer.invoke(CHANNELS.FETCH_RIOT_MATCHES, params),
   importRiotMatch: (params) => ipcRenderer.invoke(CHANNELS.IMPORT_RIOT_MATCH, params),
+  fetchLcuMatches: () => ipcRenderer.invoke(CHANNELS.FETCH_LCU_MATCHES),
+  importLcuMatch: (gameId) => ipcRenderer.invoke(CHANNELS.IMPORT_LCU_MATCH, gameId),
+  importLatestLcuMatch: () => ipcRenderer.invoke(CHANNELS.IMPORT_LATEST_LCU_MATCH),
   getLiveLolStatus: () => ipcRenderer.invoke(CHANNELS.GET_LIVE_LOL_STATUS),
   pollLiveLolNow: () => ipcRenderer.invoke(CHANNELS.POLL_LIVE_LOL_NOW),
   onStateSync: (cb) => {
@@ -79,6 +86,12 @@ const api: KaynDesktopApi = {
     const listener = (_event: Electron.IpcRendererEvent, status: LiveLolStatus) => cb(status);
     ipcRenderer.on(CHANNELS.ON_LIVE_LOL_SYNC, listener);
     return () => ipcRenderer.removeListener(CHANNELS.ON_LIVE_LOL_SYNC, listener);
+  },
+  onAutoReviewCaptured: (cb) => {
+    const listener = (_event: Electron.IpcRendererEvent, notice: AutoReviewCapturedNotice) =>
+      cb(notice);
+    ipcRenderer.on(CHANNELS.ON_AUTO_REVIEW_CAPTURED, listener);
+    return () => ipcRenderer.removeListener(CHANNELS.ON_AUTO_REVIEW_CAPTURED, listener);
   },
 };
 

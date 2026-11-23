@@ -1,10 +1,10 @@
 import type { CatalogSnapshot, CatalogValidationReport } from '../shared/types';
 import {
   BUILD_DATA_META,
-  RUNE_BLUEPRINTS,
   collectBlueprintItemIds,
   collectBlueprintRuneIds,
   collectBlueprintStatShardIds,
+  getAllRuneBlueprints,
 } from './buildProfiles';
 import { TACTICAL_DATA_META } from './championTactics';
 
@@ -98,7 +98,7 @@ export function validateRecommendationsAgainstCatalog(
 
   // Validar também árvore e slot exatos de cada blueprint (keystones no slot 0, menores nos slots 1..3, sem duplicar slot na secundária)
   const invalidSlotRuneIdsSet = new Set<number>();
-  for (const bp of Object.values(RUNE_BLUEPRINTS)) {
+  for (const bp of getAllRuneBlueprints()) {
     bp.primaryRuneIds.forEach((runeId, expectedSlot) => {
       const meta = runeMetaMap.get(runeId);
       if (meta && (meta.treeId !== bp.primaryTreeId || meta.slotIndex !== expectedSlot)) {

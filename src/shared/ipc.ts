@@ -39,11 +39,15 @@ export const IPC_CHANNELS = {
   IMPORT_REVIEW_JSON: 'kayn:import-review-json',
   FETCH_RIOT_MATCHES: 'kayn:fetch-riot-matches',
   IMPORT_RIOT_MATCH: 'kayn:import-riot-match',
+  FETCH_LCU_MATCHES: 'kayn:fetch-lcu-matches',
+  IMPORT_LCU_MATCH: 'kayn:import-lcu-match',
+  IMPORT_LATEST_LCU_MATCH: 'kayn:import-latest-lcu-match',
   GET_LIVE_LOL_STATUS: 'kayn:get-live-lol-status',
   POLL_LIVE_LOL_NOW: 'kayn:poll-live-lol-now',
   ON_STATE_SYNC: 'kayn:on-state-sync',
   ON_CARD_OPTIONS_SYNC: 'kayn:on-card-options-sync',
   ON_LIVE_LOL_SYNC: 'kayn:on-live-lol-sync',
+  ON_AUTO_REVIEW_CAPTURED: 'kayn:on-auto-review-captured',
 } as const;
 
 export interface InitialHydrationPayload {
@@ -66,6 +70,32 @@ export interface RiotMatchListEntry {
   kills: number;
   deaths: number;
   assists: number;
+}
+
+export interface LcuMatchListEntry {
+  gameId: string;
+  gameCreation: number;
+  gameDurationSeconds: number;
+  queueId: number;
+  queueLabel: string;
+  mapId: number;
+  championId: string;
+  championName: string;
+  win: boolean;
+  kills: number;
+  deaths: number;
+  assists: number;
+  totalCs: number;
+  csPerMin: number;
+  alreadyImported: boolean;
+}
+
+export interface AutoReviewCapturedNotice {
+  reviewId: string;
+  title: string;
+  source: 'live_auto' | 'lcu_enriched';
+  result: 'win' | 'loss' | 'unknown';
+  capturedAt: string;
 }
 
 export interface KaynDesktopApi {
@@ -129,9 +159,25 @@ export interface KaynDesktopApi {
     review?: ReviewMatch;
     error?: string;
   }>;
+  fetchLcuMatches: () => Promise<{
+    ok: boolean;
+    matches?: LcuMatchListEntry[];
+    error?: string;
+  }>;
+  importLcuMatch: (gameId: string) => Promise<{
+    ok: boolean;
+    review?: ReviewMatch;
+    error?: string;
+  }>;
+  importLatestLcuMatch: () => Promise<{
+    ok: boolean;
+    review?: ReviewMatch;
+    error?: string;
+  }>;
   getLiveLolStatus: () => Promise<LiveLolStatus>;
   pollLiveLolNow: () => Promise<LiveLolStatus>;
   onStateSync: (cb: (state: PersistedAppState) => void) => () => void;
   onCardOptionsSync: (cb: (options: CardWindowOptions) => void) => () => void;
   onLiveLolSync: (cb: (status: LiveLolStatus) => void) => () => void;
+  onAutoReviewCaptured: (cb: (notice: AutoReviewCapturedNotice) => void) => () => void;
 }

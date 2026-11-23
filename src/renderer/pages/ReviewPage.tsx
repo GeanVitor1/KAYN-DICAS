@@ -1,4 +1,5 @@
 import {
+  AlertTriangle,
   CheckCircle2,
   ChevronDown,
   ChevronUp,
@@ -6,18 +7,25 @@ import {
   Edit3,
   FileUp,
   HelpCircle,
+  History,
   Plus,
+  Radio,
+  RefreshCw,
   Search,
+  Skull,
+  Sparkles,
   Trash2,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { analyzeReviewMatch } from '../../engine/reviewAnalyzer';
 import { filterStudyLessons, getAllStudyLessons } from '../../engine/studyLibrary';
 import { matchRulesForReviewEvent } from '../../engine/tacticalMemory';
-import type { RiotMatchListEntry } from '../../shared/ipc';
+import type { LcuMatchListEntry, RiotMatchListEntry } from '../../shared/ipc';
 import type {
+  CatalogSnapshot,
   EnemyResponseCertainty,
   LanePrioState,
+  LiveLolStatus,
   ReviewEvent,
   ReviewEventType,
   ReviewLaneFocus,
@@ -27,6 +35,7 @@ import type {
   TacticalRule,
 } from '../../shared/types';
 import { ExpandableSection } from '../components/ExpandableSection';
+import { ChampionPortrait, ItemIconTile } from '../components/GameIcon';
 
 function createBlankEvent(minute = 5): ReviewEvent {
   return {
@@ -49,7 +58,7 @@ function createBlankEvent(minute = 5): ReviewEvent {
 }
 
 const TYPE_PT: Record<ReviewEventType, string> = {
-  gank: 'Gank',
+  gank: 'Gank / Luta',
   death: 'Morte',
   reset: 'Reset',
   farm: 'Farm',
@@ -82,7 +91,13 @@ function shortTakeawayForEvent(
     return 'Boa leitura de mapa; o ajuste aqui é só na execução mecânica.';
   }
   if (analysis.decisionQuality === 'ruim') {
+    if (ev.decisionContextSource === 'live_captured' || ev.decisionContextSource === 'lcu_captured') {
+      return `${analysis.decisionReason} ${ev.enemyResponseCertainty === 'confirmed' ? ev.enemyResponseText : ''}`.trim();
+    }
     return analysis.plausibleAlternative;
+  }
+  if (ev.decisionContextSource === 'live_captured' || ev.decisionContextSource === 'lcu_captured') {
+    return ev.whatHappenedAfter || analysis.decisionReason;
   }
   if (analysis.decisionQuality === 'questionavel') {
     return analysis.decisionReason;
@@ -93,9 +108,14 @@ function shortTakeawayForEvent(
   return analysis.decisionReason;
 }
 
+type TimelineFilter = 'all' | 'death' | 'gank' | 'objective';
+
 export function ReviewPage({
   reviews,
   activeReviewId,
+  catalog,
+  liveLolStatus,
+  autoRecordEnabled = true,
   customLessons = [],
   tacticalRules = [],
   onSelectReview,
@@ -103,11 +123,17 @@ export function ReviewPage({
   onDeleteReview,
   onExportJson,
   onImportJson,
+  onFetchLcuMatches,
+  onImportLcuMatch,
+  onImportLatestLcuMatch,
   onFetchRiotMatches,
   onImportRiotMatch,
 }: {
   reviews: ReviewMatch[];
   activeReviewId: string;
+  catalog: CatalogSnapshot;
+  liveLolStatus?: LiveLolStatus | null;
+  autoRecordEnabled?: boolean;
   customLessons?: StudyLesson[];
   tacticalRules?: TacticalRule[];
   onSelectReview: (id: string) => Promise<void>;
@@ -115,6 +141,13 @@ export function ReviewPage({
   onDeleteReview: (id: string) => Promise<void>;
   onExportJson: (review: ReviewMatch) => Promise<{ saved: boolean; filePath?: string; error?: string }>;
   onImportJson: () => Promise<{ imported: boolean; error?: string }>;
+  onFetchLcuMatches: () => Promise<{
+    ok: boolean;
+    matches?: LcuMatchListEntry[];
+    error?: string;
+  }>;
+  onImportLcuMatch: (gameId: string) => Promise<{ ok: boolean; review?: ReviewMatch; error?: string }>;
+  onImportLatestLcuMatch: () => Promise<{ ok: boolean; review?: ReviewMatch; error?: string }>;
   onFetchRiotMatches: (params: {
     apiKey: string;
     gameName: string;
@@ -134,6 +167,13 @@ export function ReviewPage({
   const [editingEventId, setEditingEventId] = useState<string | null>(null);
   const [draftEvent, setDraftEvent] = useState<ReviewEvent | null>(null);
   const [statusMsg, setStatusMsg] = useState<string | null>(null);
+  const [timelineFilter, setTimelineFilter] = useState<TimelineFilter>('all');
+
+  // Histórico direto do cliente LoL (LCU local — zero chave Riot)
+  const [lcuLoading, setLcuLoading] = useState(false);
+  const [lcuError, setLcuError] = useState<string | null>(null);
+  const [lcuMatches, setLcuMatches] = useState<LcuMatchListEntry[]>([]);
+  const [showLcuHistory, setShowLcuHistory] = useState(false);
 
   // Match-V5 opcional
   const [riotKey, setRiotKey] = useState('');
@@ -175,7 +215,7 @@ export function ReviewPage({
       title: 'Nova Revisão Manual (Solo/Duo BR)',
       isExampleDemo: false,
       sourceLabel: 'Preenchimento manual',
-      patch: '16.23.1',
+      patch: catalog.patch,
       rankContext: 'Diamante Solo/Duo BR',
       plannedForm: 'blue',
       actualFormMinute: null,
@@ -242,6 +282,57 @@ export function ReviewPage({
     else if (res.error) setStatusMsg(`Erro ao importar JSON: ${res.error}`);
   };
 
+  const handleImportLatestLcu = async () => {
+    setLcuError(null);
+    setStatusMsg(null);
+    setLcuLoading(true);
+    try {
+      const res = await onImportLatestLcuMatch();
+      if (!res.ok) {
+        setLcuError(res.error ?? 'Não foi possível importar a última partida do cliente do LoL.');
+      } else {
+        setShowLcuHistory(false);
+        setStatusMsg(
+          `Última partida importada do LoL com timeline completa: ${res.review?.title ?? 'Pronta para análise'}.`,
+        );
+      }
+    } finally {
+      setLcuLoading(false);
+    }
+  };
+
+  const handleFetchLcuHistory = async () => {
+    setLcuError(null);
+    setLcuLoading(true);
+    try {
+      const res = await onFetchLcuMatches();
+      if (!res.ok || !res.matches) {
+        setLcuError(res.error ?? 'Falha ao consultar histórico do cliente do LoL.');
+      } else {
+        setLcuMatches(res.matches);
+        setShowLcuHistory(true);
+      }
+    } finally {
+      setLcuLoading(false);
+    }
+  };
+
+  const handleImportLcuGame = async (gameId: string) => {
+    setLcuError(null);
+    setLcuLoading(true);
+    try {
+      const res = await onImportLcuMatch(gameId);
+      if (!res.ok) {
+        setLcuError(res.error ?? 'Falha ao importar partida do LoL.');
+      } else {
+        setShowLcuHistory(false);
+        setStatusMsg(`Partida importada e analisada: ${res.review?.title ?? `#${gameId}`}.`);
+      }
+    } finally {
+      setLcuLoading(false);
+    }
+  };
+
   const handleRiotSearch = async () => {
     setRiotError(null);
     setRiotLoading(true);
@@ -281,16 +372,27 @@ export function ReviewPage({
   };
 
   const sortedEvents = [...activeReview.events].sort((a, b) => a.minute - b.minute);
+  const filteredEvents = sortedEvents.filter((ev) => {
+    if (timelineFilter === 'all') return true;
+    if (timelineFilter === 'death') return ev.type === 'death' || ev.outcome === 'died';
+    if (timelineFilter === 'gank') return ev.type === 'gank' && ev.outcome !== 'died';
+    if (timelineFilter === 'objective') return ev.type === 'objective';
+    return true;
+  });
+
+  const stats = activeReview.matchStats;
+  const diagnostic = analysis.diagnostic;
+  const lolConnected = liveLolStatus && liveLolStatus.phase !== 'disconnected';
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
-      {/* Barra superior compacta */}
-      <div className="toolbar">
-        <div className="toolbar-group" style={{ flex: 1, minWidth: 0 }}>
+      {/* Barra superior: seleção de revisão + importação direta do cliente LoL (zero chave API) */}
+      <div className="toolbar" style={{ flexWrap: 'wrap', gap: 8 }}>
+        <div className="toolbar-group" style={{ flex: 1, minWidth: 260 }}>
           <select
             className="select"
             aria-label="Selecionar revisão"
-            style={{ width: 'auto', minWidth: 260, maxWidth: 440 }}
+            style={{ width: 'auto', minWidth: 250, maxWidth: 420 }}
             value={activeReview.id}
             onChange={(e) => void onSelectReview(e.target.value)}
           >
@@ -300,9 +402,36 @@ export function ReviewPage({
               </option>
             ))}
           </select>
-          <button type="button" className="btn btn-primary btn-xs" onClick={() => void startNewReview()}>
-            <Plus size={12} /> Nova revisão
+
+          <button
+            type="button"
+            data-testid="lcu-import-latest-btn"
+            className="btn btn-blue btn-xs"
+            disabled={lcuLoading}
+            onClick={() => void handleImportLatestLcu()}
+            title="Puxa automaticamente sua última partida jogada direto do cliente do LoL (sem chave Riot)"
+          >
+            <RefreshCw size={12} /> {lcuLoading ? 'Lendo LoL...' : 'Importar última do LoL'}
           </button>
+
+          <button
+            type="button"
+            data-testid="lcu-fetch-history-btn"
+            className="btn btn-xs"
+            disabled={lcuLoading}
+            onClick={() =>
+              showLcuHistory && lcuMatches.length > 0
+                ? setShowLcuHistory(false)
+                : void handleFetchLcuHistory()
+            }
+          >
+            <History size={12} /> {showLcuHistory ? 'Ocultar histórico' : 'Histórico do LoL'}
+          </button>
+
+          <button type="button" className="btn btn-xs" onClick={() => void startNewReview()}>
+            <Plus size={12} /> Manual
+          </button>
+
           {reviews.length > 1 ? (
             <button
               type="button"
@@ -316,6 +445,14 @@ export function ReviewPage({
         </div>
 
         <div className="toolbar-group">
+          {autoRecordEnabled ? (
+            <span
+              className={`badge ${lolConnected ? 'badge-green' : 'badge-muted'}`}
+              title="Ao terminar uma partida com o app aberto, a revisão é gravada automaticamente"
+            >
+              <Radio size={10} /> {lolConnected ? 'Auto-gravação ativa' : 'Auto-gravação pronta'}
+            </span>
+          ) : null}
           {activeReview.isExampleDemo ? (
             <span className="badge badge-amber">Exemplo fictício</span>
           ) : null}
@@ -329,8 +466,346 @@ export function ReviewPage({
       </div>
 
       {statusMsg ? <div className="banner banner-success">{statusMsg}</div> : null}
+      {lcuError ? <div className="banner banner-warning">{lcuError}</div> : null}
 
-      {/* Resumo enxuto no topo */}
+      {/* Aviso amigável quando ainda está vendo o exemplo fictício */}
+      {activeReview.isExampleDemo ? (
+        <div
+          className="banner banner-info"
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap' }}
+        >
+          <span>
+            Você está vendo o <strong>exemplo fictício</strong>. Com o cliente do LoL aberto, clique em{' '}
+            <strong>Importar última do LoL</strong> para puxar sua partida real (sem chave API), ou deixe o app aberto ao jogar para gravar automaticamente ao fim da partida.
+          </span>
+          <button
+            type="button"
+            className="btn btn-blue btn-xs"
+            disabled={lcuLoading}
+            onClick={() => void handleImportLatestLcu()}
+          >
+            <RefreshCw size={12} /> Puxar minha última partida agora
+          </button>
+        </div>
+      ) : null}
+
+      {/* Painel expansível com histórico recente direto do cliente local do LoL */}
+      {showLcuHistory && lcuMatches.length > 0 ? (
+        <section className="panel" data-testid="lcu-history-panel">
+          <div className="panel-header">
+            <h2 className="panel-title">
+              Últimas partidas no cliente do LoL ({lcuMatches.length}) — sem chave API
+            </h2>
+            <button
+              type="button"
+              className="btn btn-xs btn-ghost"
+              onClick={() => void handleFetchLcuHistory()}
+              disabled={lcuLoading}
+            >
+              <RefreshCw size={12} /> Atualizar lista
+            </button>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 280, overflowY: 'auto' }}>
+            {lcuMatches.map((m) => {
+              const champ = catalog.champions[m.championId];
+              const isKayn = m.championId === 'Kayn';
+              return (
+                <div
+                  key={m.gameId}
+                  className="lcu-match-row"
+                  style={isKayn ? { borderColor: 'rgba(56, 189, 248, 0.35)' } : undefined}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+                    <ChampionPortrait
+                      patch={catalog.patch}
+                      imageFull={champ?.imageFull}
+                      name={m.championName}
+                      size={34}
+                    />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                        <strong style={{ fontSize: 13 }}>{m.championName}</strong>
+                        <span className={`badge ${m.win ? 'badge-green' : 'badge-red'}`}>
+                          {m.win ? 'Vitória' : 'Derrota'}
+                        </span>
+                        <span className="badge badge-muted">{m.queueLabel}</span>
+                        {m.alreadyImported ? (
+                          <span className="badge badge-blue">Já importada</span>
+                        ) : null}
+                      </div>
+                      <div className="small-text muted-text mono">
+                        {m.kills}/{m.deaths}/{m.assists} · {m.totalCs} CS ({m.csPerMin}/min) ·{' '}
+                        {Math.round(m.gameDurationSeconds / 60)} min
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-xs btn-blue"
+                    disabled={lcuLoading}
+                    onClick={() => void handleImportLcuGame(m.gameId)}
+                  >
+                    {m.alreadyImported ? 'Reimportar e analisar' : 'Analisar partida'}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
+
+      {/* PAINEL DE DIAGNÓSTICO AUTOMÁTICO REAL (quando há matchStats da partida) */}
+      {stats && diagnostic ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }} data-testid="review-diagnostic-panel">
+          {/* Hero da Partida + KPIs */}
+          <section
+            className={`review-hero ${
+              stats.result === 'win'
+                ? 'review-hero-win'
+                : stats.result === 'loss'
+                  ? 'review-hero-loss'
+                  : ''
+            }`}
+          >
+            <div className="review-hero-top">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                <ChampionPortrait
+                  patch={catalog.patch}
+                  imageFull={catalog.champions[stats.championId]?.imageFull}
+                  name={stats.championName}
+                  size={52}
+                />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                    <span
+                      className={`badge ${
+                        stats.result === 'win'
+                          ? 'badge-green'
+                          : stats.result === 'loss'
+                            ? 'badge-red'
+                            : 'badge-muted'
+                      }`}
+                    >
+                      {stats.result === 'win'
+                        ? 'VITÓRIA'
+                        : stats.result === 'loss'
+                          ? 'DERROTA'
+                          : 'PARTIDA'}
+                    </span>
+                    <strong style={{ fontSize: 16, color: '#ffffff' }}>
+                      {stats.championName} · {stats.kills}/{stats.deaths}/{stats.assists}
+                    </strong>
+                    <span className="small-text muted-text mono">
+                      {Math.round(stats.durationSeconds / 60)} min · Nv {stats.level} ·{' '}
+                      {stats.queueLabel ?? activeReview.rankContext}
+                    </span>
+                  </div>
+                  <div className="small-text" style={{ color: '#e2ecfb', fontWeight: 600 }}>
+                    {diagnostic.headline}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                {/* Itens usados na partida */}
+                {stats.itemsBuilt.length > 0 ? (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                    {stats.itemsBuilt.slice(0, 6).map((it, idx) => (
+                      <ItemIconTile
+                        key={`${it.itemId}-${idx}`}
+                        patch={catalog.patch}
+                        iconFile={catalog.items[it.itemId]?.imageFull ?? `${it.itemId}.png`}
+                        name={it.name}
+                        size={32}
+                      />
+                    ))}
+                  </div>
+                ) : null}
+
+                {/* Nota geral */}
+                <div
+                  className={`review-grade-pill review-grade-${diagnostic.grade}`}
+                  title={`Pontuação factual de desempenho Kayn Jungle: ${diagnostic.overallScore}/100`}
+                >
+                  <span style={{ fontSize: 20, fontWeight: 900, lineHeight: 1 }}>
+                    {diagnostic.grade}
+                  </span>
+                  <span className="mono" style={{ fontSize: 10, opacity: 0.85 }}>
+                    {diagnostic.overallScore}/100
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Faixa de KPIs */}
+            <div className="review-kpi-strip">
+              {diagnostic.kpiCards.map((kpi) => (
+                <div key={kpi.label} className={`review-kpi-card review-kpi-${kpi.status}`}>
+                  <span className="small-text muted-text" style={{ fontSize: 11 }}>
+                    {kpi.label}
+                  </span>
+                  <strong style={{ fontSize: 16, color: '#ffffff' }} className="mono">
+                    {kpi.value}
+                  </strong>
+                  <span className="small-text muted-text" style={{ fontSize: 11 }}>
+                    {kpi.target}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Diagnóstico detalhado: Principais Erros vs Raio-X das Mortes & Pontos Positivos */}
+          <div className="grid-2">
+            <section className="panel" data-testid="review-top-mistakes">
+              <div className="panel-header">
+                <h2 className="panel-title" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <AlertTriangle size={14} color="var(--red)" /> Onde você errou / o que mais custou
+                </h2>
+                <span className="badge badge-muted">
+                  {diagnostic.topMistakes.length} ponto(s)
+                </span>
+              </div>
+
+              {diagnostic.topMistakes.length === 0 ? (
+                <div className="small-text muted-text">
+                  Nenhum erro estatístico grave detectado nos números da partida. Revise os lances da timeline abaixo (especialmente wave, posicionamento em lutas e chamadas de objetivo no mid/late).
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {diagnostic.topMistakes.map((finding) => (
+                    <div
+                      key={finding.id}
+                      className={`review-finding-card review-finding-${finding.severity}`}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6 }}>
+                        <strong style={{ fontSize: 13, color: '#ffffff' }}>{finding.title}</strong>
+                        <span
+                          className={`badge ${
+                            finding.severity === 'critico' ? 'badge-red' : 'badge-amber'
+                          }`}
+                        >
+                          {finding.severity === 'critico' ? 'Crítico' : 'Atenção'}
+                        </span>
+                      </div>
+                      <div className="small-text mono" style={{ color: '#cbd5e1' }}>
+                        {finding.evidence}
+                      </div>
+                      <div className="small-text muted-text">{finding.whyItCostGame}</div>
+                      <div className="small-text" style={{ color: '#bae6fd' }}>
+                        <strong>Próximo jogo:</strong> {finding.actionNextGame}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
+              {/* Raio-X das Mortes */}
+              <section className="panel">
+                <h2 className="panel-title" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <Skull size={14} color="var(--amber)" /> Raio-X das Mortes ({diagnostic.deathBreakdown.total})
+                </h2>
+                <div className="grid-3 small-text">
+                  <div className="panel-subtle">
+                    <div className="muted-text">Early (≤14m)</div>
+                    <strong
+                      className="mono"
+                      style={{
+                        fontSize: 16,
+                        color: diagnostic.deathBreakdown.earlyDeaths >= 2 ? 'var(--red)' : '#ffffff',
+                      }}
+                    >
+                      {diagnostic.deathBreakdown.earlyDeaths}
+                    </strong>
+                  </div>
+                  <div className="panel-subtle">
+                    <div className="muted-text">Mid / Late</div>
+                    <strong className="mono" style={{ fontSize: 16, color: '#ffffff' }}>
+                      {diagnostic.deathBreakdown.midLateDeaths}
+                    </strong>
+                  </div>
+                  <div className="panel-subtle">
+                    <div className="muted-text">Antes de obj.</div>
+                    <strong
+                      className="mono"
+                      style={{
+                        fontSize: 16,
+                        color:
+                          diagnostic.deathBreakdown.deathsBeforeObjective > 0
+                            ? 'var(--red)'
+                            : 'var(--green)',
+                      }}
+                    >
+                      {diagnostic.deathBreakdown.deathsBeforeObjective}
+                    </strong>
+                  </div>
+                </div>
+
+                {/* Distribuição por região do mapa (quando capturado via LCU com X/Y) */}
+                {stats.captureSource === 'lcu_history' ? (
+                  <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 4 }}>
+                    {(Object.entries(diagnostic.deathBreakdown.deathsByLane) as Array<
+                      [ReviewLaneFocus, number]
+                    >).map(([lane, count]) => (
+                      <span
+                        key={lane}
+                        className={`badge ${count >= 2 ? 'badge-red' : 'badge-muted'}`}
+                      >
+                        {LANE_PT[lane]}: {count}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="small-text muted-text" style={{ marginTop: 4 }}>
+                    Dica: clique em <strong>Importar última do LoL</strong> para enriquecer com a região exata (Bot/Mid/Top/Selva) de cada morte e a comparação vs JG inimigo.
+                  </div>
+                )}
+
+                {diagnostic.deathBreakdown.deathStreaks.length > 0 ? (
+                  <div className="small-text" style={{ color: '#fca5a5', marginTop: 4 }}>
+                    <strong>Sequência crítica:</strong>{' '}
+                    {diagnostic.deathBreakdown.deathStreaks.join(' · ')}
+                  </div>
+                ) : null}
+
+                {stats.planComparison ? (
+                  <div
+                    className="small-text muted-text"
+                    style={{ borderTop: '1px solid var(--border)', paddingTop: 7, marginTop: 4 }}
+                  >
+                    <strong>Plano do Draft:</strong> {stats.planComparison.expectedFormLabel} · Inimigos: {stats.planComparison.enemyArmorCount} frontline/armadura, {stats.planComparison.enemyHealingCount} cura, {stats.planComparison.enemyShieldCount} escudo.
+                  </div>
+                ) : null}
+              </section>
+
+              {/* Pontos Positivos */}
+              <section className="panel">
+                <h2 className="panel-title" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <Sparkles size={14} color="var(--green)" /> O que você fez bem (manter)
+                </h2>
+                {diagnostic.strengths.length === 0 ? (
+                  <div className="small-text muted-text">
+                    Partida difícil estatisticamente — foque primeiro em estabilizar o erro #1 ao lado no próximo jogo.
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+                    {diagnostic.strengths.map((s) => (
+                      <div key={s.id} className="review-finding-card review-finding-positivo">
+                        <strong style={{ fontSize: 12.5, color: '#a7f3d0' }}>{s.title}</strong>
+                        <div className="small-text muted-text">{s.evidence}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </section>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Resumo enxuto no topo (Bot / Padrões / Foco) */}
       <div className="grid-3">
         <section className="panel" data-testid="review-bot-summary">
           <h2 className="panel-title">Tentativas na Bot</h2>
@@ -355,7 +830,7 @@ export function ReviewPage({
         <section className="panel">
           <h2 className="panel-title">Padrões recorrentes</h2>
           {analysis.recurringPatterns.length === 0 ? (
-            <div className="small-text muted-text">Nenhum padrão negativo repetido.</div>
+            <div className="small-text muted-text">Nenhum padrão negativo repetido na timeline.</div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
               {analysis.recurringPatterns.map((pat) => (
@@ -378,17 +853,41 @@ export function ReviewPage({
         </section>
       </div>
 
-      {/* TIMELINE LIMPA: Evento + Minuto + Aprendizado curto de primeira; contexto sob expansão */}
+      {/* TIMELINE LIMPA: Evento + Minuto + Filtros + Aprendizado curto de primeira; contexto sob expansão */}
       <section className="panel">
-        <div className="panel-header">
-          <h2 className="panel-title">Timeline ({sortedEvents.length} lances)</h2>
+        <div className="panel-header" style={{ flexWrap: 'wrap', gap: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+            <h2 className="panel-title">Timeline ({filteredEvents.length} de {sortedEvents.length} lances)</h2>
+            <div style={{ display: 'flex', gap: 4 }}>
+              {(
+                [
+                  ['all', 'Todos'],
+                  ['death', 'Só Mortes'],
+                  ['gank', 'Abates / Assists'],
+                  ['objective', 'Objetivos'],
+                ] as Array<[TimelineFilter, string]>
+              ).map(([key, label]) => (
+                <button
+                  key={key}
+                  type="button"
+                  className={`btn btn-xs ${timelineFilter === key ? 'btn-primary' : 'btn-ghost'}`}
+                  onClick={() => setTimelineFilter(key)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
           <button type="button" className="btn btn-xs btn-blue" onClick={() => void addNewEvent()}>
             <Plus size={12} /> Adicionar lance
           </button>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          {sortedEvents.map((ev) => {
+          {filteredEvents.length === 0 ? (
+            <div className="small-text muted-text">Nenhum lance encontrado para este filtro.</div>
+          ) : null}
+          {filteredEvents.map((ev) => {
             const evAnalysis = analysis.perEvent.find((a) => a.eventId === ev.id);
             const isExpanded = expandedEventId === ev.id;
             const isEditing = editingEventId === ev.id && draftEvent;
@@ -535,7 +1034,7 @@ export function ReviewPage({
                             setDraftEvent({ ...draftEvent, type: e.target.value as ReviewEventType })
                           }
                         >
-                          <option value="gank">Gank</option>
+                          <option value="gank">Gank / Luta</option>
                           <option value="death">Morte</option>
                           <option value="objective">Objetivo</option>
                           <option value="reset">Reset</option>
@@ -730,7 +1229,7 @@ export function ReviewPage({
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           <div className="small-text muted-text">
-            Busca abates, mortes e objetivos épicos na Match-V5 (BR1). Ganks sem abate, wave e tempo parado seguem manuais.
+            Alternativa caso o cliente do LoL não esteja aberto. Busca abates, mortes e objetivos épicos na Match-V5 (BR1).
           </div>
           <div className="grid-3">
             <label className="field-label">

@@ -251,6 +251,18 @@ const browserFallbackApi: KaynDesktopApi = {
   async importRiotMatch() {
     return { ok: false, error: 'Disponível no app desktop Electron.' };
   },
+  async fetchLcuMatches() {
+    return {
+      ok: false,
+      error: 'Leitura direta do histórico do LoL requer o app desktop Electron.',
+    };
+  },
+  async importLcuMatch() {
+    return { ok: false, error: 'Disponível no app desktop Electron.' };
+  },
+  async importLatestLcuMatch() {
+    return { ok: false, error: 'Disponível no app desktop Electron.' };
+  },
   async getLiveLolStatus() {
     return {
       phase: 'disconnected',
@@ -278,6 +290,9 @@ const browserFallbackApi: KaynDesktopApi = {
     return () => {};
   },
   onLiveLolSync() {
+    return () => {};
+  },
+  onAutoReviewCaptured() {
     return () => {};
   },
 };

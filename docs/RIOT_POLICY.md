@@ -11,7 +11,10 @@ Este documento registra como o **KAYN-DICAS** respeita a documentação oficial 
    - Usa exclusivamente o endpoint oficial local documentado pela Riot Games — **zero leitura de memória**, **zero injeção**, **zero alteração do Vanguard** e sem necessidade de privilégios de administrador.
    - Exibe apenas dados públicos factuais da partida atual (10 campeões reais, nível, ouro na mão, KDA, CS total do HUD, itens já comprados na sua build e alertas factuais de itens comprados pelos inimigos).
    - **Limites de Game Integrity respeitados:** não rastreia cooldowns ocultos de ultimates/feitiços inimigos, não expõe posições no minimapa/nevoeiro, não toca alertas sonoros e não toma decisões automatizadas de macro ("faça Dragão agora") durante a partida.
-3. **Fora da partida ativa (Treino e Revisão Pós-Jogo):** toda simulação de decisão (Dragão vs gank vs farm vs reset) e análise de timeline roda isoladamente fora de partidas ao vivo.
+3. **Fora da partida ativa (Treino e Revisão Pós-Jogo Automática):**
+   - Ao encerrar uma partida monitorada pela `Live Client Data API`, o app grava automaticamente um resumo pós-jogo (abates, mortes, objetivos, ritmo de farm e itens) para diagnóstico na aba **Revisão**.
+   - Fora de partidas ativas, o app também pode consultar o histórico local do próprio jogador via `LCU` (`/lol-match-history/v1/...`) para importar timeline com coordenadas reais e comparação contra o caçador adversário — sem exigir chave externa da Riot API e **sem armazenar nomes/PUUIDs de outros jogadores**.
+   - Toda simulação de decisão (Dragão vs gank vs farm vs reset) e análise de timeline roda isoladamente fora de partidas ao vivo.
 
 ## 2. Privacidade e fontes de dados
 

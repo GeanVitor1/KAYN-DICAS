@@ -130,4 +130,34 @@ describe('Motor de Análise de Draft (Kayn Jungle)', () => {
     expect(frozen.recommendedForm).toBe('blue');
     expect(frozen.draftName).toBe(DEMO_DRAFTS.blue.name);
   });
+
+  it('recomenda Kayn Azul (e nunca Rhaast nem forçar Mid contra Fizz) em composição inimiga 100% papel sem tanques (Fizz/Jhin/Vladimir/Zed/Milio)', () => {
+    const allSquishyDraft: DraftState = {
+      id: 'all-squishy-no-tank',
+      name: 'Inimigos 5 papéis (Fizz/Vlad/Zed/Jhin/Milio)',
+      allies: {
+        top: 'Fiora',
+        jungle: 'Kayn',
+        mid: 'Ahri',
+        bot: 'Kaisa',
+        support: 'Lulu',
+      },
+      enemies: {
+        top: 'Vladimir',
+        jungle: 'Zed',
+        mid: 'Fizz',
+        bot: 'Jhin',
+        support: 'Milio',
+      },
+      staticNotes: '',
+      updatedAt: '2026-11-23T00:00:00.000Z',
+    };
+
+    const res = analyzeDraft(allSquishyDraft, catalog, { preferBlueAsTiebreaker: false });
+    expect(res.recommendedForm).toBe('blue');
+    expect(res.confidence.level).toBe('alta');
+    expect(res.scores.netBlueMinusRed).toBeGreaterThan(5);
+    expect(res.lanes.firstGankWindow).not.toBe('mid');
+    expect(res.lanes.bestPlayAroundLane).not.toBe('mid');
+  });
 });

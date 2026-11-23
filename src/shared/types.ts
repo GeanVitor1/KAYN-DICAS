@@ -153,8 +153,14 @@ export interface StatShardRef {
   validInCatalog: boolean;
 }
 
+export type BlueBuildVariantKey = 'blue_standard' | 'blue_cc' | 'blue_shields';
+
 export interface RuneRecommendation {
   formLabel: string;
+  variantKey?: BlueBuildVariantKey | 'red' | 'open';
+  variantLabel?: string;
+  summonerSpells?: string[];
+  summonerSpellsNote?: string;
   primaryTreeId: number;
   primaryTreeName: string;
   primaryTreeIcon: string | null;
@@ -202,8 +208,12 @@ export interface SituationalBuildCategory {
 
 export interface BuildRecommendation {
   form: KaynFormChoice;
+  variantKey?: BlueBuildVariantKey | 'red' | 'open';
+  variantLabel?: string;
   junglePet: BuildItemRef;
   boots: BuildItemRef[];
+  bootsNote?: string;
+  fullBuildBootReplacement?: BuildItemRef;
   core: BuildItemRef[];
   situational: SituationalBuildCategory[];
   validatedPatch: string;
@@ -300,7 +310,9 @@ export interface FrozenPreGameCard {
     secondaryRunes: string[];
     statShards: string[];
   };
+  summonerSpells?: string[];
   runesVisual?: {
+    variantLabel?: string;
     keystone: RuneEntryRef;
     primaryTreeIcon: string | null;
     primaryMinors: RuneEntryRef[];
@@ -316,8 +328,11 @@ export interface FrozenPreGameCard {
     activeSituational: Array<{ label: string; items: string[] }>;
   };
   buildVisual?: {
+    variantLabel?: string;
     junglePet: BuildItemRef;
     boots: BuildItemRef[];
+    bootsNote?: string;
+    fullBuildBootReplacement?: BuildItemRef;
     core: BuildItemRef[];
     hasInvalidItems: boolean;
   };
@@ -608,8 +623,63 @@ export interface ReviewEvent {
   enemyResponseText: string;
   enemyResponseCertainty: EnemyResponseCertainty;
   executionNote: string;
-  decisionContextSource: 'manual_observed' | 'api_partial_hypothesis';
+  decisionContextSource: 'manual_observed' | 'api_partial_hypothesis' | 'live_captured' | 'lcu_captured';
   linkedLessonId?: string | null;
+}
+
+export interface ReviewMatchStats {
+  capturedAt: string;
+  captureSource: 'live_auto' | 'lcu_history' | 'riot_match_v5' | 'manual';
+  result: 'win' | 'loss' | 'unknown';
+  durationSeconds: number;
+  queueLabel?: string;
+  championId: string;
+  championName: string;
+  kills: number;
+  deaths: number;
+  assists: number;
+  teamKills: number;
+  killParticipationPct: number | null;
+  totalCs: number;
+  csPerMin: number;
+  goldEarned: number;
+  goldPerMin: number;
+  damageToChampions?: number | null;
+  visionScore?: number | null;
+  level: number;
+  itemsBuilt: Array<{ itemId: string; name: string }>;
+  allies?: DraftSide;
+  enemies?: DraftSide;
+  recommendedFormFromDraft?: KaynFormChoice;
+  objectives: {
+    allyDragons: number;
+    enemyDragons: number;
+    allyGrubs: number;
+    enemyGrubs: number;
+    allyHeralds: number;
+    enemyHeralds: number;
+    allyBarons: number;
+    enemyBarons: number;
+  };
+  earlyBenchmarks?: {
+    csAt10?: number | null;
+    csAt15?: number | null;
+    deathsBefore14?: number;
+    killsAssistsBefore14?: number;
+    longestFarmDrySpellMinutes?: number | null;
+    longestFarmDrySpellRange?: string | null;
+    goldDiffAt10VsEnemyJg?: number | null;
+    csDiffAt10VsEnemyJg?: number | null;
+    goldDiffAt15VsEnemyJg?: number | null;
+    csDiffAt15VsEnemyJg?: number | null;
+  };
+  planComparison?: {
+    expectedFormLabel: string;
+    enemyArmorCount: number;
+    enemyHealingCount: number;
+    enemyShieldCount: number;
+    missingCounterItems: string[];
+  };
 }
 
 export interface ReviewMatch {
@@ -625,6 +695,48 @@ export interface ReviewMatch {
   actualFormChosen: 'blue' | 'red' | null;
   events: ReviewEvent[];
   playerSummaryNote: string;
+  matchStats?: ReviewMatchStats;
+}
+
+export type DiagnosticSeverity = 'critico' | 'atencao' | 'positivo';
+
+export interface ReviewDiagnosticFinding {
+  id: string;
+  severity: DiagnosticSeverity;
+  category:
+    | 'mortes'
+    | 'farm_ritmo'
+    | 'objetivos'
+    | 'participacao'
+    | 'build_plano'
+    | 'bot_disciplina';
+  title: string;
+  evidence: string;
+  whyItCostGame: string;
+  actionNextGame: string;
+  minutes?: number[];
+}
+
+export interface ReviewDiagnosticReport {
+  overallScore: number;
+  grade: 'S' | 'A' | 'B' | 'C' | 'D';
+  headline: string;
+  topMistakes: ReviewDiagnosticFinding[];
+  strengths: ReviewDiagnosticFinding[];
+  deathBreakdown: {
+    total: number;
+    earlyDeaths: number;
+    midLateDeaths: number;
+    deathsBeforeObjective: number;
+    deathsByLane: Record<ReviewLaneFocus, number>;
+    deathStreaks: string[];
+  };
+  kpiCards: Array<{
+    label: string;
+    value: string;
+    target: string;
+    status: 'good' | 'warn' | 'bad';
+  }>;
 }
 
 export interface ReviewEventAnalysis {
@@ -668,11 +780,13 @@ export interface ReviewAnalysis {
   recurringPatterns: RecurringPattern[];
   nextGamesFocus: string;
   missingContextWarnings: string[];
+  diagnostic?: ReviewDiagnosticReport;
 }
 
 export interface AppSettings {
   preferBlueAsTiebreaker: boolean;
   liveLolSyncEnabled?: boolean;
+  autoRecordPostGameReview?: boolean;
   cardWindow: CardWindowOptions;
   riotApiKeyMode: 'none' | 'session_only' | 'saved_encrypted';
   riotRegionRouting: 'americas';

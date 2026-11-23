@@ -1,4 +1,5 @@
 import type {
+  BlueBuildVariantKey,
   BuildItemRef,
   BuildRecommendation,
   CatalogSnapshot,
@@ -12,11 +13,11 @@ import type {
 } from '../shared/types';
 
 export const BUILD_DATA_META = {
-  buildVersion: '2026.11-kayn-16.23.1-v3',
+  buildVersion: '2026.11-kayn-16.23.1-karasmai-v4',
   validatedPatch: '16.23.1',
   source:
-    "Recomendações revisadas para Kayn Jungle (Summoner's Rift, IDs e ícones conferidos no Data Dragon BR 16.23.1 pt_BR)",
-  updatedAt: '2026-11-19',
+    "Kayn Azul atualizado pelo guia do KarasMaii (Patch 26.23 / 16.23.1, @KarasMaii em 21/11/2026) + Rhaast Bruiser; IDs e ícones conferidos no Data Dragon BR 16.23.1 pt_BR",
+  updatedAt: '2026-11-23',
 } as const;
 
 export const DEFAULT_STAT_SHARD_FALLBACKS: Record<number, CatalogStatShard> = {
@@ -73,73 +74,235 @@ export const DEFAULT_STAT_SHARD_FALLBACKS: Record<number, CatalogStatShard> = {
 
 export interface StaticRuneBlueprint {
   formLabel: string;
+  variantLabel?: string;
   primaryTreeId: number;
   primaryRuneIds: [number, number, number, number];
   secondaryTreeId: number;
   secondaryRuneIds: [number, number];
   statShardIds: [number, number, number];
+  summonerSpells: string[];
+  summonerSpellsNote: string;
   whyFormDiffers: string;
   alternativeNote: string;
 }
 
-export const RUNE_BLUEPRINTS: Record<'blue' | 'red' | 'open', StaticRuneBlueprint> = {
-  blue: {
-    formLabel: 'Kayn Azul — Explosão e Reset',
+export const BLUE_RUNE_VARIANTS: Record<BlueBuildVariantKey, StaticRuneBlueprint> = {
+  blue_standard: {
+    formLabel: 'Kayn Azul — Eletrocutar (Padrão · Karasmai 26.23)',
+    variantLabel: 'Padrão · Karasmai 26.23',
     primaryTreeId: 8100, // Dominação
-    primaryRuneIds: [8128, 8143, 8140, 8135], // Colheita Sombria, Impacto Repentino, Lembranças Aterrorizantes, Caçador de Tesouros
+    primaryRuneIds: [8112, 8143, 8140, 8135], // Eletrocutar, Impacto Repentino, Lembranças Aterrorizantes, Caçador de Tesouros
     secondaryTreeId: 8300, // Inspiração
-    secondaryRuneIds: [8304, 8347], // Calçados Mágicos, Perspicácia Cósmica
-    statShardIds: [5008, 5008, 5011], // Força Adaptativa, Força Adaptativa, Vida Base
+    secondaryRuneIds: [8321, 8347], // Reembolso, Perspicácia Cósmica
+    statShardIds: [5008, 5008, 5011], // Força Adaptativa, Força Adaptativa, Vida Base (+65)
+    summonerSpells: ['Incendiar', 'Golpear'],
+    summonerSpellsNote:
+      'KarasMaii (26.23): Incendiar + Golpear + R ativa Eletrocutar com consistência e garante abates cedo.',
     whyFormDiffers:
-      'Azul joga por burst curto em alvos frágeis e ritmo de mapa. Colheita Sombria + Impacto Repentino somam dano imediato ao sair da parede com E/Q, enquanto Inspiração economiza 300g da bota e reduz o tempo de Flash/Golpear. Conquistador perde valor aqui porque lutas do Azul duram 1-3 segundos.',
+      'Guia KarasMaii (Patch 26.23): após os nerfs em Quebra-Bastião e Cicloespada Voltaica, Eletrocutar entrega burst imediato mais confiável que Colheita Sombria ou Avanço da Tempestade. Sem excesso de CC ou escudos inimigos, Caçador de Tesouros + Reembolso + Perspicácia Cósmica aceleram Youmuu e o snowball do mid game.',
     alternativeNote:
-      'Se optar por Feitiçaria secundária em jogos de muita rotação: Arcanista do Axioma (8224) + Transcendência (8210). Se o plano virar Rhaast no lobby, troque para Precisão (Conquistador).',
+      'Contra times com muito CC ou muitos escudos, KarasMaii troca Caçador de Tesouros por Caça Suprema (8106) e a árvore secundária para Precisão: Golpe de Misericórdia (8014) + Triunfo (9111).',
   },
+  blue_cc: {
+    formLabel: 'Kayn Azul — Eletrocutar (Contra muito CC · Karasmai 26.23)',
+    variantLabel: 'Contra muito CC · Karasmai 26.23',
+    primaryTreeId: 8100, // Dominação
+    primaryRuneIds: [8112, 8143, 8140, 8106], // Eletrocutar, Impacto Repentino, Lembranças Aterrorizantes, Caça Suprema
+    secondaryTreeId: 8000, // Precisão
+    secondaryRuneIds: [8014, 9111], // Golpe de Misericórdia, Triunfo
+    statShardIds: [5008, 5008, 5011], // Força Adaptativa, Força Adaptativa, Vida Base (+65)
+    summonerSpells: ['Incendiar', 'Golpear'],
+    summonerSpellsNote:
+      'KarasMaii (26.23): Incendiar + Golpear + R ativa Eletrocutar e coloca o alvo na faixa de Golpe de Misericórdia para finalizar.',
+    whyFormDiffers:
+      'Guia KarasMaii (Patch 26.23) contra composições com muito CC: Eletrocutar + Incendiar/Golpear garante burst imediato, Caça Suprema reduz a recarga do R para desviar de controles e Golpe de Misericórdia + Triunfo finalizam o alvo e sustentam a saída.',
+    alternativeNote:
+      'Sem excesso de CC nem escudos inimigos, prefira Caçador de Tesouros (8135) + Inspiração com Reembolso (8321) e Perspicácia Cósmica (8347) para acelerar o ouro da build.',
+  },
+  blue_shields: {
+    formLabel: 'Kayn Azul — Eletrocutar (Contra muitos escudos · Karasmai 26.23)',
+    variantLabel: 'Contra escudos · Karasmai 26.23',
+    primaryTreeId: 8100, // Dominação
+    primaryRuneIds: [8112, 8143, 8140, 8106], // Eletrocutar, Impacto Repentino, Lembranças Aterrorizantes, Caça Suprema
+    secondaryTreeId: 8000, // Precisão
+    secondaryRuneIds: [8014, 9111], // Golpe de Misericórdia, Triunfo
+    statShardIds: [5008, 5008, 5011], // Força Adaptativa, Força Adaptativa, Vida Base (+65)
+    summonerSpells: ['Incendiar', 'Golpear'],
+    summonerSpellsNote:
+      'KarasMaii (26.23): Incendiar + Golpear + R ativa Eletrocutar e coloca o alvo na faixa de Golpe de Misericórdia mesmo contra escudos.',
+    whyFormDiffers:
+      'Guia KarasMaii (Patch 26.23) contra muitos escudos: combinado com Presa da Serpente como 2º item, Eletrocutar + Caça Suprema + Golpe de Misericórdia + Triunfo garantem execução consistente sobre carries protegidos por encantadores.',
+    alternativeNote:
+      'Se o draft inimigo não tiver excesso de escudos nem muito CC, troque para Caçador de Tesouros (8135) + Reembolso (8321) + Perspicácia Cósmica (8347).',
+  },
+};
+
+export const RUNE_BLUEPRINTS: Record<'blue' | 'red' | 'open', StaticRuneBlueprint> = {
+  blue: BLUE_RUNE_VARIANTS.blue_standard,
   red: {
-    formLabel: 'Rhaast — Luta Longa e Cura',
+    formLabel: 'Rhaast — Luta Longa e Cura (Bruiser)',
+    variantLabel: 'Bruiser · Luta Longa',
     primaryTreeId: 8000, // Precisão
     primaryRuneIds: [8010, 9111, 9105, 8299], // Conquistador, Triunfo, Lenda: Aceleração, Até a Morte
     secondaryTreeId: 8300, // Inspiração
     secondaryRuneIds: [8304, 8347], // Calçados Mágicos, Perspicácia Cósmica
     statShardIds: [5008, 5008, 5001], // Força Adaptativa, Força Adaptativa, Vida Escalável
+    summonerSpells: ['Flash', 'Golpear'],
+    summonerSpellsNote:
+      'Flash + Golpear mantém alcance para W-Flash e reposicionamento em teamfights de Rhaast Bruiser.',
     whyFormDiffers:
-      'Rhaast quer prolongar trocas e curar com dano de habilidades. Conquistador empilha AD + cura contínua, Triunfo sustenta resets em 2v2/teamfight, Lenda: Aceleração acelera rotações de Q/W e Até a Morte aumenta cura e dano em vida baixa. Dominação de runa principal deixa Rhaast sem fôlego após a primeira rotação.',
+      'Rhaast quer prolongar trocas e curar com dano de habilidades (KarasMaii reforçou no patch 26.23 que segue jogando Rhaast Bruiser puro). Conquistador empilha AD + cura contínua, Triunfo sustenta resets em 2v2/teamfight, Lenda: Aceleração acelera rotações de Q/W e Até a Morte aumenta cura e dano em vida baixa.',
     alternativeNote:
       'Contra muito poke/CC onde queira mais resistência no mid game: Determinação secundária com Condicionamento (8429) + Revitalizar (8453).',
   },
   open: {
     formLabel: 'Indefinido — Página Segura até Definir no Lobby',
+    variantLabel: 'Flexível até fechar draft',
     primaryTreeId: 8000, // Precisão (segura bem os dois planos se o draft ainda está aberto)
     primaryRuneIds: [8010, 9111, 9105, 8014], // Conquistador, Triunfo, Lenda: Aceleração, Golpe de Misericórdia
     secondaryTreeId: 8300, // Inspiração
     secondaryRuneIds: [8304, 8347],
     statShardIds: [5008, 5008, 5011],
+    summonerSpells: ['Flash', 'Golpear'],
+    summonerSpellsNote:
+      'Mantenha Flash + Golpear enquanto o draft estiver aberto; se confirmar Kayn Azul no lobby, considere Incendiar + Golpear (guia KarasMaii 26.23).',
     whyFormDiffers:
-      'Com a forma ainda aberta ou draft incompleto, Conquistador é a página mais segura porque Rhaast funciona perfeitamente com ela e o Azul ainda aproveita AD acumulado em escaramuças, enquanto Colheita Sombria trava muito o potencial de um Rhaast forçado.',
+      'Com a forma ainda aberta ou draft incompleto, Conquistador é a página mais segura porque Rhaast funciona perfeitamente com ela e o Azul ainda aproveita AD acumulado em escaramuças, enquanto Eletrocutar reduz o fôlego de um Rhaast Bruiser forçado.',
     alternativeNote:
-      'Assim que os últimos picks inimigos fecharem: 3+ alvos frágeis sem peel pesado -> mude para Dominação (Colheita Sombria). 2+ frontline/peel duro -> mantenha Conquistador e troque Golpe de Misericórdia por Até a Morte (8299).',
+      'Assim que os últimos picks inimigos fecharem: 3+ alvos frágeis sem peel pesado -> mude para Dominação (Eletrocutar + Incendiar/Golpear, guia KarasMaii 26.23). 2+ frontline/peel duro -> mantenha Conquistador e troque Golpe de Misericórdia por Até a Morte (8299).',
   },
 };
+
+export function getAllRuneBlueprints(): StaticRuneBlueprint[] {
+  return [
+    ...Object.values(BLUE_RUNE_VARIANTS),
+    RUNE_BLUEPRINTS.red,
+    RUNE_BLUEPRINTS.open,
+  ];
+}
+
+export function selectBlueKaynVariant(
+  enemyProfiles: ChampionTacticalProfile[],
+): BlueBuildVariantKey {
+  const heavyShieldCount = enemyProfiles.filter((p) => p.heavyShields).length;
+  const hardCcCount = enemyProfiles.filter((p) => p.ccScore >= 3).length;
+  const highCcCount = enemyProfiles.filter((p) => p.ccScore >= 2).length;
+  const totalCcScore = enemyProfiles.reduce((acc, p) => acc + p.ccScore, 0);
+
+  const hasLotsOfShields = heavyShieldCount >= 2;
+  const hasLotsOfCc =
+    highCcCount >= 3 || totalCcScore >= 8 || (hardCcCount >= 1 && highCcCount >= 2);
+
+  if (hasLotsOfShields && !(hardCcCount >= 2 || totalCcScore >= 9)) {
+    return 'blue_shields';
+  }
+  if (hasLotsOfCc) {
+    return 'blue_cc';
+  }
+  return 'blue_standard';
+}
 
 export interface BuildBlueprintItem {
   id: string;
   reason: string;
 }
 
-export const BLUE_BUILD_BLUEPRINT = {
-  junglePet: {
-    id: '1102', // Cria de Andabrisas
-    reason: 'Velocidade de movimento nos arbustos/rio acelera ângulos de flanco pelo E.',
+const BLUE_TIER1_BOOTS_ITEM: BuildBlueprintItem = {
+  id: '1001', // Botas (Tier 1)
+  reason:
+    'KarasMaii (26.23): fique apenas com Botas Tier 1 (300g) após Youmuu — nunca evolua para Tier 2. Venda no full build para fechar o 6º item.',
+};
+
+export const BLUE_BUILD_VARIANTS: Record<
+  BlueBuildVariantKey,
+  {
+    variantLabel: string;
+    junglePet: BuildBlueprintItem;
+    boots: BuildBlueprintItem[];
+    bootsNote: string;
+    secondItem: BuildBlueprintItem;
+    fullBuildBootReplacement: BuildBlueprintItem;
+  }
+> = {
+  blue_standard: {
+    variantLabel: 'Padrão (sem muito CC/escudos) · Karasmai 26.23',
+    junglePet: {
+      id: '1102', // Cria de Andabrisas
+      reason: 'Velocidade de movimento nos arbustos/rio acelera ângulos de flanco pelo E.',
+    },
+    boots: [BLUE_TIER1_BOOTS_ITEM],
+    bootsNote: 'Apenas Botas Tier 1 (300g) — com Youmuu não evolua para Tier 2; venda no full build para Limiar da Noite.',
+    secondItem: {
+      id: '6696', // Arco do Axioma
+      reason: '2º item sem excesso de CC/escudos (KarasMaii 26.23): reduz recarga do R em abates e acelera o snowball.',
+    },
+    fullBuildBootReplacement: {
+      id: '3814', // Limiar da Noite
+      reason: 'No full build, venda as Botas Tier 1 e compre Limiar da Noite para entrar com escudo de feitiço no late game.',
+    },
   },
-  boots: [
-    { id: '3158', reason: 'Padrão: aceleração para Q/E/R e Feitiços de Invocador mais frequentes.' },
-    { id: '3009', reason: 'Alternativa de tempo de mapa quando precisa cruzar o mapa muito rápido.' },
-  ],
+  blue_cc: {
+    variantLabel: 'Contra muito CC · Karasmai 26.23',
+    junglePet: {
+      id: '1102', // Cria de Andabrisas
+      reason: 'Velocidade de movimento nos arbustos/rio acelera ângulos de flanco pelo E.',
+    },
+    boots: [BLUE_TIER1_BOOTS_ITEM],
+    bootsNote: 'Apenas Botas Tier 1 (300g) — com Youmuu não evolua para Tier 2; venda no full build para Arco do Axioma.',
+    secondItem: {
+      id: '3814', // Limiar da Noite
+      reason: '2º item contra muito CC (KarasMaii 26.23): escudo de feitiço protege a entrada pela parede sem tomar controle seco.',
+    },
+    fullBuildBootReplacement: {
+      id: '6696', // Arco do Axioma
+      reason: 'No full build, venda as Botas Tier 1 e compre Arco do Axioma para multiplicar resets de R nas lutas finais.',
+    },
+  },
+  blue_shields: {
+    variantLabel: 'Contra muitos escudos · Karasmai 26.23',
+    junglePet: {
+      id: '1102', // Cria de Andabrisas
+      reason: 'Velocidade de movimento nos arbustos/rio acelera ângulos de flanco pelo E.',
+    },
+    boots: [BLUE_TIER1_BOOTS_ITEM],
+    bootsNote: 'Apenas Botas Tier 1 (300g) — com Youmuu não evolua para Tier 2; venda no full build para Arco do Axioma.',
+    secondItem: {
+      id: '6695', // Presa da Serpente
+      reason: '2º item contra muitos escudos (KarasMaii 26.23): corta escudos pela metade com custo baixo (2500g) para garantir o burst.',
+    },
+    fullBuildBootReplacement: {
+      id: '6696', // Arco do Axioma
+      reason: 'No full build, venda as Botas Tier 1 e compre Arco do Axioma para multiplicar resets de R nas lutas finais.',
+    },
+  },
+};
+
+export const BLUE_BUILD_BLUEPRINT = {
+  junglePet: BLUE_BUILD_VARIANTS.blue_standard.junglePet,
+  boots: BLUE_BUILD_VARIANTS.blue_standard.boots,
   core: [
-    { id: '6697', reason: 'Húbris: 1º item forte para snowball e empilhar AD em abates cedo.' },
-    { id: '3142', reason: 'Lâmina Fantasma de Youmuu: velocidade de movimento e letalidade para achar ângulos sem queimar E.' },
-    { id: '6696', reason: 'Arco do Axioma: reduz recarga do R em abates e mantém pressão em lutas seguidas.' },
-  ],
+    {
+      id: '3142',
+      reason:
+        '1º item (KarasMaii 26.23): Lâmina Fantasma de Youmuu entrega letalidade e velocidade de movimento suficientes para dispensar Botas Tier 2.',
+    },
+    BLUE_BUILD_VARIANTS.blue_standard.secondItem,
+    {
+      id: '3036',
+      reason:
+        '3º item (KarasMaii 26.23): Lembranças do Lorde Dominik para penetração % de armadura (troque por Lembrete Mortal 3033 contra muita cura).',
+    },
+    {
+      id: '2517',
+      reason:
+        '4º item (KarasMaii 26.23): Fome Eterna (Endless Hunger) entrega muita aceleração de habilidade no mid-late game para fechar partidas.',
+    },
+    {
+      id: '3026',
+      reason:
+        '5º item (KarasMaii 26.23): Anjo Guardião segura o mergulho final nos carregadores em lutas de objetivo.',
+    },
+  ] as BuildBlueprintItem[],
 };
 
 export const RED_BUILD_BLUEPRINT = {
@@ -165,12 +328,13 @@ export const OPEN_BUILD_BLUEPRINT = {
     reason: 'Opção neutra de duelo enquanto a forma ainda está em aberto no draft.',
   },
   boots: [
-    { id: '3158', reason: 'Ionianas mantém flexibilidade entre Azul e Rhaast nos primeiros resets.' },
+    { id: '1001', reason: 'Segure Botas Tier 1 até confirmar a forma: de Azul não evolua para Tier 2; de Rhaast feche Aço/Mercúrio.' },
+    { id: '3158', reason: 'Ionianas como opção alternativa se virar Rhaast contra pouco CC.' },
   ],
   core: [
     { id: '3134', reason: 'Punhal Serrilhado ou componentes de AD/Aceleração até confirmar a forma antes de fechar o 1º item.' },
-    { id: '6692', reason: 'Eclipse funciona bem se precisar virar Rhaast e ainda entrega pico decente cedo.' },
-    { id: '3142', reason: 'Lâmina Fantasma de Youmuu se os alvos frágeis ficarem expostos e confirmar Azul.' },
+    { id: '6692', reason: 'Eclipse funciona bem se precisar virar Rhaast Bruiser.' },
+    { id: '3142', reason: 'Lâmina Fantasma de Youmuu se os alvos frágeis ficarem expostos e confirmar Kayn Azul (guia KarasMaii 26.23).' },
   ],
 };
 
@@ -179,23 +343,35 @@ export function collectBlueprintItemIds(): string[] {
     BLUE_BUILD_BLUEPRINT.junglePet.id,
     RED_BUILD_BLUEPRINT.junglePet.id,
     OPEN_BUILD_BLUEPRINT.junglePet.id,
-    // Situacionais (separados por forma)
-    '6699', // Cicloespada Voltaica (Azul)
-    '6694', // Rancor de Serylda (Azul)
-    '3814', // Limiar da Noite (Azul)
-    '6695', // Presa da Serpente (Azul / Rhaast contra escudos)
-    '3004', // Manamune (Azul em jogos de escala)
+    // Itens do guia KarasMaii 26.23 (todas as variantes do Kayn Azul)
+    '1001', // Botas Tier 1
+    '3142', // Lâmina Fantasma de Youmuu
+    '3814', // Limiar da Noite
+    '6695', // Presa da Serpente
+    '6696', // Arco do Axioma
+    '3036', // Lembranças do Lorde Dominik
+    '3033', // Lembrete Mortal
+    '2517', // Fome Eterna (Endless Hunger)
+    '3026', // Anjo Guardião
+    // Situacionais adicionais (separados por forma)
+    '6694', // Rancor de Serylda (alternativa de slow/haste no Azul)
+    '6697', // Húbris (alternativa de snowball no Azul)
     '3161', // Lança de Shojin (Rhaast)
     '6610', // Céu Dividido (Rhaast)
     '6333', // Dança da Morte (Rhaast)
     '3053', // Sinal de Sterak (Rhaast)
     '3156', // Mandíbula de Malmortius (Rhaast)
     '3065', // Semblante Espiritual (Rhaast)
-    '3026', // Anjo Guardião
     '3075', // Armadura de Espinhos (Rhaast)
     '3123', // Chamado do Carrasco
     '6609', // Serrespada Quimiopunk
   ]);
+  for (const variant of Object.values(BLUE_BUILD_VARIANTS)) {
+    ids.add(variant.junglePet.id);
+    variant.boots.forEach((b) => ids.add(b.id));
+    ids.add(variant.secondItem.id);
+    ids.add(variant.fullBuildBootReplacement.id);
+  }
   for (const b of [
     ...BLUE_BUILD_BLUEPRINT.boots,
     ...BLUE_BUILD_BLUEPRINT.core,
@@ -211,7 +387,7 @@ export function collectBlueprintItemIds(): string[] {
 
 export function collectBlueprintRuneIds(): number[] {
   const ids = new Set<number>();
-  for (const bp of Object.values(RUNE_BLUEPRINTS)) {
+  for (const bp of getAllRuneBlueprints()) {
     ids.add(bp.primaryTreeId);
     ids.add(bp.secondaryTreeId);
     bp.primaryRuneIds.forEach((id) => ids.add(id));
@@ -222,7 +398,7 @@ export function collectBlueprintRuneIds(): number[] {
 
 export function collectBlueprintStatShardIds(): number[] {
   const ids = new Set<number>();
-  for (const bp of Object.values(RUNE_BLUEPRINTS)) {
+  for (const bp of getAllRuneBlueprints()) {
     bp.statShardIds.forEach((id) => ids.add(id));
   }
   return Array.from(ids);
@@ -344,8 +520,8 @@ function resolveStatShardEntry(
       name: fallback.name,
       shortLabel: fallback.shortLabel,
       row: expectedRow,
-      icon: null, // Sem ícone oficial confirmado no catálogo ativo -> fallback neutro com nome
-      validInCatalog: !catalog.statShards, // Se catálogo antigo não listava statShards, usa fallback neutro
+      icon: null,
+      validInCatalog: !catalog.statShards,
     };
   }
 
@@ -362,8 +538,16 @@ function resolveStatShardEntry(
 export function buildRuneRecommendation(
   form: KaynFormChoice,
   catalog: CatalogSnapshot,
+  enemyProfiles: ChampionTacticalProfile[] = [],
 ): RuneRecommendation {
-  const bp = RUNE_BLUEPRINTS[form];
+  const variantKey: BlueBuildVariantKey | 'red' | 'open' =
+    form === 'blue' ? selectBlueKaynVariant(enemyProfiles) : form;
+
+  const bp =
+    form === 'blue'
+      ? BLUE_RUNE_VARIANTS[variantKey as BlueBuildVariantKey]
+      : RUNE_BLUEPRINTS[form];
+
   const primaryTree = resolveTree(catalog, bp.primaryTreeId);
   const secondaryTree = resolveTree(catalog, bp.secondaryTreeId);
 
@@ -397,6 +581,10 @@ export function buildRuneRecommendation(
 
   return {
     formLabel: bp.formLabel,
+    variantKey,
+    variantLabel: bp.variantLabel,
+    summonerSpells: [...bp.summonerSpells],
+    summonerSpellsNote: bp.summonerSpellsNote,
     primaryTreeId: bp.primaryTreeId,
     primaryTreeName: primaryTree?.name ?? `Revisão necessária (árvore #${bp.primaryTreeId})`,
     primaryTreeIcon: primaryTree?.icon || null,
@@ -449,19 +637,14 @@ export function buildItemRecommendation(
   enemyProfiles: ChampionTacticalProfile[],
   catalog: CatalogSnapshot,
 ): BuildRecommendation {
-  const blueprint =
-    form === 'blue'
-      ? BLUE_BUILD_BLUEPRINT
-      : form === 'red'
-        ? RED_BUILD_BLUEPRINT
-        : OPEN_BUILD_BLUEPRINT;
-
   const squishyCount = enemyProfiles.filter((p) => p.isSquishyTarget).length;
   const frontlineCount = enemyProfiles.filter((p) => p.isFrontline).length;
   const heavyArmorCount = enemyProfiles.filter((p) => p.heavyArmorUser).length;
   const heavyHealingCount = enemyProfiles.filter((p) => p.heavyHealing).length;
   const heavyShieldCount = enemyProfiles.filter((p) => p.heavyShields).length;
   const highCcCount = enemyProfiles.filter((p) => p.ccScore >= 2).length;
+  const needsAntiHeal =
+    heavyHealingCount >= 2 || (heavyHealingCount >= 1 && frontlineCount >= 1);
 
   const healChampions = enemyProfiles
     .filter((p) => p.heavyHealing)
@@ -472,6 +655,62 @@ export function buildItemRecommendation(
   const armorChampions = enemyProfiles
     .filter((p) => p.heavyArmorUser || p.isFrontline)
     .map((p) => catalog.champions[p.championId]?.name ?? p.championId);
+
+  let variantKey: BlueBuildVariantKey | 'red' | 'open';
+  let variantLabel: string | undefined;
+  let bootsNote: string | undefined;
+  let fullBuildBootReplacement: BuildItemRef | undefined;
+  let junglePet: BuildItemRef;
+  let boots: BuildItemRef[];
+  let core: BuildItemRef[];
+
+  if (form === 'blue') {
+    const blueVariantKey = selectBlueKaynVariant(enemyProfiles);
+    const blueVariant = BLUE_BUILD_VARIANTS[blueVariantKey];
+    variantKey = blueVariantKey;
+    variantLabel = blueVariant.variantLabel;
+    bootsNote = blueVariant.bootsNote;
+
+    const armorPenThirdItem: BuildBlueprintItem = needsAntiHeal
+      ? {
+          id: '3033',
+          reason:
+            '3º item contra muita cura (KarasMaii 26.23): Lembrete Mortal combina penetração % de armadura com Feridas Dolorosas no lugar de Lembranças do Lorde Dominik.',
+        }
+      : {
+          id: '3036',
+          reason:
+            '3º item padrão (KarasMaii 26.23): Lembranças do Lorde Dominik para máxima penetração % de armadura (troque por Lembrete Mortal 3033 se houver muita cura inimiga).',
+        };
+
+    const blueCoreBlueprint: BuildBlueprintItem[] = [
+      BLUE_BUILD_BLUEPRINT.core[0], // 3142 Youmuu
+      blueVariant.secondItem, // 6696 Axioma | 3814 Limiar da Noite | 6695 Presa da Serpente
+      armorPenThirdItem, // 3036 Lord Dominik | 3033 Lembrete Mortal
+      BLUE_BUILD_BLUEPRINT.core[3], // 2517 Fome Eterna (Endless Hunger)
+      BLUE_BUILD_BLUEPRINT.core[4], // 3026 Anjo Guardião
+    ];
+
+    junglePet = resolveItemRef(
+      catalog,
+      blueVariant.junglePet.id,
+      blueVariant.junglePet.reason,
+    );
+    boots = blueVariant.boots.map((b) => resolveItemRef(catalog, b.id, b.reason));
+    core = blueCoreBlueprint.map((c) => resolveItemRef(catalog, c.id, c.reason));
+    fullBuildBootReplacement = resolveItemRef(
+      catalog,
+      blueVariant.fullBuildBootReplacement.id,
+      blueVariant.fullBuildBootReplacement.reason,
+    );
+  } else {
+    variantKey = form;
+    const blueprint = form === 'red' ? RED_BUILD_BLUEPRINT : OPEN_BUILD_BLUEPRINT;
+    variantLabel = form === 'red' ? 'Bruiser · Rhaast' : 'Flexível (aguardando forma)';
+    junglePet = resolveItemRef(catalog, blueprint.junglePet.id, blueprint.junglePet.reason);
+    boots = blueprint.boots.map((b) => resolveItemRef(catalog, b.id, b.reason));
+    core = blueprint.core.map((c) => resolveItemRef(catalog, c.id, c.reason));
+  }
 
   const situational: SituationalBuildCategory[] = [
     {
@@ -485,14 +724,34 @@ export function buildItemRecommendation(
           : 'Quando inimigos compram armadura cedo.',
       items:
         form === 'blue'
-          ? [resolveItemRef(catalog, '6694', 'Rancor de Serylda: penetração % de armadura + aceleração + slow em alvos baixos.')]
-          : [resolveItemRef(catalog, '3071', 'Cutelo Negro: quebra até 30% da armadura para o seu ADC também bater.')],
+          ? [
+              resolveItemRef(
+                catalog,
+                needsAntiHeal ? '3033' : '3036',
+                needsAntiHeal
+                  ? 'Lembrete Mortal: 3º item do guia KarasMaii (26.23) unindo penetração % e corta-cura.'
+                  : 'Lembranças do Lorde Dominik: 3º item principal de penetração % no guia KarasMaii (26.23).',
+              ),
+              resolveItemRef(
+                catalog,
+                '6694',
+                'Rancor de Serylda: alternativa caso queira mais aceleração e slow no W/Q.',
+              ),
+            ]
+          : [
+              resolveItemRef(
+                catalog,
+                '3071',
+                'Cutelo Negro: quebra até 30% da armadura para o seu ADC também bater.',
+              ),
+            ],
     },
     {
       key: 'sobrevivencia',
       label: 'Sobrevivência / CC / Burst',
       shortCondition: 'Contra muito CC ou burst',
-      activeInDraft: highCcCount >= 2 || enemyProfiles.some((p) => p.fightStyle === 'short_burst'),
+      activeInDraft:
+        highCcCount >= 2 || enemyProfiles.some((p) => p.fightStyle === 'short_burst'),
       triggerReason:
         highCcCount >= 2
           ? `${highCcCount} inimigos com controle de grupo forte.`
@@ -500,8 +759,16 @@ export function buildItemRecommendation(
       items:
         form === 'blue'
           ? [
-              resolveItemRef(catalog, '3814', 'Limiar da Noite: escudo de feitiço para não tomar CC seco ao entrar na parede.'),
-              resolveItemRef(catalog, '3026', 'Anjo Guardião: segunda vida quando você é o único assassino fechando lutas.'),
+              resolveItemRef(
+                catalog,
+                '3814',
+                'Limiar da Noite: entra como 2º item contra muito CC ou no lugar das Botas no full build (KarasMaii 26.23).',
+              ),
+              resolveItemRef(
+                catalog,
+                '3026',
+                'Anjo Guardião: 5º item padrão do guia KarasMaii (26.23) para garantir lutas decisivas.',
+              ),
             ]
           : [
               resolveItemRef(catalog, '3065', 'Semblante Espiritual: amplifica cura do Rhaast e MR contra magos.'),
@@ -520,14 +787,18 @@ export function buildItemRecommendation(
           ? `Escudos relevantes em: ${shieldChampions.join(', ')}.`
           : 'Contra encantadores e carries com muito escudo.',
       items: [
-        resolveItemRef(catalog, '6695', 'Presa da Serpente: corta escudos pela metade com custo baixo — excelente no Azul e viável no Rhaast.'),
+        resolveItemRef(
+          catalog,
+          '6695',
+          'Presa da Serpente: no guia KarasMaii (26.23), entra como 2º item contra times com muitos escudos.',
+        ),
       ],
     },
     {
       key: 'excesso_cura',
       label: 'Excesso de cura inimiga',
       shortCondition: 'Contra muita cura',
-      activeInDraft: heavyHealingCount >= 2 || (heavyHealingCount >= 1 && frontlineCount >= 1),
+      activeInDraft: needsAntiHeal,
       triggerReason:
         healChampions.length > 0
           ? `Cura forte em: ${healChampions.join(', ')}.`
@@ -540,24 +811,40 @@ export function buildItemRecommendation(
               resolveItemRef(catalog, '6609', 'Serrespada Quimiopunk: fechamento com vida e aceleração.'),
             ]
           : [
-              resolveItemRef(catalog, '3123', 'Chamado do Carrasco (800g): segure só o componente se ninguém do time fizer corta-cura.'),
-              resolveItemRef(catalog, '6609', 'Serrespada Quimiopunk: fechamento final se precisar manter corta-cura.'),
+              resolveItemRef(
+                catalog,
+                '3033',
+                'Lembrete Mortal: substitui Lembranças do Lorde Dominik no 3º slot da build KarasMaii (26.23) contra muita cura.',
+              ),
+              resolveItemRef(
+                catalog,
+                '3123',
+                'Chamado do Carrasco (800g): antecipe o componente se a cura inimiga estiver fora de controle antes do 3º item.',
+              ),
             ],
     },
     ...(form !== 'red'
       ? [
           {
             key: 'alvo_fragil' as const,
-            label: 'Pickoff / Carries com mobilidade',
-            shortCondition: 'Para garantir pickoff',
+            label: 'Snowball / Reset de Ultimate',
+            shortCondition: 'Snowball / Full build',
             activeInDraft: form === 'blue' && squishyCount >= 3,
             triggerReason:
               squishyCount >= 3
                 ? `${squishyCount} alvos frágeis na composição inimiga.`
-                : 'Para prender carries móveis com slow e ampliar dano de combo.',
+                : 'Amplifica ritmo de abates e resets de R em lutas curtas.',
             items: [
-              resolveItemRef(catalog, '6699', 'Cicloespada Voltaica: energiza no E/Q e aplica slow pesado para garantir o W.'),
-              resolveItemRef(catalog, '3004', 'Manamune: opção de escala para spam de W/Q em jogos mais longos.'),
+              resolveItemRef(
+                catalog,
+                '6696',
+                'Arco do Axioma: 2º item no padrão KarasMaii (26.23) ou 6º item no lugar das Botas Tier 1.',
+              ),
+              resolveItemRef(
+                catalog,
+                '6697',
+                'Húbris: alternativa situacional se estiver muito na frente cedo e quiser empilhar AD bruto.',
+              ),
             ],
           },
         ]
@@ -582,14 +869,11 @@ export function buildItemRecommendation(
       : []),
   ];
 
-  const junglePet = resolveItemRef(catalog, blueprint.junglePet.id, blueprint.junglePet.reason);
-  const boots = blueprint.boots.map((b) => resolveItemRef(catalog, b.id, b.reason));
-  const core = blueprint.core.map((c) => resolveItemRef(catalog, c.id, c.reason));
-
   const hasInvalidItems =
     !junglePet.availableInCatalog ||
     boots.some((b) => !b.availableInCatalog) ||
-    core.some((c) => !c.availableInCatalog);
+    core.some((c) => !c.availableInCatalog) ||
+    Boolean(fullBuildBootReplacement && !fullBuildBootReplacement.availableInCatalog);
 
   const patchWarning =
     catalog.patch !== BUILD_DATA_META.validatedPatch
@@ -600,8 +884,12 @@ export function buildItemRecommendation(
 
   return {
     form,
+    variantKey,
+    variantLabel,
     junglePet,
     boots,
+    bootsNote,
+    fullBuildBootReplacement,
     core,
     situational,
     validatedPatch: BUILD_DATA_META.validatedPatch,

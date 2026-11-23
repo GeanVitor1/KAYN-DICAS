@@ -10,8 +10,8 @@ import type {
 import { CURATED_STUDY_LESSONS } from './studyLibrary';
 
 export const TACTICAL_MEMORY_META = {
-  version: '2026.11-memory-v1',
-  updatedAt: '2026-11-19',
+  version: '2026.11-memory-v2-karasmai-26-23',
+  updatedAt: '2026-11-23',
 } as const;
 
 interface RuleBlueprint {
@@ -85,6 +85,20 @@ const CURATED_RULE_BLUEPRINTS: Record<string, RuleBlueprint> = {
       'Se o inimigo ainda tiver stun/afastamento pronto perto da torre, não force o dive sozinho.',
     patchValidity: 'Mecânica base (ordem exata W/Q pós-R marcada como incerta)',
     draftTags: ['red', 'wall_micro'],
+  },
+  'karasmai-macro-blue-26-23-electrocute-build': {
+    actionTitle: 'Azul 26.23: Eletrocutar + Incendiar e Botas Tier 1',
+    oneLineTip: 'De Azul (Karasmai 26.23): use Eletrocutar + Incendiar/Golpear, feche Youmuu e segure Botas Tier 1 até o full build.',
+    preGameWatchReminder: 'Azul (Karasmai 26.23): Eletrocutar + Incendiar; não evolua Botas após Youmuu.',
+    signals: [
+      { icon: 'gold', label: 'Youmuu → Botas T1 (300g)' },
+      { icon: 'dash', label: 'Incendiar + Golpear + R' },
+      { icon: 'timer', label: 'Fome Eterna 4º p/ fechar' },
+    ],
+    changePlanCondition:
+      'Se o draft virar jogo de Rhaast, mantenha Rhaast Bruiser (Conquistador + Eclipse/Cutelo) em vez de forçar a build assassina.',
+    patchValidity: 'Verificado no guia @KarasMaii (Patch 26.23 / 16.23.1, 21/11/2026)',
+    draftTags: ['blue'],
   },
   'karasmai-macro-skip-mid-pivot-top': {
     actionTitle: 'Pular campo para fechar forma antes do Dragão',

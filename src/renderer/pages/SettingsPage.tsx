@@ -303,8 +303,18 @@ export function SettingsPage({
               />
               <span>Detectar Seleção de Campeões (LCU local) e Partida ao vivo (Riot Live Client Data)</span>
             </label>
+            <label className="switch-row">
+              <input
+                type="checkbox"
+                checked={settings.autoRecordPostGameReview !== false}
+                onChange={(e) =>
+                  void onUpdateSettings({ autoRecordPostGameReview: e.target.checked })
+                }
+              />
+              <span>Gravar revisão pós-partida automaticamente ao encerrar o jogo e abrir diagnóstico</span>
+            </label>
             <div className="small-text muted-text">
-              Status atual: <strong>{liveLolStatus?.sourceLabel ?? 'Aguardando League of Legends'}</strong>. Lê apenas IDs de campeões na Seleção (respeitando o anonimato) e dados públicos oficiais da partida (ouro, nível, itens comprados e placar) sem ler memória nem interferir no Vanguard.
+              Status atual: <strong>{liveLolStatus?.sourceLabel ?? 'Aguardando League of Legends'}</strong>. Lê apenas IDs de campeões na Seleção (respeitando o anonimato), dados públicos oficiais da partida e seu histórico pós-jogo local (sem precisar de chave Riot, sem ler memória nem interferir no Vanguard).
             </div>
           </section>
 

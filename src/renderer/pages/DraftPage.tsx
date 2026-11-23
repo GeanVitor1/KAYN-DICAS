@@ -521,14 +521,26 @@ export function DraftPage({
           {/* RUNAS */}
           <div className="rune-section-block" data-testid="draft-runes-section">
             <div className="panel-header">
-              <h2 className="panel-title">Runa</h2>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 7, flexWrap: 'wrap' }}>
+                <h2 className="panel-title">Runa</h2>
+                {analysis.runes.summonerSpells && analysis.runes.summonerSpells.length > 0 ? (
+                  <span
+                    className={`badge ${analysis.recommendedForm === 'blue' ? 'badge-blue' : 'badge-muted'}`}
+                    title={analysis.runes.summonerSpellsNote}
+                    data-testid="summoner-spells-badge"
+                  >
+                    {analysis.runes.summonerSpells.join(' + ')}
+                  </span>
+                ) : null}
+              </div>
               {analysis.runes.hasInvalidRunes ? (
                 <span className="badge badge-amber">
                   <AlertTriangle size={11} /> Revisão necessária
                 </span>
               ) : (
-                <span className="small-text muted-text">
+                <span className="small-text muted-text" data-testid="runes-tree-summary">
                   {analysis.runes.primaryTreeName} + {analysis.runes.secondaryTreeName}
+                  {analysis.runes.variantLabel ? ` · ${analysis.runes.variantLabel}` : ''}
                 </span>
               )}
             </div>
@@ -644,8 +656,9 @@ export function DraftPage({
               {analysis.build.core.map((item, idx) => {
                 const isOwned = ownedItemSet.has(item.id);
                 const isNext = nextBuildStep?.nextItem?.id === item.id;
+                const tileSize = analysis.build.core.length >= 5 ? 48 : 54;
                 return (
-                  <div key={`${item.id}-${idx}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                  <div key={`${item.id}-${idx}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                     <div className={`item-live-wrap ${isOwned ? 'item-owned' : ''} ${isNext ? 'item-next' : ''}`}>
                       <ItemIconTile
                         patch={catalog.patch}
@@ -653,7 +666,7 @@ export function DraftPage({
                         name={item.name}
                         gold={item.gold}
                         reason={isOwned ? 'Já comprado nesta partida.' : item.reason}
-                        size={54}
+                        size={tileSize}
                         invalid={!item.availableInCatalog}
                       />
                       {isOwned ? (
@@ -664,7 +677,7 @@ export function DraftPage({
                     </div>
                     {idx < analysis.build.core.length - 1 ? (
                       <span className="build-arrow" aria-hidden="true">
-                        <ChevronRight size={16} />
+                        <ChevronRight size={15} />
                       </span>
                     ) : null}
                   </div>
@@ -683,7 +696,7 @@ export function DraftPage({
               </div>
             ) : null}
 
-            {/* Linha compacta: Pet + Botas */}
+            {/* Linha compacta: Pet + Botas (+ troca no full build quando aplicável) */}
             <div className="build-support-strip">
               <div className="build-mini-group">
                 <span className="build-mini-label">Pet</span>
@@ -704,7 +717,9 @@ export function DraftPage({
               </div>
 
               <div className="build-mini-group">
-                <span className="build-mini-label">Botas</span>
+                <span className="build-mini-label">
+                  {analysis.build.fullBuildBootReplacement ? 'Botas T1' : 'Botas'}
+                </span>
                 {analysis.build.boots.map((b) => (
                   <ItemIconTile
                     key={b.id}
@@ -717,6 +732,26 @@ export function DraftPage({
                     invalid={!b.availableInCatalog}
                   />
                 ))}
+                {analysis.build.fullBuildBootReplacement ? (
+                  <>
+                    <span
+                      className="small-text muted-text"
+                      style={{ fontSize: 11 }}
+                      title={analysis.build.bootsNote}
+                    >
+                      vender full build →
+                    </span>
+                    <ItemIconTile
+                      patch={catalog.patch}
+                      iconFile={analysis.build.fullBuildBootReplacement.icon}
+                      name={analysis.build.fullBuildBootReplacement.name}
+                      gold={analysis.build.fullBuildBootReplacement.gold}
+                      reason={analysis.build.fullBuildBootReplacement.reason}
+                      size={34}
+                      invalid={!analysis.build.fullBuildBootReplacement.availableInCatalog}
+                    />
+                  </>
+                ) : null}
               </div>
             </div>
 
@@ -790,6 +825,17 @@ export function DraftPage({
                 <strong>Runas ({analysis.runes.primaryTreeName}):</strong>{' '}
                 <span className="muted-text">{analysis.runes.whyFormDiffers}</span>
               </div>
+              {analysis.runes.summonerSpellsNote ? (
+                <div className="muted-text">
+                  <strong>Feitiços ({analysis.runes.summonerSpells?.join(' + ')}):</strong>{' '}
+                  {analysis.runes.summonerSpellsNote}
+                </div>
+              ) : null}
+              {analysis.build.bootsNote ? (
+                <div className="muted-text">
+                  <strong>Botas:</strong> {analysis.build.bootsNote}
+                </div>
+              ) : null}
               <div className="muted-text">
                 <strong>Orbes:</strong> {analysis.orbSummary.earlyAccessNote}
               </div>

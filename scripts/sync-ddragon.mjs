@@ -8,9 +8,13 @@ const OUTPUT_PATH = path.join(ROOT, 'src', 'data', 'ddragon-snapshot.json');
 const ASSETS_ROOT = path.join(ROOT, 'public', 'ddragon-assets');
 
 const REQUIRED_KAYN_ITEM_IDS = [
+  '1001', // Botas (Tier 1 — Karasmai 26.23 Azul)
   '1101', // Filhote de Garrabrasa
   '1102', // Cria de Andabrisas
   '1103', // Broto de Esmagamusgo
+  '2517', // Fome Eterna (Endless Hunger — Karasmai 26.23 Azul)
+  '3033', // Lembrete Mortal (Karasmai 26.23 Azul anti-cura)
+  '3036', // Lembranças do Lorde Dominik (Karasmai 26.23 Azul)
   '3158', // Botas Ionianas da Lucidez
   '3009', // Botas da Rapidez
   '3047', // Botas Galvanizadas de Aço

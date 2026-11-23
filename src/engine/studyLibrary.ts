@@ -7,12 +7,13 @@ import type {
 } from '../shared/types';
 
 export const STUDY_LIBRARY_META = {
-  version: '2026.11-phase2-v1',
-  updatedAt: '2026-11-18',
+  version: '2026.11-phase2-v2-karasmai-26-23',
+  updatedAt: '2026-11-23',
   verifiedChannels: {
     caiozera: 'https://www.youtube.com/@caiozerinha',
     karasmaiMain: 'https://www.youtube.com/@karasmailol',
     karasmaiSecondary: 'https://www.youtube.com/@karasmaikayn',
+    karasmaiX: 'https://x.com/KarasMaii',
   },
 } as const;
 
@@ -254,8 +255,66 @@ export const CURATED_STUDY_LESSONS: StudyLesson[] = [
   },
 
   // =====================================================================
-  // KARASMAI (@karasmailol) — VERIFICADO POR LEGENDA OFICIAL + VISUAL
+  // KARASMAI (@karasmailol / @KarasMaii) — VERIFICADO POR FONTE OFICIAL
   // =====================================================================
+  {
+    id: 'karasmai-macro-blue-26-23-electrocute-build',
+    title: 'Kayn Azul no Patch 26.23: Eletrocutar + Incendiar, Botas Tier 1 e 3 rotas de build',
+    creator: 'karasmai',
+    creatorDisplayName: 'Karasmai',
+    attributionLabel: 'Observado no Karasmai',
+    topic: 'macro',
+    form: 'blue',
+    verificationStatus: 'verified_transcript_and_visual',
+    speechVerified: true,
+    isHistoricalReference: false,
+    patch: '26.23 (Data Dragon 16.23.1, Nov/2026)',
+    videoUrl: 'https://x.com/KarasMaii/status/2124248244796735803',
+    videoTitle: 'My personal Favorite Blue Kayn runes And Build! (Patch 26.23)',
+    channelName: 'Karasmai (@KarasMaii no X)',
+    channelUrl: 'https://x.com/KarasMaii',
+    contextStartSeconds: null,
+    playMomentSeconds: null,
+    timestampDisplay: 'Post + Infográfico Patch 26.23 (21/11/2026)',
+    gameClockDisplay: 'Pré-jogo / Build completa',
+    shortSummaryPt:
+      'Após os nerfs em Quebra-Bastião e Cicloespada Voltaica, Karasmai troca Avanço da Tempestade e Colheita Sombria por Eletrocutar + Incendiar/Golpear, joga de Youmuu 1º item mantendo apenas Botas Tier 1 (vendidas no full build) e adapta o 2º item e a árvore secundária conforme o excesso de CC ou escudos inimigos.',
+    evidenceNote:
+      'Verificado diretamente no texto e no infográfico oficial publicados por @KarasMaii no X em 21/11/2026 para o Patch 26.23 (16.23.1).',
+    macro: {
+      beforePlayContext:
+        'Na seleção de campeões (Patch 26.23), ao confirmar Kayn Azul contra uma composição inimiga favorável, você precisa definir tanto o 2º item quanto a árvore secundária antes do jogo começar.',
+      visibleRiskOrOpportunity:
+        'Com os nerfs em Quebra-Bastião e Cicloespada Voltaica, ficou difícil ativar Avanço da Tempestade cedo com consistência, e Colheita Sombria entrega pouco valor imediato nos primeiros embates. Além disso, gastar 600–900g evoluindo Botas Tier 2 atrasa picos de letalidade quando Youmuu já dá velocidade de movimento.',
+      actionAndAlternative:
+        'Use Eletrocutar + Impacto Repentino + Lembranças Aterrorizantes com Incendiar + Golpear. Faça Youmuu → Botas Tier 1 (sem evoluir!) → 2º item adaptativo (Limiar da Noite vs muito CC; Presa da Serpente vs muitos escudos; Arco do Axioma no padrão) → Lembranças do Lorde Dominik ou Lembrete Mortal → Fome Eterna → Anjo Guardião → venda Botas no full build (Arco do Axioma nas rotas de CC/escudos, ou Limiar da Noite na rota padrão). Nas runas, use Caça Suprema + Golpe de Misericórdia/Triunfo contra CC ou escudos, e Caçador de Tesouros + Reembolso/Perspicácia Cósmica no padrão.',
+      whatWouldChangeDecision:
+        'Se o draft virar jogo de Rhaast, Karasmai reforça no mesmo post que continua preferindo Rhaast Bruiser puro com variações de lutador (Conquistador + Eclipse/Cutelo/Dança da Morte) em vez de forçar a build assassina.',
+      howToApply:
+        'No lobby de Kayn Azul, faça duas perguntas: "Eles têm muito CC ou muitos escudos?" — se sim, Caça Suprema + Precisão e 2º item defensivo/anti-escudo; se não, Caçador de Tesouros + Inspiração (Reembolso) e Arco do Axioma 2º. Em todos os casos, segure Botas Tier 1 após Youmuu até o full build.',
+      worksWhen:
+        'Draft favorável ao Kayn Azul no Patch 26.23 onde você precisa de burst confiável cedo com Incendiar + Golpear + R e aceleração alta no mid-late com Fome Eterna.',
+      chooseDifferentWhen:
+        'A composição inimiga exigir Rhaast Bruiser (2+ frontlines/peel pesado ou falta de linha de frente no seu time).',
+      sessionDrillOrQuestion:
+        'No próximo lobby de Kayn Azul, você verificou antes dos 10s finais se o inimigo pede Limiar da Noite, Presa da Serpente ou Arco do Axioma 2º — e lembrou de não evoluir as Botas Tier 1?',
+    },
+    karasmaiPt: {
+      whatHeDid:
+        'Publicou o infográfico completo de Kayn Azul no Patch 26.23 com 3 rotas adaptativas (muito CC, muitos escudos e padrão), todas abrindo de Youmuu + Botas Tier 1, 3º slot de penetração (Lorde Dominik ou Lembrete Mortal), 4º Fome Eterna, 5º Anjo Guardião e venda das Botas no full build.',
+      whatHeExplained:
+        'Explicou que parou com Avanço da Tempestade após os nerfs de Quebra-Bastião e Voltaica por falta de dano cedo, achou Colheita Sombria com pouco valor imediato e adotou Eletrocutar com Incendiar + Golpear ("ignite/smite ulti coloca o alvo na faixa de Golpe de Misericórdia"). Destacou que Fome Eterna entrega muita aceleração para fechar partidas no mid-late, que Youmuu dispensa Botas Tier 2, e que no Rhaast segue jogando Bruiser puro.',
+      howToTrain:
+        'Aplique o combo Incendiar + Golpear + R para garantir o disparo de Eletrocutar e a execução com Golpe de Misericórdia, e treine fechar Youmuu mantendo apenas Botas de 300g para antecipar o 2º e o 3º itens.',
+      englishTerms: [
+        { term: 'Electrocute', meaningPt: 'Eletrocutar (runa essencial de burst imediato).' },
+        { term: 'Coup de Grace', meaningPt: 'Golpe de Misericórdia (dano extra em alvos com vida baixa).' },
+        { term: 'Endless Hunger', meaningPt: 'Fome Eterna (item de AD + aceleração de habilidade alta no mid-late).' },
+        { term: 'Bastionbreaker / Voltaic', meaningPt: 'Quebra-Bastião e Cicloespada Voltaica (itens nerfados no 26.23).' },
+        { term: 'Tier 2 boots', meaningPt: 'Botas evoluídas (ex.: Ionianas/Rapidez) — Karasmai pula no Azul graças à Youmuu.' },
+      ],
+    },
+  },
   {
     id: 'karasmai-macro-skip-mid-pivot-top',
     title: 'Abandonar Mid após reset e pular Gromp para fechar forma antes do Dragão',

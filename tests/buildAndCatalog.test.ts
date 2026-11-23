@@ -48,7 +48,7 @@ describe('Validação do Catálogo Data Dragon (BR), Ícones e Atualizações', 
     expect(report.missingShardIds).toEqual([]);
     expect(report.patchMismatch).toBe(false);
 
-    // Garante separação realista por forma: Kayn Azul nunca recomenda Céu Dividido (6610) nem Hidra Profana (6698)
+    // Garante separação realista por forma: Kayn Azul (guia KarasMaii 26.23) nunca recomenda Céu Dividido (6610), Hidra Profana (6698) nem Cicloespada Voltaica (6699)
     const blueBuild = buildItemRecommendation('blue', [], catalog);
     const allBlueIds = [
       ...blueBuild.core.map((i) => i.id),
@@ -56,11 +56,11 @@ describe('Validação do Catálogo Data Dragon (BR), Ícones e Atualizações', 
     ];
     expect(allBlueIds).not.toContain('6610');
     expect(allBlueIds).not.toContain('6698');
-    expect(allBlueIds).toContain('6697'); // Húbris
-    expect(allBlueIds).toContain('3142'); // Youmuu
-    expect(allBlueIds).toContain('6696'); // Arco do Axioma
-    expect(allBlueIds).toContain('6694'); // Rancor de Serylda
-    expect(allBlueIds).toContain('3814'); // Limiar da Noite
+    expect(allBlueIds).not.toContain('6699');
+    expect(blueBuild.variantKey).toBe('blue_standard');
+    expect(blueBuild.boots.map((b) => b.id)).toEqual(['1001']); // Apenas Botas Tier 1
+    expect(blueBuild.core.map((i) => i.id)).toEqual(['3142', '6696', '3036', '2517', '3026']); // Youmuu -> Axioma -> Dominik -> Fome Eterna -> Anjo Guardião
+    expect(blueBuild.fullBuildBootReplacement?.id).toBe('3814'); // Vender Botas -> Limiar da Noite
 
     // Rhaast usa núcleo bruiser (Eclipse -> Cutelo Negro -> Dança da Morte) e nunca inclui Cicloespada/Hidra Profana
     const redBuild = buildItemRecommendation('red', [], catalog);
@@ -71,6 +71,47 @@ describe('Validação do Catálogo Data Dragon (BR), Ícones e Atualizações', 
     expect(redBuild.core.map((i) => i.id)).toEqual(['6692', '3071', '6333']);
     expect(allRedIds).not.toContain('6698');
     expect(allRedIds).not.toContain('6699');
+  });
+
+  it('aplica corretamente as 3 rotas do guia KarasMaii (Patch 26.23) para Kayn Azul conforme CC, Escudos e Cura inimigos', () => {
+    const profileOf = (ids: string[]) =>
+      ids
+        .map((id) => getChampionTacticalProfile(id, catalog))
+        .filter((p): p is NonNullable<typeof p> => Boolean(p));
+
+    // 1. Sem muito CC nem escudos -> Padrão (Youmuu -> Axioma -> Dominik -> Fome Eterna -> GA | Full build: Limiar da Noite)
+    const stdEnemies = profileOf(['Jayce', 'Graves', 'Syndra', 'Jinx', 'Lux']);
+    const stdBuild = buildItemRecommendation('blue', stdEnemies, catalog);
+    const stdRunes = buildRuneRecommendation('blue', catalog, stdEnemies);
+    expect(stdBuild.variantKey).toBe('blue_standard');
+    expect(stdBuild.boots.map((b) => b.id)).toEqual(['1001']);
+    expect(stdBuild.core.map((i) => i.id)).toEqual(['3142', '6696', '3036', '2517', '3026']);
+    expect(stdBuild.fullBuildBootReplacement?.id).toBe('3814');
+    expect(stdRunes.primaryRunes.map((r) => r.id)).toEqual([8112, 8143, 8140, 8135]); // Eletrocutar, Impacto Repentino, Lembranças Aterrorizantes, Caçador de Tesouros
+    expect(stdRunes.secondaryTreeId).toBe(8300); // Inspiração
+    expect(stdRunes.secondaryRunes.map((r) => r.id)).toEqual([8321, 8347]); // Reembolso, Perspicácia Cósmica
+    expect(stdRunes.summonerSpells).toEqual(['Incendiar', 'Golpear']);
+
+    // 2. Contra muito CC -> Limiar da Noite 2º + Caça Suprema + Precisão (Golpe de Misericórdia + Triunfo) | Full build: Axioma
+    const ccEnemies = profileOf(['Jayce', 'Graves', 'Lissandra', 'Jinx', 'Morgana']);
+    const ccBuild = buildItemRecommendation('blue', ccEnemies, catalog);
+    const ccRunes = buildRuneRecommendation('blue', catalog, ccEnemies);
+    expect(ccBuild.variantKey).toBe('blue_cc');
+    expect(ccBuild.core.map((i) => i.id)).toEqual(['3142', '3814', '3036', '2517', '3026']);
+    expect(ccBuild.fullBuildBootReplacement?.id).toBe('6696');
+    expect(ccRunes.primaryRunes.map((r) => r.id)).toEqual([8112, 8143, 8140, 8106]); // Caça Suprema
+    expect(ccRunes.secondaryTreeId).toBe(8000); // Precisão
+    expect(ccRunes.secondaryRunes.map((r) => r.id)).toEqual([8014, 9111]); // Golpe de Misericórdia, Triunfo
+
+    // 3. Contra muitos escudos + muita cura -> Presa da Serpente 2º + Lembrete Mortal 3º + Caça Suprema + Precisão
+    const shieldHealEnemies = profileOf(['Aatrox', 'Viego', 'Orianna', 'Jinx', 'Lulu']);
+    const shBuild = buildItemRecommendation('blue', shieldHealEnemies, catalog);
+    const shRunes = buildRuneRecommendation('blue', catalog, shieldHealEnemies);
+    expect(shBuild.variantKey).toBe('blue_shields');
+    expect(shBuild.core.map((i) => i.id)).toEqual(['3142', '6695', '3033', '2517', '3026']); // Presa da Serpente + Lembrete Mortal
+    expect(shBuild.fullBuildBootReplacement?.id).toBe('6696');
+    expect(shRunes.primaryRunes.map((r) => r.id)).toEqual([8112, 8143, 8140, 8106]);
+    expect(shRunes.secondaryRunes.map((r) => r.id)).toEqual([8014, 9111]);
   });
 
   it('quando uma runa é removida em um patch futuro, NÃO substitui silenciosamente nem renderiza imagem velha', () => {

@@ -1,124 +1,17 @@
-import fs from 'node:fs';
-import https from 'node:https';
-import path from 'node:path';
 import {
   mapLcuSessionToLiveDraft,
   mapLiveClientDataToStatus,
-  parseLockfileContent,
-  type ParsedLockfile,
 } from '../engine/liveLolParser';
-import type { CatalogSnapshot, LiveLolStatus } from '../shared/types';
-
-function requestLocalhostJson(options: {
-  port: number;
-  urlPath: string;
-  authHeader?: string;
-  timeoutMs?: number;
-}): Promise<{ ok: boolean; status: number; data?: unknown }> {
-  return new Promise((resolve) => {
-    const req = https.request(
-      {
-        hostname: '127.0.0.1',
-        port: options.port,
-        path: options.urlPath,
-        method: 'GET',
-        // Certificado autoassinado oficial do cliente local da Riot (estritamente loopback 127.0.0.1)
-        rejectUnauthorized: false,
-        timeout: options.timeoutMs ?? 1200,
-        headers: options.authHeader
-          ? { Authorization: options.authHeader, Accept: 'application/json' }
-          : { Accept: 'application/json' },
-      },
-      (res) => {
-        const status = res.statusCode ?? 0;
-        const chunks: Buffer[] = [];
-        res.on('data', (chunk: Buffer) => chunks.push(chunk));
-        res.on('end', () => {
-          if (status < 200 || status >= 300) {
-            resolve({ ok: false, status });
-            return;
-          }
-          try {
-            const text = Buffer.concat(chunks).toString('utf-8');
-            resolve({ ok: true, status, data: JSON.parse(text) });
-          } catch {
-            resolve({ ok: false, status });
-          }
-        });
-      },
-    );
-
-    req.on('timeout', () => {
-      req.destroy();
-      resolve({ ok: false, status: 0 });
-    });
-    req.on('error', () => {
-      resolve({ ok: false, status: 0 });
-    });
-    req.end();
-  });
-}
-
-function discoverCandidateLockfilePaths(): string[] {
-  const candidates = new Set<string>([
-    'C:\\Riot Games\\League of Legends\\lockfile',
-    'D:\\Riot Games\\League of Legends\\lockfile',
-    'E:\\Riot Games\\League of Legends\\lockfile',
-  ]);
-
-  // 1. Metadata oficial da instalação do League of Legends no Windows
-  const productYaml =
-    'C:\\ProgramData\\Riot Games\\Metadata\\league_of_legends.live\\league_of_legends.live.product_settings.yaml';
-  try {
-    if (fs.existsSync(productYaml)) {
-      const content = fs.readFileSync(productYaml, 'utf-8');
-      const match = content.match(/product_install_full_path:\s*"?([^"\r\n]+)"?/);
-      if (match?.[1]) {
-        const cleanDir = match[1].trim().replace(/\//g, path.sep);
-        candidates.add(path.join(cleanDir, 'lockfile'));
-      }
-    }
-  } catch {
-    // Ignora se sem acesso
-  }
-
-  // 2. RiotClientInstalls.json (caso instalado em outro drive)
-  const riotInstallsJson = 'C:\\ProgramData\\Riot Games\\RiotClientInstalls.json';
-  try {
-    if (fs.existsSync(riotInstallsJson)) {
-      const parsed = JSON.parse(fs.readFileSync(riotInstallsJson, 'utf-8')) as Record<string, unknown>;
-      for (const val of Object.values(parsed)) {
-        if (typeof val === 'string' && val.toLowerCase().includes('riot games')) {
-          const idx = val.toLowerCase().indexOf('riot games');
-          const riotRoot = val.slice(0, idx + 'Riot Games'.length);
-          candidates.add(path.join(riotRoot, 'League of Legends', 'lockfile'));
-        }
-      }
-    }
-  } catch {
-    // Ignora se não existir ou formato diferente
-  }
-
-  return Array.from(candidates);
-}
-
-function readActiveLockfile(): ParsedLockfile | null {
-  for (const filePath of discoverCandidateLockfilePaths()) {
-    try {
-      if (!fs.existsSync(filePath)) continue;
-      const content = fs.readFileSync(filePath, 'utf-8');
-      const parsed = parseLockfileContent(content);
-      if (parsed) return parsed;
-    } catch {
-      // Lockfile pode estar bloqueado momentaneamente ou inacessível
-    }
-  }
-  return null;
-}
+import { LiveMatchRecorder } from '../engine/liveMatchRecorder';
+import type { CatalogSnapshot, LiveLolStatus, ReviewMatch } from '../shared/types';
+import { buildLcuAuthHeader, readActiveLockfile, requestLocalhostJson } from './lcuClient';
 
 export class LolLiveMonitorService {
   private readonly getCatalog: () => CatalogSnapshot;
+  private readonly getPreferBlueAsTiebreaker: () => boolean;
   private readonly onChange: (status: LiveLolStatus) => void;
+  private readonly onMatchFinished?: (review: ReviewMatch) => void;
+  private readonly recorder = new LiveMatchRecorder();
   private enabled: boolean;
   private timer: NodeJS.Timeout | null = null;
   private polling = false;
@@ -127,11 +20,15 @@ export class LolLiveMonitorService {
 
   constructor(options: {
     getCatalog: () => CatalogSnapshot;
+    getPreferBlueAsTiebreaker?: () => boolean;
     onChange: (status: LiveLolStatus) => void;
+    onMatchFinished?: (review: ReviewMatch) => void;
     enabled: boolean;
   }) {
     this.getCatalog = options.getCatalog;
+    this.getPreferBlueAsTiebreaker = options.getPreferBlueAsTiebreaker ?? (() => true);
     this.onChange = options.onChange;
+    this.onMatchFinished = options.onMatchFinished;
     this.enabled = options.enabled;
     this.status = {
       phase: 'disconnected',
@@ -153,6 +50,7 @@ export class LolLiveMonitorService {
     this.enabled = enabled;
     if (!enabled) {
       this.stop();
+      this.recorder.reset();
       this.emitIfChanged({
         phase: 'disconnected',
         enabled: false,
@@ -196,6 +94,17 @@ export class LolLiveMonitorService {
     }
   }
 
+  private flushRecordedMatchIfReady(catalog: CatalogSnapshot): void {
+    if (!this.recorder.isRecording()) return;
+    const review = this.recorder.finalizeMatch(catalog, {
+      minDurationSeconds: 120,
+      preferBlueAsTiebreaker: this.getPreferBlueAsTiebreaker(),
+    });
+    if (review && this.onMatchFinished) {
+      this.onMatchFinished(review);
+    }
+  }
+
   async pollNow(): Promise<LiveLolStatus> {
     if (!this.enabled) {
       return this.status;
@@ -219,22 +128,32 @@ export class LolLiveMonitorService {
       if (liveGameRes.ok && liveGameRes.data) {
         const mapped = mapLiveClientDataToStatus(liveGameRes.data, catalog);
         if (mapped) {
+          const { gameEndedNow } = this.recorder.ingestLivePayload(liveGameRes.data, catalog);
           this.emitIfChanged({
             phase: 'in_game',
             enabled: true,
             lastUpdatedAt: nowIso,
-            sourceLabel: 'Partida ao vivo (Riot Live Client Data)',
+            sourceLabel: 'Partida ao vivo (Riot Live Client Data · gravando revisão)',
             liveDraft: mapped.liveDraft,
             liveMatch: mapped.liveMatch,
           });
+          if (gameEndedNow) {
+            this.flushRecordedMatchIfReady(catalog);
+          }
           return this.status;
         }
+      }
+
+      // Saiu de uma partida ativa -> finalizar e salvar a revisão gravada automaticamente
+      if (this.recorder.isRecording()) {
+        this.flushRecordedMatchIfReady(catalog);
+        this.recorder.reset();
       }
 
       // 2. Caso não esteja em partida, verificar Seleção de Campeões via LCU oficial local
       const lockfile = readActiveLockfile();
       if (lockfile) {
-        const auth = `Basic ${Buffer.from(`riot:${lockfile.password}`).toString('base64')}`;
+        const auth = buildLcuAuthHeader(lockfile);
         const champSelectRes = await requestLocalhostJson({
           port: lockfile.port,
           urlPath: '/lol-champ-select/v1/session',

@@ -130,13 +130,33 @@ function analyzeTargetLane(
     };
   }
 
-  const allySetup = allyList.reduce((acc, a) => acc + a.p.gankSetupScore, 0) / allyList.length;
-  const allyCc = allyList.reduce((acc, a) => acc + a.p.ccScore, 0) / allyList.length;
+  // Na Bot (2v2), o setup/CC principal de quem abre a jogada (ex.: Nautilus + Kai'Sa) não cai pela metade por causa do ADC.
+  const weightedDuo = (values: number[], primaryWeight: number): number => {
+    if (values.length === 1) return values[0];
+    const sorted = [...values].sort((a, b) => b - a);
+    return sorted[0] * primaryWeight + sorted[1] * (1 - primaryWeight);
+  };
+
+  const allySetup =
+    lane === 'bot'
+      ? weightedDuo(allyList.map((a) => a.p.gankSetupScore), 0.78)
+      : allyList.reduce((acc, a) => acc + a.p.gankSetupScore, 0) / allyList.length;
+  const allyCc =
+    lane === 'bot'
+      ? weightedDuo(allyList.map((a) => a.p.ccScore), 0.78)
+      : allyList.reduce((acc, a) => acc + a.p.ccScore, 0) / allyList.length;
   const ally2v2 = allyList.reduce((acc, a) => acc + a.p.early2v2Score, 0) / allyList.length;
 
+  // Fuga na Bot usa média (um alvo imóvel como Jhin ainda é punível), mas Peel usa peso maior no protetor (ex.: Milio/Lulu)
   const enemyEscape = enemyList.reduce((acc, e) => acc + e.p.escapeScore, 0) / enemyList.length;
-  const enemyPeel = enemyList.reduce((acc, e) => acc + e.p.peelScore, 0) / enemyList.length;
-  const enemyCc = enemyList.reduce((acc, e) => acc + e.p.ccScore, 0) / enemyList.length;
+  const enemyPeel =
+    lane === 'bot'
+      ? weightedDuo(enemyList.map((e) => e.p.peelScore), 0.75)
+      : enemyList.reduce((acc, e) => acc + e.p.peelScore, 0) / enemyList.length;
+  const enemyCc =
+    lane === 'bot'
+      ? weightedDuo(enemyList.map((e) => e.p.ccScore), 0.72)
+      : enemyList.reduce((acc, e) => acc + e.p.ccScore, 0) / enemyList.length;
   const enemy2v2 = enemyList.reduce((acc, e) => acc + e.p.early2v2Score, 0) / enemyList.length;
   const enemyPriority = Math.max(...enemyList.map((e) => e.p.priorityTargetWeight));
 
@@ -150,47 +170,57 @@ function analyzeTargetLane(
         ? 'medio'
         : 'baixo';
 
-  // Potencial de conversão pós-gank (placas, Vastilarvas/Arauto, Dragão, torre)
+  // Potencial de conversão pós-gank (Dragão/2 alvos na Bot, Vastilarvas/lane longa no Top, rio no Mid)
   const conversionScore =
     lane === 'bot'
-      ? (enemyPriority >= 2.5 ? 2.2 : 1.5) + (allySetup >= 2 ? 0.6 : 0)
-      : lane === 'mid'
-        ? 2.1 + (ally2v2 >= 2 ? 0.6 : 0) // libera rio para os dois lados
-        : 1.9 + (ally2v2 >= 2 ? 0.7 : 0); // Vastilarvas / placas no Top
+      ? (enemyPriority >= 2.5 ? 2.3 : 1.65) + (allySetup >= 1.9 ? 0.55 : 0)
+      : lane === 'top'
+        ? 2.1 + (ally2v2 >= 2 ? 0.65 : 0) // Lane longa + Vastilarvas/Arauto/placas
+        : 1.85 + (ally2v2 >= 2 ? 0.45 : 0); // Mid é a rota mais curta — depende de setup real
 
   const conversionPotential: LaneAnalysis['conversionPotential'] =
     conversionScore >= 2.5 ? 'alto' : conversionScore >= 1.8 ? 'medio' : 'baixo';
+
+  // Geometria real de Summoner's Rift: Mid é a rota mais curta (inimigo chega na torre em 2 passos, pior ainda contra mobilidade),
+  // enquanto Top e Bot são rotas longas com paredes grossas ideais para o E do Kayn.
+  const midShortLaneFirstPenalty = lane === 'mid' ? 0.8 + (enemyEscape >= 2 ? 0.65 : 0) : 0;
+  const midShortLanePlayPenalty = lane === 'mid' ? 0.55 + (enemyEscape >= 2 ? 0.45 : 0) : 0;
+  const sideLaneWallBonus = lane === 'mid' ? 0 : 0.35;
 
   // Bônus de orbe alinhado apenas como fator secundário (nunca sobrepõe setup/risco!)
   const targetMatchesBlue = enemyList.some((e) => e.p.orbType === 'ranged');
   const targetMatchesRed = enemyList.some((e) => e.p.orbType === 'melee');
   let orbAlignmentBonus = 0;
-  if (preferredForm === 'blue' && targetMatchesBlue) orbAlignmentBonus = 0.5;
-  if (preferredForm === 'red' && targetMatchesRed) orbAlignmentBonus = 0.5;
+  if (preferredForm === 'blue' && targetMatchesBlue) orbAlignmentBonus = 0.55;
+  if (preferredForm === 'red' && targetMatchesRed) orbAlignmentBonus = 0.55;
 
   // Sem bônus automático para Bot por ter 2 alvos!
-  // Se aliado não tem setup (allySetup < 1.2) e inimigo tem fuga/peel alta, bot é fortemente penalizada.
+  // Se aliado não tem setup (allySetup < 1.1) e inimigo tem fuga/peel alta, bot é fortemente penalizada.
   const noSetupPenalty = allySetup < 1.1 ? 1.5 : 0;
-  const highEvasionPenalty = enemyEscape * 1.15 + enemyPeel * 0.95;
+  const highEvasionPenalty = enemyEscape * 1.15 + enemyPeel * 0.9;
 
   const firstWindowScore = round2(
-    allySetup * 1.5 +
-      allyCc * 0.6 +
-      skirmishEdge * 0.85 -
+    allySetup * 1.45 +
+      allyCc * 0.55 +
+      skirmishEdge * 0.85 +
+      sideLaneWallBonus -
       highEvasionPenalty -
       noSetupPenalty -
+      midShortLaneFirstPenalty -
       (countergankRisk === 'alto' ? 1.0 : countergankRisk === 'medio' ? 0.35 : 0),
   );
 
   const playAroundScore = round2(
     allySetup * 1.15 +
-      enemyPriority * 0.75 +
+      enemyPriority * 0.65 +
       conversionScore * 0.7 +
       skirmishEdge * 0.75 +
-      orbAlignmentBonus -
-      enemyEscape * 0.7 -
+      orbAlignmentBonus +
+      sideLaneWallBonus -
+      enemyEscape * 0.75 -
       enemyPeel * 0.65 -
-      noSetupPenalty * 0.8,
+      noSetupPenalty * 0.8 -
+      midShortLanePlayPenalty,
   );
 
   const allyNames = allyList.map((a) => a.name).join(' + ');
@@ -313,15 +343,18 @@ export function analyzeDraft(
 
     if (p.isSquishyTarget) {
       totalSquishy += 1;
-      // Desconta quem tem fuga/peel alta e adiciona bônus a alvos prioritários imóveis
-      const vulnerability = Math.max(0.35, 1.35 - p.escapeScore * 0.25 - p.peelScore * 0.15) * (0.7 + p.priorityTargetWeight * 0.2);
+      // Todo alvo papel valoriza Kayn Azul; mobilidade/peel apenas ajustam moderadamente o acesso (sem anular o alvo papel)
+      const vulnerability =
+        Math.max(0.65, 1.35 - p.escapeScore * 0.16 - p.peelScore * 0.1) *
+        (0.75 + p.priorityTargetWeight * 0.18);
       effectiveSquishyScore += vulnerability;
     }
     if (p.isFrontline) enemyFrontlineCount += 1;
     enemyCcTotal += p.ccScore;
     enemyPeelTotal += p.peelScore;
     if (p.fightStyle === 'short_burst') enemyShortBurstCount += 1;
-    if (p.fightStyle === 'extended_fight') enemyExtendedCount += 1;
+    // Apenas campeões não-frágeis (tanques/lutadores/esgrimistas) que prolongam briga melee favorecem Rhaast — ADCs/encantadores papéis NÃO contam para Rhaast!
+    if (!p.isSquishyTarget && p.fightStyle === 'extended_fight') enemyExtendedCount += 1;
     if (p.heavyArmorUser) enemyHeavyArmorCount += 1;
   }
 
@@ -334,68 +367,93 @@ export function analyzeDraft(
   let redScore = 0;
 
   // 1. Alvos prioritários alcançáveis e vulneráveis
-  const targetBluePts = round2(effectiveSquishyScore * 1.45 - enemyPeelTotal * 0.48);
-  const targetRedPts = round2(enemyFrontlineCount * 0.75 + enemyPeelTotal * 0.42);
+  const targetBluePts = round2(effectiveSquishyScore * 1.45 - enemyPeelTotal * 0.28);
+  // Peel inimigo só puxa para Rhaast quando existe frontline/lutador inimigo para segurar a luta; contra 5 papéis, peel não torna Rhaast bom!
+  const peelRedBonus = enemyFrontlineCount >= 1 ? enemyPeelTotal * 0.28 : 0;
+  const targetRedPts = round2(enemyFrontlineCount * 0.9 + peelRedBonus);
   blueScore += targetBluePts;
   redScore += targetRedPts;
   weights.push({
     label: 'Alvos prioritários e vulnerabilidade',
     blueImpact: targetBluePts,
     redImpact: targetRedPts,
-    explanation: `${totalSquishy} alvo(s) frágil(eis), com peel inimigo total ${enemyPeelTotal} reduzindo acesso limpo do Assassino.`,
+    explanation: `${totalSquishy} alvo(s) frágil(eis), com peel inimigo total ${enemyPeelTotal}${enemyFrontlineCount === 0 ? ' (sem frontline inimiga para sustentar Rhaast)' : ''}.`,
   });
 
   // 2. Frontline, CC duro e armadura inimiga
-  const frontlineRedPts = round2(enemyFrontlineCount * 1.55 + Math.max(0, enemyCcTotal - 3) * 0.35 + enemyHeavyArmorCount * 0.65);
-  const frontlineBluePts = round2(enemyFrontlineCount <= 1 ? 1.4 : 0);
+  const frontlineRedPts = round2(
+    enemyFrontlineCount * 1.9 + Math.max(0, enemyCcTotal - 5) * 0.28 + enemyHeavyArmorCount * 0.65,
+  );
+  const frontlineBluePts = round2(
+    enemyFrontlineCount === 0 ? 3.2 : enemyFrontlineCount === 1 ? 1.6 : 0,
+  );
   blueScore += frontlineBluePts;
   redScore += frontlineRedPts;
   weights.push({
     label: 'Frontline, CC e resistência adversária',
     blueImpact: frontlineBluePts,
     redImpact: frontlineRedPts,
-    explanation: `${enemyFrontlineCount} frontline(s) e ${enemyCcTotal} pts de CC inimigo. Quanto mais frontline/CC, mais Rhaast ganha valor por % de vida máxima e cura.`,
+    explanation:
+      enemyFrontlineCount === 0
+        ? `Nenhuma frontline/tanque inimigo (${enemyCcTotal} pts de CC) — Rhaast fica sem alvos de vida alta para curar e Kayn Azul domina.`
+        : `${enemyFrontlineCount} frontline(s) e ${enemyCcTotal} pts de CC inimigo. Quanto mais frontline/CC, mais Rhaast ganha valor por % de vida máxima e cura.`,
   });
 
   // 3. Necessidade do time aliado (iniciação / quem aguenta luta longa)
+  // Regra real de Kayn: faltar frontline aliada só puxa forte para Rhaast se o time inimigo tiver frontline/lutadores;
+  // contra 4–5 papéis sem tanque inimigo, fazer Rhaast só por falta de tanque aliado é armadilha!
   const allyMissingFrontline = allies.length >= 2 && allyFrontlineCount === 0 && allyEngageTotal <= 2;
-  const allyNeedsRedPts = allyMissingFrontline ? 3.1 : allyFrontlineCount === 0 ? 1.4 : 0;
-  const allyCoversBluePts = allyFrontlineCount >= 1 || allyEngageTotal >= 4 ? 1.4 : 0;
+  const enemyHasNoFrontlineAndSquishy = enemyFrontlineCount === 0 && totalSquishy >= 4;
+  const allyNeedsRedPts = enemyHasNoFrontlineAndSquishy
+    ? 0
+    : enemyFrontlineCount >= 2
+      ? allyMissingFrontline
+        ? 2.8
+        : allyFrontlineCount === 0
+          ? 1.3
+          : 0
+      : allyMissingFrontline
+        ? 1.2
+        : allyFrontlineCount === 0
+          ? 0.5
+          : 0;
+  const allyCoversBluePts = allyFrontlineCount >= 1 || allyEngageTotal >= 4 ? 1.2 : 0;
   blueScore += allyCoversBluePts;
   redScore += allyNeedsRedPts;
   weights.push({
     label: 'Necessidade da comp aliada (iniciação/frontline)',
     blueImpact: allyCoversBluePts,
     redImpact: allyNeedsRedPts,
-    explanation:
-      allyMissingFrontline
-        ? 'Seu time não tem frontline nem iniciação clara; entrar de Kayn Azul deixa a equipe sem quem sustente a briga.'
+    explanation: enemyHasNoFrontlineAndSquishy
+      ? 'Mesmo sem tanque aliado, o inimigo tem 0 frontlines e 4+ papéis — forçar Rhaast aqui perde valor contra alvos frágeis.'
+      : allyMissingFrontline
+        ? 'Seu time não tem frontline nem iniciação clara; contra frontlines inimigas, Rhaast ajuda a sustentar a briga.'
         : `Time aliado soma ${allyFrontlineCount} frontline(s) e ${allyEngageTotal} pts de iniciação.`,
   });
 
-  // 4. Ritmo de luta inimigo (troca rápida vs combate prolongado)
-  const tempoBluePts = round2(enemyShortBurstCount * 0.55);
-  const tempoRedPts = round2(Math.max(0, enemyExtendedCount - 1) * 0.55);
+  // 4. Ritmo de luta inimigo (burst curto vs lutadores/tanques de combate prolongado)
+  const tempoBluePts = round2(enemyShortBurstCount * 0.4);
+  const tempoRedPts = round2(enemyExtendedCount * 0.75);
   blueScore += tempoBluePts;
   redScore += tempoRedPts;
   weights.push({
     label: 'Padrão de combate inimigo (burst vs luta longa)',
     blueImpact: tempoBluePts,
     redImpact: tempoRedPts,
-    explanation: `${enemyShortBurstCount} campeão(ões) de troca curta vs ${enemyExtendedCount} de combate prolongado.`,
+    explanation: `${enemyShortBurstCount} campeão(ões) de troca curta vs ${enemyExtendedCount} lutador(es)/tanque(s) de combate prolongado.`,
   });
 
-  // 5. Acesso real a orbes (apenas peso secundário — orb NUNCA acima de farm/sobrevivência)
+  // 5. Acesso real a orbes (peso secundário e simétrico — assassinos melee móveis não empurram para Rhaast)
   const enemyLaneProfiles = enemies.filter((e) => e.role !== 'jungle');
   const accessibleRangedLanes = enemyLaneProfiles.filter(
     (e) => e.profile.orbType === 'ranged' && e.profile.escapeScore <= 2,
   ).length;
   const accessibleMeleeLanes = enemyLaneProfiles.filter(
-    (e) => e.profile.orbType === 'melee' || e.profile.orbType === 'hybrid',
+    (e) => (e.profile.orbType === 'melee' || e.profile.orbType === 'hybrid') && e.profile.escapeScore <= 2,
   ).length;
 
-  const orbBluePts = round2(accessibleRangedLanes * 0.35);
-  const orbRedPts = round2(accessibleMeleeLanes * 0.35);
+  const orbBluePts = round2(accessibleRangedLanes * 0.25);
+  const orbRedPts = round2(accessibleMeleeLanes * 0.25);
   blueScore += orbBluePts;
   redScore += orbRedPts;
   weights.push({
@@ -430,19 +488,21 @@ export function analyzeDraft(
       ? getOrbMechanicsExplanation(easiestUnlockForm, strongestForm)
       : undefined;
 
-  // Decisão final com proteção rígida para o desempate pelo Azul
+  // Decisão final simétrica com proteção rígida contra falso Rhaast em comps sem tanque e contra falso Azul em comps de Rhaast
   let recommendedForm: KaynFormChoice;
   let alternativeForm: 'blue' | 'red';
   let tiebreakerApplied = false;
   let tiebreakerBlockedReason: string | undefined;
 
-  const isClearlyRed =
-    netBlueMinusRed <= -2.2 ||
-    (enemyFrontlineCount >= 3 && effectiveSquishyScore <= 1.8) ||
-    (enemyFrontlineCount >= 2 && enemyPeelTotal >= 5 && allyMissingFrontline);
-
   const isClearlyBlue =
-    netBlueMinusRed >= 3.2 && enemyFrontlineCount <= 1 && enemies.length >= 4;
+    (enemyFrontlineCount === 0 && totalSquishy >= 4 && enemies.length >= 4) ||
+    (netBlueMinusRed >= 2.4 && enemyFrontlineCount <= 1 && enemies.length >= 4);
+
+  const isClearlyRed =
+    !isClearlyBlue &&
+    ((enemyFrontlineCount >= 3 && totalSquishy <= 2) ||
+      (netBlueMinusRed <= -2.4 && (enemyFrontlineCount >= 2 || totalSquishy <= 2)) ||
+      (enemyFrontlineCount >= 2 && enemyPeelTotal >= 5 && allyMissingFrontline));
 
   if (enemies.length < 3 && !isClearlyRed) {
     recommendedForm = 'open';
@@ -577,7 +637,7 @@ export function analyzeDraft(
         : 'Rota limpa Top -> Bot ou Bot -> Top avaliando o Mid na transição sem quebrar a cadência de respawn dos campos; resete no pico de ouro antes de disputar o primeiro objetivo.';
 
   const enemyProfiles = enemies.map((e) => e.profile);
-  const runes = buildRuneRecommendation(recommendedForm, catalog);
+  const runes = buildRuneRecommendation(recommendedForm, catalog, enemyProfiles);
   const build = buildItemRecommendation(recommendedForm, enemyProfiles, catalog);
 
   return {
@@ -717,7 +777,9 @@ export function createFrozenCardFromAnalysis(
       secondaryRunes: analysis.runes.secondaryRunes.map((r) => r.name),
       statShards: [...analysis.runes.statShards],
     },
+    summonerSpells: analysis.runes.summonerSpells ? [...analysis.runes.summonerSpells] : undefined,
     runesVisual: {
+      variantLabel: analysis.runes.variantLabel,
       keystone,
       primaryTreeIcon: analysis.runes.primaryTreeIcon,
       primaryMinors: analysis.runes.primaryRunes.slice(1),
@@ -728,13 +790,18 @@ export function createFrozenCardFromAnalysis(
     },
     buildSummary: {
       junglePet: analysis.build.junglePet.name,
-      boots: analysis.build.boots.map((b) => b.name).join(' / '),
+      boots: analysis.build.bootsNote
+        ? `${analysis.build.boots.map((b) => b.name).join(' / ')} (Tier 1 — vender no full build)`
+        : analysis.build.boots.map((b) => b.name).join(' / '),
       coreItems: analysis.build.core.map((c) => c.name),
       activeSituational,
     },
     buildVisual: {
+      variantLabel: analysis.build.variantLabel,
       junglePet: analysis.build.junglePet,
       boots: analysis.build.boots,
+      bootsNote: analysis.build.bootsNote,
+      fullBuildBootReplacement: analysis.build.fullBuildBootReplacement,
       core: analysis.build.core,
       hasInvalidItems: analysis.build.hasInvalidItems,
     },

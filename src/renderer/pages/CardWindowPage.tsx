@@ -321,10 +321,20 @@ export function CardWindowPage({
                     invalid={!activeCard.runesVisual.keystone.validInCatalog}
                   />
                   <div style={{ minWidth: 0 }}>
-                    <div style={{ fontSize: 12.5, fontWeight: 800, color: '#ffffff', lineHeight: 1.15 }}>
-                      {activeCard.runesVisual.keystone.validInCatalog
-                        ? activeCard.runesVisual.keystone.name
-                        : 'Revisão necessária'}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                      <div style={{ fontSize: 12.5, fontWeight: 800, color: '#ffffff', lineHeight: 1.15 }}>
+                        {activeCard.runesVisual.keystone.validInCatalog
+                          ? activeCard.runesVisual.keystone.name
+                          : 'Revisão necessária'}
+                      </div>
+                      {activeCard.summonerSpells && activeCard.summonerSpells.length > 0 ? (
+                        <span
+                          className={`badge ${activeCard.recommendedForm === 'blue' ? 'badge-blue' : 'badge-muted'}`}
+                          style={{ padding: '1px 5px', fontSize: 10 }}
+                        >
+                          {activeCard.summonerSpells.join(' + ')}
+                        </span>
+                      ) : null}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginTop: 4 }}>
                       {activeCard.runesVisual.secondaryRunes.map((r) => (
@@ -362,9 +372,10 @@ export function CardWindowPage({
               <div className="card-section-label">Build</div>
               {activeCard.buildVisual ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 7, flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexWrap: 'wrap' }}>
                     {activeCard.buildVisual.core.map((item, idx) => {
                       const isOwned = ownedSet.has(item.id);
+                      const tileSize = activeCard.buildVisual!.core.length >= 5 ? 40 : 44;
                       return (
                         <div key={`${item.id}-${idx}`} className={`item-live-wrap ${isOwned ? 'item-owned' : ''}`}>
                           <ItemIconTile
@@ -372,7 +383,7 @@ export function CardWindowPage({
                             iconFile={item.icon}
                             name={item.name}
                             gold={item.gold}
-                            size={44}
+                            size={tileSize}
                             invalid={!item.availableInCatalog}
                           />
                           {isOwned ? (
@@ -403,6 +414,21 @@ export function CardWindowPage({
                         invalid={!b.availableInCatalog}
                       />
                     ))}
+                    {activeCard.buildVisual.fullBuildBootReplacement ? (
+                      <>
+                        <span className="muted-text" style={{ fontSize: 10 }} title={activeCard.buildVisual.bootsNote}>
+                          →
+                        </span>
+                        <ItemIconTile
+                          patch={cardPatch}
+                          iconFile={activeCard.buildVisual.fullBuildBootReplacement.icon}
+                          name={activeCard.buildVisual.fullBuildBootReplacement.name}
+                          reason={activeCard.buildVisual.fullBuildBootReplacement.reason}
+                          size={26}
+                          invalid={!activeCard.buildVisual.fullBuildBootReplacement.availableInCatalog}
+                        />
+                      </>
+                    ) : null}
                     <span className="small-text muted-text" style={{ marginLeft: 'auto', fontSize: 11 }}>
                       1ª: {activeCard.lanesToWatch.firstGankWindow}
                     </span>

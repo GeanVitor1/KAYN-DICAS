@@ -13,7 +13,7 @@ import {
   getAllStudyLessons,
 } from '../engine/studyLibrary';
 import { buildTacticalRulesFromLessons } from '../engine/tacticalMemory';
-import type { InitialHydrationPayload } from '../shared/ipc';
+import type { AutoReviewCapturedNotice, InitialHydrationPayload } from '../shared/ipc';
 import type {
   AppSettings,
   CardWindowOptions,
@@ -41,6 +41,8 @@ export function App() {
 
   const [hydration, setHydration] = useState<InitialHydrationPayload | null>(null);
   const [liveLolStatus, setLiveLolStatus] = useState<LiveLolStatus | null>(null);
+  const [autoCapturedNotice, setAutoCapturedNotice] =
+    useState<AutoReviewCapturedNotice | null>(null);
   const [activeTab, setActiveTab] = useState<TabKey>('draft');
   const [selectedTrainingScenarioId, setSelectedTrainingScenarioId] = useState<string | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -84,12 +86,17 @@ export function App() {
     const unsubLive = api.onLiveLolSync((nextLive: LiveLolStatus) => {
       setLiveLolStatus(nextLive);
     });
+    const unsubAutoReview = api.onAutoReviewCaptured((notice: AutoReviewCapturedNotice) => {
+      setAutoCapturedNotice(notice);
+      setActiveTab('review');
+    });
 
     return () => {
       mounted = false;
       unsubState();
       unsubOpts();
       unsubLive();
+      unsubAutoReview();
     };
   }, [api]);
 
@@ -293,6 +300,47 @@ export function App() {
       </header>
 
       <main className="page-content">
+        {autoCapturedNotice ? (
+          <div
+            className="banner banner-success"
+            style={{
+              marginBottom: 10,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: 10,
+              flexWrap: 'wrap',
+            }}
+          >
+            <span>
+              <strong>
+                {autoCapturedNotice.source === 'lcu_enriched'
+                  ? 'Revisão atualizada com timeline completa do LoL:'
+                  : 'Partida gravada automaticamente:'}
+              </strong>{' '}
+              {autoCapturedNotice.title}
+            </span>
+            <div style={{ display: 'flex', gap: 6 }}>
+              {activeTab !== 'review' ? (
+                <button
+                  type="button"
+                  className="btn btn-xs btn-primary"
+                  onClick={() => setActiveTab('review')}
+                >
+                  Abrir revisão
+                </button>
+              ) : null}
+              <button
+                type="button"
+                className="btn btn-xs btn-ghost"
+                onClick={() => setAutoCapturedNotice(null)}
+              >
+                Fechar
+              </button>
+            </div>
+          </div>
+        ) : null}
+
         {activeTab === 'draft' ? (
           <DraftPage
             draft={state.currentDraft}
@@ -406,6 +454,9 @@ export function App() {
           <ReviewPage
             reviews={state.reviews}
             activeReviewId={state.activeReviewId}
+            catalog={catalog}
+            liveLolStatus={liveLolStatus}
+            autoRecordEnabled={state.settings.autoRecordPostGameReview !== false}
             customLessons={state.customLessons ?? []}
             tacticalRules={tacticalRules}
             onSelectReview={async (id: string) => {
@@ -424,6 +475,23 @@ export function App() {
             onImportJson={async () => {
               const res = await api.importReviewJson();
               if (res.imported) {
+                const refreshed = await api.getInitialState();
+                setHydration(refreshed);
+              }
+              return res;
+            }}
+            onFetchLcuMatches={() => api.fetchLcuMatches()}
+            onImportLcuMatch={async (gameId: string) => {
+              const res = await api.importLcuMatch(gameId);
+              if (res.ok) {
+                const refreshed = await api.getInitialState();
+                setHydration(refreshed);
+              }
+              return res;
+            }}
+            onImportLatestLcuMatch={async () => {
+              const res = await api.importLatestLcuMatch();
+              if (res.ok) {
                 const refreshed = await api.getInitialState();
                 setHydration(refreshed);
               }

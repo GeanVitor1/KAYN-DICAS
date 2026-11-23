@@ -12,7 +12,7 @@ import {
   shell,
 } from 'electron';
 import { parseAndValidateReviewJson, serializeReviewJson } from '../engine/reviewAnalyzer';
-import { IPC_CHANNELS } from '../shared/ipc';
+import { IPC_CHANNELS, type AutoReviewCapturedNotice } from '../shared/ipc';
 import type {
   AppSettings,
   CardWindowOptions,
@@ -25,6 +25,11 @@ import type {
 } from '../shared/types';
 import { AssetCacheService, parseAssetUrl } from './assetCacheService';
 import { DdragonCatalogService } from './ddragonService';
+import {
+  fetchLcuRecentMatches,
+  importLatestLcuMatch,
+  importLcuMatchById,
+} from './lcuMatchHistoryService';
 import { LolLiveMonitorService } from './lolLiveService';
 import {
   fetchAndConvertRiotMatch,
@@ -141,6 +146,91 @@ function broadcastLiveLolStatus(): void {
       win.webContents.send(IPC_CHANNELS.ON_LIVE_LOL_SYNC, status);
     }
   }
+}
+
+function broadcastAutoReviewCaptured(notice: AutoReviewCapturedNotice): void {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send(IPC_CHANNELS.ON_AUTO_REVIEW_CAPTURED, notice);
+  }
+}
+
+function upsertReviewAndActivate(review: ReviewMatch, replaceReviewId?: string): void {
+  const others = appState.reviews.filter(
+    (r) =>
+      r.id !== review.id &&
+      (!replaceReviewId || r.id !== replaceReviewId) &&
+      (!review.matchId || r.matchId !== review.matchId),
+  );
+  appState = sanitizePersistedState({
+    ...appState,
+    reviews: [review, ...others],
+    activeReviewId: review.id,
+  });
+  persistState();
+}
+
+function handleAutoRecordedMatch(liveReview: ReviewMatch): void {
+  if (appState.settings.autoRecordPostGameReview === false) {
+    return;
+  }
+
+  upsertReviewAndActivate(liveReview);
+  broadcastAutoReviewCaptured({
+    reviewId: liveReview.id,
+    title: liveReview.title,
+    source: 'live_auto',
+    result: liveReview.matchStats?.result ?? 'unknown',
+    capturedAt: new Date().toISOString(),
+  });
+
+  // Tenta enriquecer com a timeline completa do LCU local (coordenadas X/Y + diff vs JG inimigo) após o cliente gravar o fim de jogo
+  const tryEnrichFromLcu = async (attempt: number): Promise<void> => {
+    try {
+      const existingIds = new Set(
+        appState.reviews.map((r) => r.matchId).filter((id): id is string => Boolean(id)),
+      );
+      const listRes = await fetchLcuRecentMatches({
+        catalog: catalogService.getCatalog(),
+        existingMatchIds: existingIds,
+      });
+      if (!listRes.ok || !listRes.matches || listRes.matches.length === 0) {
+        if (attempt < 2) {
+          setTimeout(() => void tryEnrichFromLcu(attempt + 1), 4500);
+        }
+        return;
+      }
+
+      const newest = listRes.matches[0];
+      const matchEndedMs = newest.gameCreation + newest.gameDurationSeconds * 1000;
+      const isFreshMatch = Math.abs(Date.now() - matchEndedMs) <= 10 * 60 * 1000;
+      if (!isFreshMatch) {
+        if (attempt < 2) {
+          setTimeout(() => void tryEnrichFromLcu(attempt + 1), 4500);
+        }
+        return;
+      }
+
+      const imported = await importLcuMatchById({
+        gameId: newest.gameId,
+        catalog: catalogService.getCatalog(),
+        preferBlueAsTiebreaker: appState.settings.preferBlueAsTiebreaker,
+      });
+      if (imported.ok && imported.review) {
+        upsertReviewAndActivate(imported.review, liveReview.id);
+        broadcastAutoReviewCaptured({
+          reviewId: imported.review.id,
+          title: imported.review.title,
+          source: 'lcu_enriched',
+          result: imported.review.matchStats?.result ?? 'unknown',
+          capturedAt: new Date().toISOString(),
+        });
+      }
+    } catch {
+      // Mantém a revisão ao vivo já salva sem interromper o usuário
+    }
+  };
+
+  setTimeout(() => void tryEnrichFromLcu(1), 4000);
 }
 
 function computeSafeCardBounds(saved?: CardWindowOptions['bounds']): {
@@ -566,6 +656,8 @@ function registerIpcHandlers(): void {
         'www.twitch.tv',
         'twitch.tv',
         'wiki.leagueoflegends.com',
+        'x.com',
+        'www.x.com',
       ]);
       if (parsed.protocol !== 'https:' || !allowedHosts.has(parsed.hostname.toLowerCase())) {
         return { ok: false, error: 'Host ou protocolo externo não permitido.' };
@@ -676,17 +768,48 @@ function registerIpcHandlers(): void {
         puuid: params.puuid,
       });
       if (res.ok && res.review) {
-        const others = appState.reviews.filter((r) => r.id !== res.review!.id);
-        appState = sanitizePersistedState({
-          ...appState,
-          reviews: [res.review, ...others],
-          activeReviewId: res.review.id,
-        });
-        persistState();
+        upsertReviewAndActivate(res.review);
       }
       return res;
     },
   );
+
+  ipcMain.handle(IPC_CHANNELS.FETCH_LCU_MATCHES, async () => {
+    const existingIds = new Set(
+      appState.reviews.map((r) => r.matchId).filter((id): id is string => Boolean(id)),
+    );
+    return fetchLcuRecentMatches({
+      catalog: catalogService.getCatalog(),
+      existingMatchIds: existingIds,
+    });
+  });
+
+  ipcMain.handle(IPC_CHANNELS.IMPORT_LCU_MATCH, async (_e, gameId: string) => {
+    const res = await importLcuMatchById({
+      gameId,
+      catalog: catalogService.getCatalog(),
+      preferBlueAsTiebreaker: appState.settings.preferBlueAsTiebreaker,
+    });
+    if (res.ok && res.review) {
+      upsertReviewAndActivate(res.review);
+    }
+    return res;
+  });
+
+  ipcMain.handle(IPC_CHANNELS.IMPORT_LATEST_LCU_MATCH, async () => {
+    const existingIds = new Set(
+      appState.reviews.map((r) => r.matchId).filter((id): id is string => Boolean(id)),
+    );
+    const res = await importLatestLcuMatch({
+      catalog: catalogService.getCatalog(),
+      existingMatchIds: existingIds,
+      preferBlueAsTiebreaker: appState.settings.preferBlueAsTiebreaker,
+    });
+    if (res.ok && res.review) {
+      upsertReviewAndActivate(res.review);
+    }
+    return res;
+  });
 }
 
 async function runSmokeTest(): Promise<void> {
@@ -1046,7 +1169,9 @@ app.whenReady().then(async () => {
   });
   lolLiveService = new LolLiveMonitorService({
     getCatalog: () => catalogService.getCatalog(),
+    getPreferBlueAsTiebreaker: () => appState.settings.preferBlueAsTiebreaker,
     onChange: () => broadcastLiveLolStatus(),
+    onMatchFinished: (review) => handleAutoRecordedMatch(review),
     enabled: !IS_SMOKE_TEST && !CAPTURE_SCREENS_DIR && appState.settings.liveLolSyncEnabled !== false,
   });
 
