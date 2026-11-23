@@ -62,15 +62,73 @@ describe('Validação do Catálogo Data Dragon (BR), Ícones e Atualizações', 
     expect(blueBuild.core.map((i) => i.id)).toEqual(['3142', '6696', '3036', '2517', '3026']); // Youmuu -> Axioma -> Dominik -> Fome Eterna -> Anjo Guardião
     expect(blueBuild.fullBuildBootReplacement?.id).toBe('3814'); // Vender Botas -> Limiar da Noite
 
-    // Rhaast usa núcleo bruiser (Eclipse -> Cutelo Negro -> Dança da Morte) e nunca inclui Cicloespada/Hidra Profana
+    // Rhaast usa núcleo bruiser completo (5 itens) + 1 única bota e nunca inclui Cicloespada/Hidra Profana
     const redBuild = buildItemRecommendation('red', [], catalog);
     const allRedIds = [
       ...redBuild.core.map((i) => i.id),
       ...redBuild.situational.flatMap((s) => s.items.map((i) => i.id)),
     ];
-    expect(redBuild.core.map((i) => i.id)).toEqual(['6692', '3071', '6333']);
+    expect(redBuild.boots.length).toBe(1);
+    expect(redBuild.core.length).toBe(5);
+    expect(redBuild.core.slice(0, 3).map((i) => i.id)).toEqual(['6692', '3071', '6333']);
+    expect(new Set(redBuild.core.map((i) => i.id)).size).toBe(5);
     expect(allRedIds).not.toContain('6698');
     expect(allRedIds).not.toContain('6699');
+  });
+
+  it('recomenda sempre 1 única bota certeira (Mercúrio vs Aço/Tabi vs Ionianas) e build completa (5 itens) conforme dano, CC, cura e escudos', () => {
+    const profileOf = (ids: string[]) =>
+      ids
+        .map((id) => getChampionTacticalProfile(id, catalog))
+        .filter((p): p is NonNullable<typeof p> => Boolean(p));
+
+    // 1. Rhaast contra muito CC + AP + cura (Ornn, Sejuani, Sylas, Xayah, Alistar) -> Passos de Mercúrio (3111) + Semblante + Serrespada
+    const heavyCcApEnemies = profileOf(['Ornn', 'Sejuani', 'Sylas', 'Xayah', 'Alistar']);
+    const redCcAp = buildItemRecommendation('red', heavyCcApEnemies, catalog);
+    expect(redCcAp.boots.map((b) => b.id)).toEqual(['3111']); // 1 única bota: Mercúrio
+    expect(redCcAp.core.length).toBe(5);
+    expect(redCcAp.core.map((i) => i.id)).toContain('3065'); // Semblante Espiritual
+    expect(redCcAp.core.map((i) => i.id)).toContain('6609'); // Serrespada Quimiopunk (anti-cura)
+    expect(new Set(redCcAp.core.map((i) => i.id)).size).toBe(5);
+
+    // 2. Rhaast contra muito AD / ataques básicos (Darius, LeeSin, Yasuo, Caitlyn, Thresh) -> Botas de Aço / Tabi (3047) + Dança da Morte
+    const heavyAdEnemies = profileOf(['Darius', 'LeeSin', 'Yasuo', 'Caitlyn', 'Thresh']);
+    const redAd = buildItemRecommendation('red', heavyAdEnemies, catalog);
+    expect(redAd.boots.map((b) => b.id)).toEqual(['3047']); // 1 única bota: Tabi / Aço
+    expect(redAd.core.length).toBe(5);
+    expect(redAd.core.slice(0, 3).map((i) => i.id)).toEqual(['6692', '3071', '6333']);
+    // Nunca mistura Sterak (3053) e Malmortius (3156) (passiva única Salva-Vidas)
+    expect(
+      redAd.core.some((i) => i.id === '3053') && redAd.core.some((i) => i.id === '3156'),
+    ).toBe(false);
+
+    // 3. Rhaast contra pouco CC e dano misto equilibrado -> Botas Ionianas (3158)
+    const lowCcMixed = profileOf(['DrMundo', 'Graves', 'Vladimir', 'Ezreal', 'Yuumi']);
+    const redLowCc = buildItemRecommendation('red', lowCcMixed, catalog);
+    expect(redLowCc.boots.map((b) => b.id)).toEqual(['3158']); // 1 única bota: Ionianas
+    expect(redLowCc.core.length).toBe(5);
+
+    // 4. Kayn Azul contra QUALQUER fonte forte de escudos (não apenas Milio/Lulu — inclui Shen, Sett, Ivern, Karma, Janna, ou 2+ escudos como Riven + Yasuo)
+    const milioEnemies = profileOf(['Vladimir', 'Zed', 'Fizz', 'Jhin', 'Milio']);
+    const blueVsMilio = buildItemRecommendation('blue', milioEnemies, catalog);
+    expect(blueVsMilio.boots.map((b) => b.id)).toEqual(['1001']);
+    expect(blueVsMilio.variantKey).toBe('blue_shields');
+    expect(blueVsMilio.core.map((i) => i.id)).toEqual(['3142', '6695', '3033', '2517', '3026']); // Youmuu -> Presa da Serpente -> Lembrete Mortal -> Fome Eterna -> GA
+
+    const shenEnemies = profileOf(['Shen', 'Graves', 'Syndra', 'Jinx', 'Nami']);
+    const blueVsShen = buildItemRecommendation('blue', shenEnemies, catalog);
+    expect(blueVsShen.variantKey).toBe('blue_shields');
+    expect(blueVsShen.core.map((i) => i.id)).toContain('6695'); // Presa da Serpente contra Shen (Top)
+
+    const ivernEnemies = profileOf(['Jayce', 'Ivern', 'Syndra', 'Jinx', 'Nami']);
+    const blueVsIvern = buildItemRecommendation('blue', ivernEnemies, catalog);
+    expect(blueVsIvern.variantKey).toBe('blue_shields');
+    expect(blueVsIvern.core.map((i) => i.id)).toContain('6695'); // Presa da Serpente contra Ivern (Jungle)
+
+    const duoShieldEnemies = profileOf(['Riven', 'Graves', 'Yasuo', 'Jinx', 'Nami']);
+    const blueVsDuoShield = buildItemRecommendation('blue', duoShieldEnemies, catalog);
+    expect(blueVsDuoShield.variantKey).toBe('blue_shields');
+    expect(blueVsDuoShield.core.map((i) => i.id)).toContain('6695'); // Presa da Serpente contra Riven + Yasuo (2 fontes de escudo)
   });
 
   it('aplica corretamente as 3 rotas do guia KarasMaii (Patch 26.23) para Kayn Azul conforme CC, Escudos e Cura inimigos', () => {

@@ -790,7 +790,7 @@ export function createFrozenCardFromAnalysis(
     },
     buildSummary: {
       junglePet: analysis.build.junglePet.name,
-      boots: analysis.build.bootsNote
+      boots: analysis.build.fullBuildBootReplacement
         ? `${analysis.build.boots.map((b) => b.name).join(' / ')} (Tier 1 — vender no full build)`
         : analysis.build.boots.map((b) => b.name).join(' / '),
       coreItems: analysis.build.core.map((c) => c.name),

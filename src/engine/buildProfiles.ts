@@ -13,10 +13,10 @@ import type {
 } from '../shared/types';
 
 export const BUILD_DATA_META = {
-  buildVersion: '2026.11-kayn-16.23.1-karasmai-v4',
+  buildVersion: '2026.11-kayn-16.23.1-karasmai-v5',
   validatedPatch: '16.23.1',
   source:
-    "Kayn Azul atualizado pelo guia do KarasMaii (Patch 26.23 / 16.23.1, @KarasMaii em 21/11/2026) + Rhaast Bruiser; IDs e ícones conferidos no Data Dragon BR 16.23.1 pt_BR",
+    "Kayn Azul (KarasMaii 26.23) + Rhaast Bruiser completo (5 itens + 1 bota certeira por AD/AP/CC); IDs e ícones conferidos no Data Dragon BR 16.23.1 pt_BR",
   updatedAt: '2026-11-23',
 } as const;
 
@@ -181,25 +181,262 @@ export function getAllRuneBlueprints(): StaticRuneBlueprint[] {
   ];
 }
 
+export function computeEnemyShieldScore(
+  enemyProfiles: ChampionTacticalProfile[],
+): number {
+  return enemyProfiles.reduce(
+    (sum, p) => sum + (p.shieldScore ?? (p.heavyShields ? 1 : 0)),
+    0,
+  );
+}
+
+export function hasHighShieldThreat(
+  enemyProfiles: ChampionTacticalProfile[],
+): boolean {
+  return computeEnemyShieldScore(enemyProfiles) >= 2;
+}
+
 export function selectBlueKaynVariant(
   enemyProfiles: ChampionTacticalProfile[],
 ): BlueBuildVariantKey {
-  const heavyShieldCount = enemyProfiles.filter((p) => p.heavyShields).length;
   const hardCcCount = enemyProfiles.filter((p) => p.ccScore >= 3).length;
   const highCcCount = enemyProfiles.filter((p) => p.ccScore >= 2).length;
   const totalCcScore = enemyProfiles.reduce((acc, p) => acc + p.ccScore, 0);
 
-  const hasLotsOfShields = heavyShieldCount >= 2;
+  // Qualquer gerador massivo de escudos (shieldScore >= 2: Shen, Sett, Mordekaiser, Tahm Kench, Ivern, Karma, Janna, Seraphine, Sona, Lulu, Milio, Taric, Yuumi)
+  // ou 2+ campeões com escudos relevantes (ex.: Riven + Yasuo, Lee Sin + Orianna, Ambessa + Kai'Sa) já ativam Presa da Serpente!
+  const hasShieldPriority = hasHighShieldThreat(enemyProfiles);
   const hasLotsOfCc =
     highCcCount >= 3 || totalCcScore >= 8 || (hardCcCount >= 1 && highCcCount >= 2);
 
-  if (hasLotsOfShields && !(hardCcCount >= 2 || totalCcScore >= 9)) {
+  if (hasShieldPriority && !(hardCcCount >= 2 || totalCcScore >= 9)) {
     return 'blue_shields';
   }
   if (hasLotsOfCc) {
     return 'blue_cc';
   }
   return 'blue_standard';
+}
+
+export interface EnemyDamageAndCcSummary {
+  adScore: number;
+  apScore: number;
+  aaThreatCount: number;
+  hardCcCount: number;
+  highCcCount: number;
+  totalCcScore: number;
+  adNames: string[];
+  apNames: string[];
+  ccNames: string[];
+}
+
+export function summarizeEnemyDamageAndCc(
+  enemyProfiles: ChampionTacticalProfile[],
+  catalog: CatalogSnapshot,
+): EnemyDamageAndCcSummary {
+  let adScore = 0;
+  let apScore = 0;
+  let aaThreatCount = 0;
+  let hardCcCount = 0;
+  let highCcCount = 0;
+  let totalCcScore = 0;
+  const adNames: string[] = [];
+  const apNames: string[] = [];
+  const ccNames: string[] = [];
+
+  for (const p of enemyProfiles) {
+    const name = catalog.champions[p.championId]?.name ?? p.championId;
+    if (p.damageType === 'ad') {
+      adScore += 1;
+      adNames.push(name);
+    } else if (p.damageType === 'ap') {
+      apScore += 1;
+      apNames.push(name);
+    } else {
+      adScore += 0.5;
+      apScore += 0.5;
+    }
+    if (p.isAutoAttackThreat) aaThreatCount += 1;
+    if (p.ccScore >= 3) hardCcCount += 1;
+    if (p.ccScore >= 2) {
+      highCcCount += 1;
+      ccNames.push(name);
+    }
+    totalCcScore += p.ccScore;
+  }
+
+  return {
+    adScore,
+    apScore,
+    aaThreatCount,
+    hardCcCount,
+    highCcCount,
+    totalCcScore,
+    adNames,
+    apNames,
+    ccNames,
+  };
+}
+
+export function selectOptimalRedBoot(
+  enemyProfiles: ChampionTacticalProfile[],
+  catalog: CatalogSnapshot,
+): { item: BuildBlueprintItem; note: string } {
+  if (enemyProfiles.length === 0) {
+    return {
+      item: {
+        id: '3047',
+        reason:
+          'Botas Galvanizadas de Aço (Tabi): padrão seguro de Rhaast — preencha os inimigos para ajustar automaticamente entre Aço (AD), Mercúrio (CC/AP) e Ionianas.',
+      },
+      note: 'Preencha os inimigos no draft para escolher a bota exata (Aço vs Mercúrio vs Ionianas).',
+    };
+  }
+
+  const dmg = summarizeEnemyDamageAndCc(enemyProfiles, catalog);
+  const mercScore = dmg.hardCcCount * 2.2 + dmg.highCcCount * 0.9 + dmg.apScore * 1.4;
+  const steelcapsScore = dmg.adScore * 1.5 + dmg.aaThreatCount * 1.2;
+
+  // Pouco CC duro e dano equilibrado (sem excesso de AD nem de AP) -> Botas Ionianas
+  if (
+    dmg.hardCcCount === 0 &&
+    dmg.highCcCount <= 1 &&
+    dmg.totalCcScore <= 3 &&
+    dmg.adScore < 3 &&
+    dmg.apScore < 3
+  ) {
+    const reason = `Botas Ionianas: pouco CC inimigo (${dmg.totalCcScore} pts) e dano misto — acelera rotações de Q/W e Golpear.`;
+    return { item: { id: '3158', reason }, note: reason };
+  }
+
+  // Muito CC ou muito dano mágico vencendo o peso físico -> Passos de Mercúrio
+  if (mercScore >= steelcapsScore && (dmg.highCcCount >= 2 || dmg.apScore >= 2.5)) {
+    const ccDetail =
+      dmg.ccNames.length > 0 ? ` (${dmg.ccNames.slice(0, 3).join(', ')})` : '';
+    const reason = `Passos de Mercúrio: ${dmg.highCcCount} fonte(s) de CC forte${ccDetail} e ${Math.round(dmg.apScore)} fonte(s) de dano mágico.`;
+    return { item: { id: '3111', reason }, note: reason };
+  }
+
+  // Maioria AD / ameaças de ataque básico -> Botas Galvanizadas de Aço (Tabi Ninja)
+  const adDetail =
+    dmg.adNames.length > 0 ? ` (${dmg.adNames.slice(0, 3).join(', ')})` : '';
+  const aaDetail =
+    dmg.aaThreatCount > 0 ? ` · ${dmg.aaThreatCount} dependente(s) de ataque básico` : '';
+  const reason = `Botas Galvanizadas de Aço (Tabi): ${Math.round(dmg.adScore)} fonte(s) de dano físico${adDetail}${aaDetail}.`;
+  return { item: { id: '3047', reason }, note: reason };
+}
+
+export function buildAdaptiveRedCore(
+  enemyProfiles: ChampionTacticalProfile[],
+  catalog: CatalogSnapshot,
+): BuildBlueprintItem[] {
+  const dmg = summarizeEnemyDamageAndCc(enemyProfiles, catalog);
+  const frontlineCount = enemyProfiles.filter((p) => p.isFrontline).length;
+  const heavyHealingCount = enemyProfiles.filter((p) => p.heavyHealing).length;
+  const needsAntiHeal =
+    heavyHealingCount >= 2 || (heavyHealingCount >= 1 && frontlineCount >= 1);
+  const healNames = enemyProfiles
+    .filter((p) => p.heavyHealing)
+    .map((p) => catalog.champions[p.championId]?.name ?? p.championId);
+
+  const items: BuildBlueprintItem[] = [
+    {
+      id: '6692',
+      reason: '1º item: Eclipse entrega pico forte de duelo, escudo curto e pressão no mid game.',
+    },
+    {
+      id: '3071',
+      reason: '2º item: Cutelo Negro dá vida, aceleração e quebra até 30% de armadura em área no Q.',
+    },
+  ];
+
+  const picked = new Set<string>(items.map((i) => i.id));
+  const addItem = (id: string, reason: string) => {
+    if (picked.has(id) || items.length >= 5) return;
+    // Evita conflito da passiva única Salva-Vidas (Sinal de Sterak 3053 vs Mandíbula de Malmortius 3156)
+    if ((id === '3053' && picked.has('3156')) || (id === '3156' && picked.has('3053'))) {
+      return;
+    }
+    picked.add(id);
+    items.push({ id, reason });
+  };
+
+  const heavyAp = dmg.apScore >= 3 || (dmg.apScore >= 2.5 && dmg.adScore <= 1.5);
+  const heavyAd = dmg.adScore >= 3 || (dmg.adScore >= 2.5 && dmg.apScore <= 1.5);
+
+  // 3º item: defesa principal alinhada ao tipo de dano dominante do inimigo
+  if (heavyAp) {
+    addItem(
+      '3065',
+      `3º item contra time pesado em AP (${Math.round(dmg.apScore)} fontes): Semblante Espiritual dá RM e amplifica toda a cura do Rhaast.`,
+    );
+  } else {
+    addItem(
+      '6333',
+      '3º item: Dança da Morte segura burst físico e transforma teamfights com cura em abates.',
+    );
+  }
+
+  // 4º item: corta-cura se necessário, senão MR (se AP relevante) ou Sterak (contra burst/CC)
+  if (needsAntiHeal) {
+    const healTag = healNames.length > 0 ? ` (${healNames.slice(0, 3).join(', ')})` : '';
+    if (heavyAd) {
+      addItem(
+        '3075',
+        `Contra cura forte${healTag} e time pesado em AD: Armadura de Espinhos corta cura e pune ataques básicos.`,
+      );
+    } else {
+      addItem(
+        '6609',
+        `Contra cura forte${healTag}: Serrespada Quimiopunk aplica Feridas Dolorosas com vida e aceleração.`,
+      );
+    }
+  }
+
+  if (dmg.apScore >= 2 && !picked.has('3065')) {
+    addItem(
+      '3065',
+      `Contra ${Math.round(dmg.apScore)} fonte(s) de AP: Semblante Espiritual dá RM e turbina a cura das habilidades do Rhaast.`,
+    );
+  }
+
+  if (dmg.adScore >= 2 && !picked.has('6333')) {
+    addItem(
+      '6333',
+      `Contra ${Math.round(dmg.adScore)} fonte(s) de AD: Dança da Morte absorve burst físico e prolonga a luta.`,
+    );
+  }
+
+  // 5º item / preenchimento até completar os 5 itens lendários
+  if (dmg.apScore >= 3.5 && !picked.has('3053')) {
+    addItem(
+      '3156',
+      'Contra composição quase 100% mágica: Mandíbula de Malmortius entrega escudo anti-AP e omnivamp.',
+    );
+  }
+
+  addItem(
+    '3053',
+    'Sinal de Sterak: escudo anti-burst + tenacidade para segurar lutas 5v5 de objetivo.',
+  );
+
+  if (frontlineCount >= 2) {
+    addItem(
+      '3161',
+      `Contra ${frontlineCount} frontlines inimigas: Lança de Shojin amplifica dano de Q/W/R e acelera rotações em lutas longas.`,
+    );
+  }
+
+  addItem(
+    '3065',
+    'Semblante Espiritual: fechamento defensivo que potencializa a cura natural do Rhaast e de Eclipse/Conquistador.',
+  );
+  addItem(
+    '3026',
+    'Anjo Guardião: segunda vida nas lutas decisivas de Barão e Dragão Ancião.',
+  );
+
+  return items;
 }
 
 export interface BuildBlueprintItem {
@@ -641,7 +878,7 @@ export function buildItemRecommendation(
   const frontlineCount = enemyProfiles.filter((p) => p.isFrontline).length;
   const heavyArmorCount = enemyProfiles.filter((p) => p.heavyArmorUser).length;
   const heavyHealingCount = enemyProfiles.filter((p) => p.heavyHealing).length;
-  const heavyShieldCount = enemyProfiles.filter((p) => p.heavyShields).length;
+  const hasShieldPriority = hasHighShieldThreat(enemyProfiles);
   const highCcCount = enemyProfiles.filter((p) => p.ccScore >= 2).length;
   const needsAntiHeal =
     heavyHealingCount >= 2 || (heavyHealingCount >= 1 && frontlineCount >= 1);
@@ -683,13 +920,36 @@ export function buildItemRecommendation(
             '3º item padrão (KarasMaii 26.23): Lembranças do Lorde Dominik para máxima penetração % de armadura (troque por Lembrete Mortal 3033 se houver muita cura inimiga).',
         };
 
-    const blueCoreBlueprint: BuildBlueprintItem[] = [
-      BLUE_BUILD_BLUEPRINT.core[0], // 3142 Youmuu
-      blueVariant.secondItem, // 6696 Axioma | 3814 Limiar da Noite | 6695 Presa da Serpente
-      armorPenThirdItem, // 3036 Lord Dominik | 3033 Lembrete Mortal
-      BLUE_BUILD_BLUEPRINT.core[3], // 2517 Fome Eterna (Endless Hunger)
-      BLUE_BUILD_BLUEPRINT.core[4], // 3026 Anjo Guardião
-    ];
+    // Se o inimigo tiver MUITO CC extremo E também encantador de escudos (ex.: Lissandra + Nautilus + Lulu/Milio),
+    // inclui Presa da Serpente dentro da build completa além de Limiar da Noite!
+    const blueCoreBlueprint: BuildBlueprintItem[] =
+      blueVariantKey === 'blue_cc' && hasShieldPriority
+        ? [
+            BLUE_BUILD_BLUEPRINT.core[0], // 3142 Youmuu
+            blueVariant.secondItem, // 3814 Limiar da Noite
+            armorPenThirdItem, // 3036 Lord Dominik | 3033 Lembrete Mortal
+            {
+              id: '6695',
+              reason: `4º item adaptativo contra escudos (${shieldChampions.slice(0, 2).join(', ') || 'encantador'}): Presa da Serpente entra na build mesmo priorizando Limiar da Noite 2º contra o CC.`,
+            },
+            BLUE_BUILD_BLUEPRINT.core[3], // 2517 Fome Eterna
+          ]
+        : [
+            BLUE_BUILD_BLUEPRINT.core[0], // 3142 Youmuu
+            blueVariant.secondItem, // 6696 Axioma | 3814 Limiar da Noite | 6695 Presa da Serpente
+            armorPenThirdItem, // 3036 Lord Dominik | 3033 Lembrete Mortal
+            BLUE_BUILD_BLUEPRINT.core[3], // 2517 Fome Eterna (Endless Hunger)
+            BLUE_BUILD_BLUEPRINT.core[4], // 3026 Anjo Guardião
+          ];
+
+    const bootReplacementItem: BuildBlueprintItem =
+      blueVariantKey === 'blue_cc' && hasShieldPriority
+        ? {
+            id: '3026',
+            reason:
+              'No full build, venda as Botas Tier 1 e feche Anjo Guardião para segurar as lutas finais.',
+          }
+        : blueVariant.fullBuildBootReplacement;
 
     junglePet = resolveItemRef(
       catalog,
@@ -700,16 +960,50 @@ export function buildItemRecommendation(
     core = blueCoreBlueprint.map((c) => resolveItemRef(catalog, c.id, c.reason));
     fullBuildBootReplacement = resolveItemRef(
       catalog,
-      blueVariant.fullBuildBootReplacement.id,
-      blueVariant.fullBuildBootReplacement.reason,
+      bootReplacementItem.id,
+      bootReplacementItem.reason,
     );
+  } else if (form === 'red') {
+    variantKey = 'red';
+    const optimalBoot = selectOptimalRedBoot(enemyProfiles, catalog);
+    const adaptiveRedCore = buildAdaptiveRedCore(enemyProfiles, catalog);
+    variantLabel = 'Bruiser · Rhaast (Build completa)';
+    bootsNote = optimalBoot.note;
+    junglePet = resolveItemRef(
+      catalog,
+      RED_BUILD_BLUEPRINT.junglePet.id,
+      RED_BUILD_BLUEPRINT.junglePet.reason,
+    );
+    boots = [resolveItemRef(catalog, optimalBoot.item.id, optimalBoot.item.reason)];
+    core = adaptiveRedCore.map((c) => resolveItemRef(catalog, c.id, c.reason));
   } else {
-    variantKey = form;
-    const blueprint = form === 'red' ? RED_BUILD_BLUEPRINT : OPEN_BUILD_BLUEPRINT;
-    variantLabel = form === 'red' ? 'Bruiser · Rhaast' : 'Flexível (aguardando forma)';
-    junglePet = resolveItemRef(catalog, blueprint.junglePet.id, blueprint.junglePet.reason);
-    boots = blueprint.boots.map((b) => resolveItemRef(catalog, b.id, b.reason));
-    core = blueprint.core.map((c) => resolveItemRef(catalog, c.id, c.reason));
+    variantKey = 'open';
+    const projectedRedBoot = selectOptimalRedBoot(enemyProfiles, catalog);
+    const projectedBootName =
+      catalog.items[projectedRedBoot.item.id]?.name ?? 'Botas defensivas';
+    variantLabel = 'Flexível (aguardando forma)';
+    bootsNote = `Segure Botas Tier 1 (300g) até definir a forma: se virar Azul não evolua para Tier 2; se virar Rhaast feche ${projectedBootName}.`;
+    junglePet = resolveItemRef(
+      catalog,
+      OPEN_BUILD_BLUEPRINT.junglePet.id,
+      OPEN_BUILD_BLUEPRINT.junglePet.reason,
+    );
+    boots = [resolveItemRef(catalog, '1001', bootsNote)];
+    core = [
+      resolveItemRef(
+        catalog,
+        '3134',
+        'Punhal Serrilhado ou componentes de AD/Aceleração até confirmar a forma antes de fechar o 1º item.',
+      ),
+      resolveItemRef(catalog, '6692', 'Eclipse caso o draft feche em Rhaast Bruiser.'),
+      resolveItemRef(
+        catalog,
+        '3142',
+        'Lâmina Fantasma de Youmuu caso confirme Kayn Azul (guia KarasMaii 26.23).',
+      ),
+      resolveItemRef(catalog, '3071', 'Cutelo Negro como 2º item no plano Rhaast.'),
+      resolveItemRef(catalog, '3026', 'Anjo Guardião como fechamento defensivo versátil em ambas as formas.'),
+    ];
   }
 
   const situational: SituationalBuildCategory[] = [
@@ -780,17 +1074,17 @@ export function buildItemRecommendation(
     {
       key: 'excesso_escudos',
       label: 'Excesso de escudos inimigos',
-      shortCondition: 'Contra muitos escudos',
-      activeInDraft: heavyShieldCount >= 2,
+      shortCondition: 'Contra escudos',
+      activeInDraft: hasShieldPriority,
       triggerReason:
         shieldChampions.length > 0
           ? `Escudos relevantes em: ${shieldChampions.join(', ')}.`
-          : 'Contra encantadores e carries com muito escudo.',
+          : 'Contra campeões que geram muito escudo (encantadores, tanques/lutadores de escudo ou 2+ fontes).',
       items: [
         resolveItemRef(
           catalog,
           '6695',
-          'Presa da Serpente: no guia KarasMaii (26.23), entra como 2º item contra times com muitos escudos.',
+          'Presa da Serpente: corta escudos pela metade (2500g) — entra automaticamente na build do Azul contra qualquer gerador massivo de escudo ou 2+ fontes de escudo.',
         ),
       ],
     },

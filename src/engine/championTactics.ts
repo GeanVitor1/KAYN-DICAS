@@ -2,15 +2,144 @@ import type {
   CatalogChampion,
   CatalogSnapshot,
   ChampionTacticalProfile,
+  DamageType,
 } from '../shared/types';
 import { classifyChampionOrbType } from './kaynMechanics';
 
 export const TACTICAL_DATA_META = {
-  tacticalVersion: '2026.11-diamond-br-v2',
+  tacticalVersion: '2026.11-diamond-br-v3',
   validatedPatch: '16.23.1',
-  source: 'Perfis táticos curados manualmente para Kayn Jungle (Solo/Duo Diamante BR) + fallback inteligente por tag primária do Data Dragon',
+  source: 'Perfis táticos curados manualmente para Kayn Jungle (Solo/Duo Diamante BR) com tipo de dano AD/AP/misto e fallback por tag primária',
   updatedAt: '2026-11-23',
 } as const;
+
+const AP_DAMAGE_CHAMPIONS = new Set([
+  'Akali',
+  'Alistar',
+  'Amumu',
+  'Bard',
+  'Blitzcrank',
+  'Braum',
+  'Chogath',
+  'Diana',
+  'Ekko',
+  'Elise',
+  'Evelynn',
+  'Fiddlesticks',
+  'Fizz',
+  'Galio',
+  'Gragas',
+  'Gwen',
+  'Ivern',
+  'Karthus',
+  'Kassadin',
+  'Katarina',
+  'Kayle',
+  'Kennen',
+  'Leblanc',
+  'Leona',
+  'Lillia',
+  'Locke',
+  'Malphite',
+  'Maokai',
+  'Mordekaiser',
+  'Nautilus',
+  'Nidalee',
+  'Nunu',
+  'Ornn',
+  'Rakan',
+  'Rammus',
+  'Rell',
+  'Rumble',
+  'Sejuani',
+  'Singed',
+  'Sylas',
+  'TahmKench',
+  'Taliyah',
+  'Taric',
+  'Teemo',
+  'Thresh',
+  'Vladimir',
+  'Zac',
+]);
+
+const MIXED_DAMAGE_CHAMPIONS = new Set([
+  'Corki',
+  'DrMundo',
+  'Jax',
+  'Kaisa',
+  'KogMaw',
+  'Shen',
+  'Shyvana',
+  'Smolder',
+  'Udyr',
+  'Varus',
+  'Volibear',
+  'Warwick',
+  'Yone',
+]);
+
+const AD_OVERRIDE_CHAMPIONS = new Set(['Pyke', 'Senna']);
+
+/** Campeões de qualquer rota/classe que geram escudos massivos ou escudam o time/carry de forma constante (shieldScore = 2). */
+const MASSIVE_SHIELD_CHAMPIONS = new Set([
+  'Ivern',
+  'Janna',
+  'Karma',
+  'Lulu',
+  'Milio',
+  'Mordekaiser',
+  'Seraphine',
+  'Sett',
+  'Shen',
+  'Sona',
+  'TahmKench',
+  'Taric',
+  'Yuumi',
+]);
+
+const AUTO_ATTACK_THREAT_CHAMPIONS = new Set([
+  'Belveth',
+  'Briar',
+  'Graves',
+  'Irelia',
+  'Jax',
+  'Kindred',
+  'MasterYi',
+  'Nilah',
+  'Nocturne',
+  'Olaf',
+  'Trundle',
+  'Tryndamere',
+  'Viego',
+  'Warwick',
+  'XinZhao',
+  'Yasuo',
+  'Yone',
+]);
+
+export function classifyChampionDamageType(
+  championId: string,
+  tags: string[],
+): DamageType {
+  if (AD_OVERRIDE_CHAMPIONS.has(championId)) return 'ad';
+  if (MIXED_DAMAGE_CHAMPIONS.has(championId)) return 'mixed';
+  if (AP_DAMAGE_CHAMPIONS.has(championId)) return 'ap';
+  const primary = tags[0] ?? '';
+  if (primary === 'Mage' || primary === 'Support') return 'ap';
+  return 'ad';
+}
+
+export function isChampionAutoAttackThreat(
+  championId: string,
+  tags: string[],
+): boolean {
+  if (AUTO_ATTACK_THREAT_CHAMPIONS.has(championId)) return true;
+  if (tags.includes('Marksman') && !['Jhin', 'Ezreal', 'Smolder', 'Corki'].includes(championId)) {
+    return true;
+  }
+  return false;
+}
 
 type TacticalOverrides = Partial<Omit<ChampionTacticalProfile, 'championId' | 'orbType' | 'isFallbackProfile'>>;
 
@@ -1683,7 +1812,151 @@ const CURATED_PROFILES: Record<string, TacticalOverrides> = {
     heavyShields: true,
     heavyArmorUser: true,
     priorityTargetWeight: 0,
-    summaryPt: 'Tanque de vida enorme com R que engole o carry; muito forte contra Kayn Azul e ótimo alvo pro Rhaast.',
+    summaryPt: 'Tanque de vida enorme com escudo gigante no E e R que engole o carry; pede Presa da Serpente e valoriza Rhaast.',
+  },
+  Shen: {
+    archetype: 'tank',
+    isSquishyTarget: false,
+    isFrontline: true,
+    fightStyle: 'extended_fight',
+    engageScore: 2,
+    peelScore: 3,
+    ccScore: 2,
+    escapeScore: 1,
+    early2v2Score: 2,
+    gankSetupScore: 2,
+    heavyShields: true,
+    heavyArmorUser: true,
+    priorityTargetWeight: 0,
+    summaryPt: 'Escudo global massivo no R + escudo passivo frequente; Presa da Serpente quebra o resgate do Shen sobre carries.',
+  },
+  Ivern: {
+    archetype: 'enchanter',
+    isSquishyTarget: true,
+    isFrontline: false,
+    fightStyle: 'short_burst',
+    engageScore: 1,
+    peelScore: 3,
+    ccScore: 2,
+    escapeScore: 1,
+    early2v2Score: 1,
+    gankSetupScore: 2,
+    heavyShields: true,
+    priorityTargetWeight: 2,
+    summaryPt: 'Spamma escudos enormes no E a cada poucos segundos; Presa da Serpente é prioridade contra Ivern.',
+  },
+  Seraphine: {
+    archetype: 'enchanter',
+    isSquishyTarget: true,
+    isFrontline: false,
+    fightStyle: 'short_burst',
+    engageScore: 2,
+    peelScore: 2,
+    ccScore: 2,
+    escapeScore: 0,
+    early2v2Score: 1,
+    gankSetupScore: 2,
+    heavyShields: true,
+    heavyHealing: true,
+    priorityTargetWeight: 3,
+    summaryPt: 'Escudo em área para o time inteiro no W + cura e R de controle; imóvel pro Azul, mas pede Presa da Serpente.',
+  },
+  Sona: {
+    archetype: 'enchanter',
+    isSquishyTarget: true,
+    isFrontline: false,
+    fightStyle: 'extended_fight',
+    engageScore: 1,
+    peelScore: 2,
+    ccScore: 2,
+    escapeScore: 0,
+    early2v2Score: 0,
+    gankSetupScore: 1,
+    heavyShields: true,
+    heavyHealing: true,
+    priorityTargetWeight: 3,
+    summaryPt: 'Extremamente frágil, porém spamma escudo e cura em área no W para toda a equipe; Presa da Serpente corta o valor dela.',
+  },
+  Taric: {
+    archetype: 'engage_support',
+    isSquishyTarget: false,
+    isFrontline: true,
+    fightStyle: 'extended_fight',
+    engageScore: 1,
+    peelScore: 3,
+    ccScore: 2,
+    escapeScore: 0,
+    early2v2Score: 2,
+    gankSetupScore: 2,
+    heavyShields: true,
+    heavyHealing: true,
+    heavyArmorUser: true,
+    priorityTargetWeight: 0,
+    summaryPt: 'Escudos no W, cura no Q e invulnerabilidade no R; muito forte contra burst do Azul e excelente alvo pro Rhaast.',
+  },
+  Sion: {
+    archetype: 'tank',
+    isSquishyTarget: false,
+    isFrontline: true,
+    fightStyle: 'extended_fight',
+    engageScore: 3,
+    peelScore: 2,
+    ccScore: 3,
+    escapeScore: 0,
+    early2v2Score: 1,
+    gankSetupScore: 2,
+    heavyShields: true,
+    heavyArmorUser: true,
+    priorityTargetWeight: 0,
+    summaryPt: 'Vida máxima infinita e escudo grande no W; alvo perfeito pro dano em % de vida do Rhaast.',
+  },
+  Udyr: {
+    archetype: 'juggernaut',
+    isSquishyTarget: false,
+    isFrontline: true,
+    fightStyle: 'extended_fight',
+    engageScore: 2,
+    peelScore: 1,
+    ccScore: 2,
+    escapeScore: 2,
+    early2v2Score: 3,
+    gankSetupScore: 2,
+    heavyShields: true,
+    heavyHealing: true,
+    priorityTargetWeight: 1,
+    summaryPt: 'Escudo e cura constantes na postura W; forte em duelo cedo e valoriza corta-cura/Rhaast.',
+  },
+  Volibear: {
+    archetype: 'juggernaut',
+    isSquishyTarget: false,
+    isFrontline: true,
+    fightStyle: 'extended_fight',
+    engageScore: 2,
+    peelScore: 1,
+    ccScore: 2,
+    escapeScore: 1,
+    early2v2Score: 3,
+    gankSetupScore: 2,
+    heavyShields: true,
+    heavyHealing: true,
+    priorityTargetWeight: 1,
+    summaryPt: 'Escudo no E + cura no W + dive no R; duelo muito forte cedo e luta prolongada.',
+  },
+  Skarner: {
+    archetype: 'tank',
+    isSquishyTarget: false,
+    isFrontline: true,
+    fightStyle: 'extended_fight',
+    engageScore: 3,
+    peelScore: 2,
+    ccScore: 3,
+    escapeScore: 1,
+    early2v2Score: 2,
+    gankSetupScore: 3,
+    heavyShields: true,
+    heavyArmorUser: true,
+    priorityTargetWeight: 0,
+    summaryPt: 'Tanque de CC pesado (E/R) com escudo recorrente no W; forte contra Azul e valoriza Rhaast.',
   },
 };
 
@@ -1691,6 +1964,15 @@ function buildFallbackProfile(champion: CatalogChampion): ChampionTacticalProfil
   const orbType = classifyChampionOrbType(champion.id, champion.attackrange);
   const tags = champion.tags;
   const primaryTag = tags[0] ?? '';
+  const damageType = classifyChampionDamageType(champion.id, tags);
+  const isAutoAttackThreat = isChampionAutoAttackThreat(champion.id, tags);
+  const common = {
+    championId: champion.id,
+    orbType,
+    damageType,
+    isAutoAttackThreat,
+    isFallbackProfile: true as const,
+  };
 
   // 1. Tanques verdadeiros (tag primária Tank, ou Support+Tank como Braum/Taric)
   if (
@@ -1698,8 +1980,7 @@ function buildFallbackProfile(champion: CatalogChampion): ChampionTacticalProfil
     (tags.includes('Tank') && !tags.includes('Assassin') && !tags.includes('Marksman') && !tags.includes('Mage'))
   ) {
     return {
-      championId: champion.id,
-      orbType,
+      ...common,
       archetype: 'tank',
       isSquishyTarget: false,
       isFrontline: true,
@@ -1714,7 +1995,6 @@ function buildFallbackProfile(champion: CatalogChampion): ChampionTacticalProfil
       heavyShields: false,
       heavyArmorUser: true,
       priorityTargetWeight: 0,
-      isFallbackProfile: true,
       summaryPt: `Perfil inferido por tags Data Dragon (${tags.join(', ')}): tanque/frontline resistente.`,
     };
   }
@@ -1722,8 +2002,7 @@ function buildFallbackProfile(champion: CatalogChampion): ChampionTacticalProfil
   // 2. Assassinos (inclusive Assassin + Fighter como Fizz, Rengar, Naafiri)
   if (primaryTag === 'Assassin') {
     return {
-      championId: champion.id,
-      orbType,
+      ...common,
       archetype: 'assassin',
       isSquishyTarget: true,
       isFrontline: false,
@@ -1738,7 +2017,6 @@ function buildFallbackProfile(champion: CatalogChampion): ChampionTacticalProfil
       heavyShields: false,
       heavyArmorUser: false,
       priorityTargetWeight: 2,
-      isFallbackProfile: true,
       summaryPt: `Perfil inferido por tags Data Dragon (${tags.join(', ')}): assassino papel de troca curta.`,
     };
   }
@@ -1746,8 +2024,7 @@ function buildFallbackProfile(champion: CatalogChampion): ChampionTacticalProfil
   // 3. Atiradores (Marksman)
   if (primaryTag === 'Marksman' || tags.includes('Marksman')) {
     return {
-      championId: champion.id,
-      orbType,
+      ...common,
       archetype: 'squishy_carry',
       isSquishyTarget: true,
       isFrontline: false,
@@ -1762,7 +2039,6 @@ function buildFallbackProfile(champion: CatalogChampion): ChampionTacticalProfil
       heavyShields: false,
       heavyArmorUser: false,
       priorityTargetWeight: 3,
-      isFallbackProfile: true,
       summaryPt: `Perfil inferido por tags Data Dragon (${tags.join(', ')}): atirador frágil prioritário.`,
     };
   }
@@ -1770,8 +2046,7 @@ function buildFallbackProfile(champion: CatalogChampion): ChampionTacticalProfil
   // 4. Magos (inclusive Mage + Fighter como Vladimir ou Mage + Support como Lux)
   if (primaryTag === 'Mage') {
     return {
-      championId: champion.id,
-      orbType,
+      ...common,
       archetype: 'control_mage',
       isSquishyTarget: true,
       isFrontline: false,
@@ -1786,7 +2061,6 @@ function buildFallbackProfile(champion: CatalogChampion): ChampionTacticalProfil
       heavyShields: false,
       heavyArmorUser: false,
       priorityTargetWeight: 2,
-      isFallbackProfile: true,
       summaryPt: `Perfil inferido por tags Data Dragon (${tags.join(', ')}): mago frágil de burst/controle.`,
     };
   }
@@ -1794,8 +2068,7 @@ function buildFallbackProfile(champion: CatalogChampion): ChampionTacticalProfil
   // 5. Suportes encantadores / utilidade (sem Tank)
   if (primaryTag === 'Support') {
     return {
-      championId: champion.id,
-      orbType,
+      ...common,
       archetype: 'enchanter',
       isSquishyTarget: true,
       isFrontline: false,
@@ -1810,7 +2083,6 @@ function buildFallbackProfile(champion: CatalogChampion): ChampionTacticalProfil
       heavyShields: true,
       heavyArmorUser: false,
       priorityTargetWeight: 2,
-      isFallbackProfile: true,
       summaryPt: `Perfil inferido por tags Data Dragon (${tags.join(', ')}): suporte de utilidade/peel.`,
     };
   }
@@ -1818,8 +2090,7 @@ function buildFallbackProfile(champion: CatalogChampion): ChampionTacticalProfil
   // 6. Duelistas leves (Fighter + Assassin como Yi, Tryndamere, Riven, Irelia) — NÃO são tanques de frontline!
   if (primaryTag === 'Fighter' && tags.includes('Assassin')) {
     return {
-      championId: champion.id,
-      orbType,
+      ...common,
       archetype: 'skirmisher',
       isSquishyTarget: true,
       isFrontline: false,
@@ -1834,7 +2105,6 @@ function buildFallbackProfile(champion: CatalogChampion): ChampionTacticalProfil
       heavyShields: false,
       heavyArmorUser: false,
       priorityTargetWeight: 2,
-      isFallbackProfile: true,
       summaryPt: `Perfil inferido por tags Data Dragon (${tags.join(', ')}): esgrimista/duelista leve (não é tanque).`,
     };
   }
@@ -1842,8 +2112,7 @@ function buildFallbackProfile(champion: CatalogChampion): ChampionTacticalProfil
   // 7. Lutadores / Juggernauts puros (Fighter sem Assassin/Marksman)
   if (primaryTag === 'Fighter' || tags.includes('Fighter')) {
     return {
-      championId: champion.id,
-      orbType,
+      ...common,
       archetype: 'juggernaut',
       isSquishyTarget: false,
       isFrontline: true,
@@ -1858,14 +2127,12 @@ function buildFallbackProfile(champion: CatalogChampion): ChampionTacticalProfil
       heavyShields: false,
       heavyArmorUser: false,
       priorityTargetWeight: 1,
-      isFallbackProfile: true,
       summaryPt: `Perfil inferido por tags Data Dragon (${tags.join(', ')}): lutador/frontline de troca estendida.`,
     };
   }
 
   return {
-    championId: champion.id,
-    orbType,
+    ...common,
     archetype: 'control_mage',
     isSquishyTarget: true,
     isFrontline: false,
@@ -1880,7 +2147,6 @@ function buildFallbackProfile(champion: CatalogChampion): ChampionTacticalProfil
     heavyShields: false,
     heavyArmorUser: false,
     priorityTargetWeight: 2,
-    isFallbackProfile: true,
     summaryPt: `Perfil inferido por tags Data Dragon (${tags.join(', ')}): campeão frágil de utilidade/dano.`,
   };
 }
@@ -1897,16 +2163,24 @@ export function getChampionTacticalProfile(
   const orbType = classifyChampionOrbType(champ.id, champ.attackrange);
   const base = buildFallbackProfile(champ);
   const override = CURATED_PROFILES[champ.id];
-  if (!override) {
-    return base;
-  }
+  const merged: ChampionTacticalProfile = override
+    ? {
+        ...base,
+        ...override,
+        championId: champ.id,
+        orbType,
+        isFallbackProfile: false,
+      }
+    : base;
+
+  const computedShieldScore =
+    merged.shieldScore ??
+    (MASSIVE_SHIELD_CHAMPIONS.has(champ.id) ? 2 : merged.heavyShields ? 1 : 0);
 
   return {
-    ...base,
-    ...override,
-    championId: champ.id,
-    orbType,
-    isFallbackProfile: false,
+    ...merged,
+    heavyShields: merged.heavyShields || computedShieldScore >= 1,
+    shieldScore: computedShieldScore,
   };
 }
 

@@ -54,7 +54,8 @@ describe('Memória Tática Local (Pré-jogo, Treino, Revisão e Cartão)', () =>
       'Minha regra: Bot na torre? Volte aos campos.',
     );
     expect(card.runesVisual?.keystone.name).toBe('Conquistador');
-    expect(card.buildVisual?.core.length).toBe(3);
+    expect(card.buildVisual?.core.length).toBe(5);
+    expect(card.buildVisual?.boots.length).toBe(1);
   });
 
   it('cruza regras táticas com cenários do Treino e eventos da Revisão', () => {

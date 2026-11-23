@@ -718,7 +718,7 @@ export function DraftPage({
 
               <div className="build-mini-group">
                 <span className="build-mini-label">
-                  {analysis.build.fullBuildBootReplacement ? 'Botas T1' : 'Botas'}
+                  {analysis.build.fullBuildBootReplacement ? 'Bota T1' : 'Bota'}
                 </span>
                 {analysis.build.boots.map((b) => (
                   <ItemIconTile
@@ -751,6 +751,20 @@ export function DraftPage({
                       invalid={!analysis.build.fullBuildBootReplacement.availableInCatalog}
                     />
                   </>
+                ) : analysis.build.boots[0] ? (
+                  <span
+                    className="small-text"
+                    style={{ fontWeight: 600 }}
+                    title={analysis.build.bootsNote ?? analysis.build.boots[0].reason}
+                    data-testid="recommended-boot-name"
+                  >
+                    {analysis.build.boots[0].availableInCatalog
+                      ? analysis.build.boots[0].name
+                          .replace('Botas Galvanizadas de Aço', 'Botas de Aço (AD)')
+                          .replace('Botas Ionianas da Lucidez', 'Ionianas')
+                          .replace('Passos de Mercúrio', 'Mercúrio (CC/AP)')
+                      : 'Revisão necessária'}
+                  </span>
                 ) : null}
               </div>
             </div>

@@ -113,9 +113,13 @@ export interface DraftState {
   updatedAt: string;
 }
 
+export type DamageType = 'ad' | 'ap' | 'mixed';
+
 export interface ChampionTacticalProfile {
   championId: string;
   orbType: OrbType;
+  damageType: DamageType;
+  isAutoAttackThreat?: boolean;
   archetype: 'squishy_carry' | 'control_mage' | 'enchanter' | 'assassin' | 'skirmisher' | 'juggernaut' | 'tank' | 'engage_support';
   isSquishyTarget: boolean;
   isFrontline: boolean;
@@ -129,6 +133,8 @@ export interface ChampionTacticalProfile {
   gankSetupScore: number; // 0..3 (como aliado)
   heavyHealing: boolean;
   heavyShields: boolean;
+  /** Intensidade de escudos do campeão: 0 = baixo/nenhum, 1 = escudo relevante, 2 = gerador massivo de escudos */
+  shieldScore?: number;
   heavyArmorUser: boolean;
   priorityTargetWeight: number; // 0..3
   isFallbackProfile: boolean;
